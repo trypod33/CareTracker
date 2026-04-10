@@ -15,7 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AddEditPersonActivity : AppCompatActivity() {
-    
+
     private lateinit var binding: ActivityAddEditPersonBinding
     private val viewModel: PersonViewModel by viewModels()
     private var personId: Long = 0L
@@ -26,32 +26,28 @@ class AddEditPersonActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.title = "Add Person"
 
-        // Check if we are editing an existing person
         personId = intent.getLongExtra("PERSON_ID", 0L)
         if (personId != 0L) {
             supportActionBar?.title = "Edit Person"
             loadPersonData()
-        } else {
-            supportActionBar?.title = "Add Person"
         }
 
         setupDropdowns()
 
-        binding.etBirthDate.setOnClickListener {
-            showDatePicker()
-        }
-
+        binding.etBirthDate.setOnClickListener { showDatePicker() }
         binding.btnSavePerson.setOnClickListener { savePerson() }
     }
 
     private fun setupDropdowns() {
         val relationships = arrayOf("Parent", "Child", "Spouse", "Sibling", "Grandparent", "Friend", "Other")
-        val relationshipAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, relationships)
-        binding.etRelationship.setAdapter(relationshipAdapter)
+        binding.etRelationship.setAdapter(
+            ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, relationships)
+        )
 
-        val roles = arrayOf("Care Receiver", "Primary Caregiver", "Secondary Caregiver", "Doctor", "Emergency Contact")
-        val roleAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, roles)
-        binding.etPersonRole.setAdapter(roleAdapter)
+        val roles = arrayOf("Self", "Care Receiver", "Primary Caregiver", "Secondary Caregiver", "Emergency Contact")
+        binding.etPersonRole.setAdapter(
+            ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, roles)
+        )
     }
 
     private fun showDatePicker() {
@@ -61,9 +57,15 @@ class AddEditPersonActivity : AppCompatActivity() {
             .build()
 
         datePicker.addOnPositiveButtonClickListener { selection ->
-            val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+            // MaterialDatePicker returns UTC midnight.
+            // Both the Calendar AND the formatter must use UTC so the
+            // date is not shifted back by the local timezone offset.
+            val utc = TimeZone.getTimeZone("UTC")
+            val calendar = Calendar.getInstance(utc)
             calendar.timeInMillis = selection
-            val format = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+            val format = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).apply {
+                timeZone = utc  // <-- this is the critical fix
+            }
             binding.etBirthDate.setText(format.format(calendar.time))
         }
 
@@ -104,7 +106,6 @@ class AddEditPersonActivity : AppCompatActivity() {
             relationship = relationship,
             role = role,
             notes = notes,
-            // Use defaults or values from UI for color/avatar
             color = "#38bdf8",
             avatar = getAvatarForRole(role)
         )
@@ -115,10 +116,11 @@ class AddEditPersonActivity : AppCompatActivity() {
 
     private fun getAvatarForRole(role: String): String {
         return when (role) {
-            "Care Receiver" -> "👵"
-            "Doctor" -> "🩺"
-            "Primary Caregiver" -> "🏠"
-            else -> "👤"
+            "Self"               -> "\uD83D\uDE0A"
+            "Care Receiver"      -> "\uD83D\uDC75"
+            "Primary Caregiver"  -> "\uD83C\uDFE0"
+            "Secondary Caregiver"-> "\uD83D\uDC4B"
+            else                 -> "\uD83D\uDC64"
         }
     }
 }
