@@ -1,0 +1,146 @@
+[
+    {
+        "merged": "com.caretracker.app-debug-56:/layout_activity_add_edit_contact.xml.flat",
+        "source": "com.caretracker.app-main-58:/layout/activity_add_edit_contact.xml"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/layout_fragment_health.xml.flat",
+        "source": "com.caretracker.app-main-58:/layout/fragment_health.xml"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/mipmap-hdpi_ic_launcher_round.png.flat",
+        "source": "com.caretracker.app-main-58:/mipmap-hdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/layout_activity_add_edit_med.xml.flat",
+        "source": "com.caretracker.app-main-58:/layout/activity_add_edit_med.xml"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/mipmap-hdpi_ic_launcher.png.flat",
+        "source": "com.caretracker.app-main-58:/mipmap-hdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/layout_activity_people_list.xml.flat",
+        "source": "com.caretracker.app-main-58:/layout/activity_people_list.xml"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "com.caretracker.app-main-58:/mipmap-xhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/layout_item_health_log.xml.flat",
+        "source": "com.caretracker.app-main-58:/layout/item_health_log.xml"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/drawable_bg_card.xml.flat",
+        "source": "com.caretracker.app-main-58:/drawable/bg_card.xml"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/menu_bottom_nav_menu.xml.flat",
+        "source": "com.caretracker.app-main-58:/menu/bottom_nav_menu.xml"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/menu_drawer_menu.xml.flat",
+        "source": "com.caretracker.app-main-58:/menu/drawer_menu.xml"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/mipmap-xxhdpi_ic_launcher_round.png.flat",
+        "source": "com.caretracker.app-main-58:/mipmap-xxhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "com.caretracker.app-main-58:/mipmap-xxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/drawable_ic_home.xml.flat",
+        "source": "com.caretracker.app-main-58:/drawable/ic_home.xml"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/drawable_ic_notification.xml.flat",
+        "source": "com.caretracker.app-main-58:/drawable/ic_notification.xml"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/drawable_ic_add.xml.flat",
+        "source": "com.caretracker.app-main-58:/drawable/ic_add.xml"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/drawable_ic_pill.xml.flat",
+        "source": "com.caretracker.app-main-58:/drawable/ic_pill.xml"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/mipmap-xhdpi_ic_launcher_round.png.flat",
+        "source": "com.caretracker.app-main-58:/mipmap-xhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/mipmap-mdpi_ic_launcher.png.flat",
+        "source": "com.caretracker.app-main-58:/mipmap-mdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/mipmap-mdpi_ic_launcher_round.png.flat",
+        "source": "com.caretracker.app-main-58:/mipmap-mdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/drawable_ic_star.xml.flat",
+        "source": "com.caretracker.app-main-58:/drawable/ic_star.xml"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/mipmap-xxxhdpi_ic_launcher_round.png.flat",
+        "source": "com.caretracker.app-main-58:/mipmap-xxxhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/drawable_ic_heart.xml.flat",
+        "source": "com.caretracker.app-main-58:/drawable/ic_heart.xml"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/layout_activity_add_edit_habit.xml.flat",
+        "source": "com.caretracker.app-main-58:/layout/activity_add_edit_habit.xml"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/layout_fragment_habits.xml.flat",
+        "source": "com.caretracker.app-main-58:/layout/fragment_habits.xml"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/layout_item_person.xml.flat",
+        "source": "com.caretracker.app-main-58:/layout/item_person.xml"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/drawable_ic_calendar.xml.flat",
+        "source": "com.caretracker.app-main-58:/drawable/ic_calendar.xml"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/layout_fragment_calendar.xml.flat",
+        "source": "com.caretracker.app-main-58:/layout/fragment_calendar.xml"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/xml_file_paths.xml.flat",
+        "source": "com.caretracker.app-main-58:/xml/file_paths.xml"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/layout_activity_health_log.xml.flat",
+        "source": "com.caretracker.app-main-58:/layout/activity_health_log.xml"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/layout_activity_main.xml.flat",
+        "source": "com.caretracker.app-main-58:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/layout_activity_add_edit_appointment.xml.flat",
+        "source": "com.caretracker.app-main-58:/layout/activity_add_edit_appointment.xml"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "com.caretracker.app-main-58:/mipmap-xxxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/layout_fragment_medications.xml.flat",
+        "source": "com.caretracker.app-main-58:/layout/fragment_medications.xml"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/layout_fragment_dashboard.xml.flat",
+        "source": "com.caretracker.app-main-58:/layout/fragment_dashboard.xml"
+    },
+    {
+        "merged": "com.caretracker.app-debug-56:/layout_activity_add_edit_person.xml.flat",
+        "source": "com.caretracker.app-main-58:/layout/activity_add_edit_person.xml"
+    }
+]

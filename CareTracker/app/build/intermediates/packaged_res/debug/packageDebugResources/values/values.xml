@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ct_accent">#06B6D4</color>
+    <color name="ct_background">#0D0D0F</color>
+    <color name="ct_divider">#1E293B</color>
+    <color name="ct_error">#EF4444</color>
+    <color name="ct_member_default">#06B6D4</color>
+    <color name="ct_primary">#7C3AED</color>
+    <color name="ct_primary_dark">#5B21B6</color>
+    <color name="ct_primary_light">#A78BFA</color>
+    <color name="ct_success">#22C55E</color>
+    <color name="ct_surface">#1A1A2E</color>
+    <color name="ct_surface_variant">#16213E</color>
+    <color name="ct_text">#F1F5F9</color>
+    <color name="ct_text_hint">#475569</color>
+    <color name="ct_text_secondary">#94A3B8</color>
+    <color name="ct_warning">#F59E0B</color>
+    <string name="app_name">CareTracker</string>
+    <string name="cat_behavior">\uD83E\uDDE0</string>
+    <string name="cat_diet">\uD83E\uDD57</string>
+    <string name="cat_general">\uD83D\uDCDD</string>
+    <string name="cat_growth">\uD83D\uDCCF</string>
+    <string name="cat_injury">\uD83E\uDE79</string>
+    <string name="cat_medicine">\uD83D\uDC8A</string>
+    <string name="cat_milestone">\uD83C\uDFC6</string>
+    <string name="cat_mood">\uD83D\uDC99</string>
+    <string name="cat_sick">\uD83E\uDD12</string>
+    <string name="cat_sleep">\uD83D\uDE34</string>
+    <string name="cat_therapy">\uD83E\uDEF6</string>
+    <string name="icon_asneeded">\uD83D\uDC8A</string>
+    <string name="icon_bedtime">\uD83C\uDF19</string>
+    <string name="icon_evening">\uD83C\uDF06</string>
+    <string name="icon_morning">\uD83C\uDF05</string>
+    <string name="icon_noon">\u2600\uFE0F</string>
+    <string name="nav_close">Close Navigation</string>
+    <string name="nav_open">Open Navigation</string>
+    <style name="Theme.CareTracker" parent="Theme.Material3.Dark.NoActionBar">
+
+        
+        <item name="colorPrimary">@color/ct_primary</item>
+        <item name="colorOnPrimary">@color/ct_surface</item>
+        <item name="colorPrimaryContainer">@color/ct_primary_dark</item>
+        <item name="colorOnPrimaryContainer">@color/ct_primary_light</item>
+
+        
+        <item name="colorSecondary">@color/ct_accent</item>
+        <item name="colorOnSecondary">@color/ct_background</item>
+        <item name="colorSecondaryContainer">@color/ct_surface_variant</item>
+        <item name="colorOnSecondaryContainer">@color/ct_text</item>
+
+        
+        <item name="android:windowBackground">@color/ct_background</item>
+        <item name="colorSurface">@color/ct_surface</item>
+        <item name="colorOnSurface">@color/ct_text</item>
+
+        
+        <item name="colorSurfaceVariant">@color/ct_surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/ct_text_secondary</item>
+
+        
+        <item name="colorOutline">@color/ct_primary_light</item>
+        <item name="colorOutlineVariant">@color/ct_divider</item>
+
+        
+        <item name="colorError">@color/ct_error</item>
+        <item name="colorOnError">@color/ct_surface</item>
+
+        
+        <item name="android:statusBarColor">@color/ct_background</item>
+        <item name="android:navigationBarColor">@color/ct_surface</item>
+
+    </style>
+</resources>

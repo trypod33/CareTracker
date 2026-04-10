@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.CareTracker" parent="Theme.Material3.Dark.NoActionBar">
+
+        <!-- Primary Brand (Violet) -->
+        <item name="colorPrimary">@color/ct_primary</item>
+        <item name="colorOnPrimary">@color/ct_surface</item>
+        <item name="colorPrimaryContainer">@color/ct_primary_dark</item>
+        <item name="colorOnPrimaryContainer">@color/ct_primary_light</item>
+
+        <!-- Secondary / Accent (Cyan) -->
+        <item name="colorSecondary">@color/ct_accent</item>
+        <item name="colorOnSecondary">@color/ct_background</item>
+        <item name="colorSecondaryContainer">@color/ct_surface_variant</item>
+        <item name="colorOnSecondaryContainer">@color/ct_text</item>
+
+        <!-- Backgrounds -->
+        <item name="android:windowBackground">@color/ct_background</item>
+        <item name="colorSurface">@color/ct_surface</item>
+        <item name="colorOnSurface">@color/ct_text</item>
+
+        <!-- Cards and Input Fields -->
+        <item name="colorSurfaceVariant">@color/ct_surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/ct_text_secondary</item>
+
+        <!-- Outlines and Dividers -->
+        <item name="colorOutline">@color/ct_primary_light</item>
+        <item name="colorOutlineVariant">@color/ct_divider</item>
+
+        <!-- Error -->
+        <item name="colorError">@color/ct_error</item>
+        <item name="colorOnError">@color/ct_surface</item>
+
+        <!-- Status and Navigation Bars -->
+        <item name="android:statusBarColor">@color/ct_background</item>
+        <item name="android:navigationBarColor">@color/ct_surface</item>
+
+    </style>
+</resources>

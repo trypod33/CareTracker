@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "../../../../../.."
+		},
+		{
+			"path": "../../../../../../../../OneDrive/Desktop/Python Programming/Flask_Habit_Health_Tracker_app"
+		},
+		{
+			"path": "../../../../../../../../OneDrive/Desktop/Python Programming/CareWallet"
+		}
+	],
+	"settings": {
+		"java.configuration.updateBuildConfiguration": "interactive"
+	}
+}

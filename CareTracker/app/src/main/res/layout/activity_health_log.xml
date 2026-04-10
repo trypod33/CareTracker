@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+        <EditText android:id="@+id/etLogType" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Type (blood sugar, water, BP, heart rate, sleep, steps)" />
+        <EditText android:id="@+id/etValue1" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:hint="Value 1" android:inputType="numberDecimal" />
+        <EditText android:id="@+id/etValue2" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:hint="Value 2 (optional)" android:inputType="numberDecimal" />
+        <EditText android:id="@+id/etUnit" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:hint="Unit" />
+        <EditText android:id="@+id/etHealthNotes" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:hint="Notes" android:minLines="3" />
+        <Button android:id="@+id/btnSaveHealthLog" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="Save Health Log" />
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Backgrounds -->
+    <color name="ct_background">#0D0D0F</color>       <!-- Near black base -->
+    <color name="ct_surface">#1A1A2E</color>           <!-- Deep navy surface -->
+    <color name="ct_surface_variant">#16213E</color>   <!-- Slightly lighter card bg -->
+
+    <!-- Primary Brand -->
+    <color name="ct_primary">#7C3AED</color>           <!-- Vivid violet -->
+    <color name="ct_primary_dark">#5B21B6</color>      <!-- Deeper violet -->
+    <color name="ct_primary_light">#A78BFA</color>     <!-- Soft lavender -->
+
+    <!-- Accent -->
+    <color name="ct_accent">#06B6D4</color>            <!-- Cyan pop -->
+
+    <!-- Text -->
+    <color name="ct_text">#F1F5F9</color>              <!-- Bright white text -->
+    <color name="ct_text_secondary">#94A3B8</color>    <!-- Muted grey text -->
+    <color name="ct_text_hint">#475569</color>         <!-- Placeholder/disabled -->
+
+    <!-- Status Colors -->
+    <color name="ct_success">#22C55E</color>           <!-- Green -->
+    <color name="ct_warning">#F59E0B</color>           <!-- Amber -->
+    <color name="ct_error">#EF4444</color>             <!-- Red -->
+
+    <!-- Member / UI extras -->
+    <color name="ct_member_default">#06B6D4</color>    <!-- Cyan to match accent -->
+    <color name="ct_divider">#1E293B</color>           <!-- Subtle divider lines -->
+</resources>

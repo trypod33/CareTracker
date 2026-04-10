@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CareTracker</string>
+
+    <!-- Medication Schedules -->
+    <string name="icon_morning">\uD83C\uDF05</string>   <!-- 🌅 -->
+    <string name="icon_noon">\u2600\uFE0F</string>       <!-- ☀️ -->
+    <string name="icon_evening">\uD83C\uDF06</string>    <!-- 🌆 -->
+    <string name="icon_bedtime">\uD83C\uDF19</string>    <!-- 🌙 -->
+    <string name="icon_asneeded">\uD83D\uDC8A</string>   <!-- 💊 -->
+
+    <!-- Health Note Categories -->
+    <string name="cat_general">\uD83D\uDCDD</string>     <!-- 📝 -->
+    <string name="cat_sick">\uD83E\uDD12</string>        <!-- 🤒 -->
+    <string name="cat_injury">\uD83E\uDE79</string>      <!-- 🩹 -->
+    <string name="cat_medicine">\uD83D\uDC8A</string>    <!-- 💊 -->
+    <string name="cat_behavior">\uD83E\uDDE0</string>    <!-- 🧠 -->
+    <string name="cat_growth">\uD83D\uDCCF</string>      <!-- 📏 -->
+    <string name="cat_mood">\uD83D\uDC99</string>        <!-- 💙 -->
+    <string name="cat_sleep">\uD83D\uDE34</string>       <!-- 😴 -->
+    <string name="cat_diet">\uD83E\uDD57</string>        <!-- 🥗 -->
+    <string name="cat_therapy">\uD83E\uDEF6</string>     <!-- 🫶 -->
+    <string name="cat_milestone">\uD83C\uDFC6</string>   <!-- 🏆 -->
+
+    <string name="nav_open">Open Navigation</string>
+    <string name="nav_close">Close Navigation</string>
+</resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+        <EditText android:id="@+id/etMedName" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Medication name" />
+        <EditText android:id="@+id/etDosage" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:hint="Dosage" />
+        <EditText android:id="@+id/etFrequency" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:hint="Frequency" />
+        <EditText android:id="@+id/etTimes" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:hint="Times of day (08:00,20:00)" />
+        <EditText android:id="@+id/etPillsRemaining" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:hint="Pills remaining" android:inputType="number" />
+        <EditText android:id="@+id/etRefillAt" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:hint="Refill alert at" android:inputType="number" />
+        <EditText android:id="@+id/etInstructions" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:hint="Instructions" android:minLines="3" />
+        <Button android:id="@+id/btnSaveMed" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="Save Medication" />
+    </LinearLayout>
+</ScrollView>
