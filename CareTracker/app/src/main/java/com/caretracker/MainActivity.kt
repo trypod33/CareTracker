@@ -6,10 +6,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.caretracker.databinding.ActivityMainBinding
 import com.caretracker.ui.calendar.CalendarFragment
+import com.caretracker.ui.carecircle.CareCircleFragment
 import com.caretracker.ui.dashboard.DashboardFragment
 import com.caretracker.ui.habits.HabitsFragment
 import com.caretracker.ui.health.HealthFragment
 import com.caretracker.ui.medications.MedicationsFragment
+import com.caretracker.ui.reports.ReportsFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -30,16 +32,21 @@ class MainActivity : AppCompatActivity() {
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        if (savedInstanceState == null) replaceFragment(DashboardFragment())
+        if (savedInstanceState == null) {
+            replaceFragment(DashboardFragment())
+            binding.navView.setCheckedItem(R.id.nav_dashboard)
+        }
 
         binding.navView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.dashboard -> replaceFragment(DashboardFragment())
-                R.id.calendar -> replaceFragment(CalendarFragment())
-                R.id.medications -> replaceFragment(MedicationsFragment())
-                R.id.health -> replaceFragment(HealthFragment())
-                R.id.habits -> replaceFragment(HabitsFragment())
-                else -> replaceFragment(DashboardFragment())
+                R.id.nav_dashboard    -> replaceFragment(DashboardFragment())
+                R.id.nav_habits       -> replaceFragment(HabitsFragment())
+                R.id.nav_health       -> replaceFragment(HealthFragment())
+                R.id.nav_medications  -> replaceFragment(MedicationsFragment())
+                R.id.nav_calendar     -> replaceFragment(CalendarFragment())
+                R.id.nav_care_circle  -> replaceFragment(CareCircleFragment())
+                R.id.nav_reports      -> replaceFragment(ReportsFragment())
+                else                  -> replaceFragment(DashboardFragment())
             }
             binding.drawerLayout.closeDrawers()
             true
