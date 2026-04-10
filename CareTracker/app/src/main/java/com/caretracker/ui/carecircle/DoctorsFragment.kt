@@ -11,6 +11,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.caretracker.databinding.FragmentDoctorsBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -20,6 +22,7 @@ class DoctorsFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: DoctorViewModel by viewModels()
     private lateinit var adapter: DoctorAdapter
+    private var collectJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -44,34 +47,23 @@ class DoctorsFragment : Fragment() {
         binding.rvDoctors.layoutManager = LinearLayoutManager(requireContext())
         binding.rvDoctors.adapter = adapter
 
-        // Observe active person and show only their doctors by default
-        // Toggle "Show All" via chip
-        var showAll = false
-
-        fun refreshDoctors() {
-            viewLifecycleOwner.lifecycleScope.launch {
-                if (showAll) {
-                    viewModel.allDoctors.collect { doctors ->
-                        adapter.submitList(doctors)
-                        binding.tvEmptyDoctors.visibility =
-                            if (doctors.isEmpty()) View.VISIBLE else View.GONE
-                    }
-                } else {
-                    viewModel.doctorsForActivePerson.collect { doctors ->
-                        adapter.submitList(doctors)
-                        binding.tvEmptyDoctors.visibility =
-                            if (doctors.isEmpty()) View.VISIBLE else View.GONE
-                    }
+        fun loadDoctors(showAll: Boolean) {
+            collectJob?.cancel()
+            collectJob = viewLifecycleOwner.lifecycleScope.launch {
+                val flow = if (showAll) viewModel.allDoctors else viewModel.doctorsForActivePerson
+                flow.collectLatest { doctors ->
+                    adapter.submitList(doctors)
+                    binding.tvEmptyDoctors.visibility =
+                        if (doctors.isEmpty()) View.VISIBLE else View.GONE
                 }
             }
         }
 
         binding.chipShowAll.setOnCheckedChangeListener { _, isChecked ->
-            showAll = isChecked
-            refreshDoctors()
+            loadDoctors(isChecked)
         }
 
-        refreshDoctors()
+        loadDoctors(false)
 
         binding.fabAddDoctor.setOnClickListener {
             startActivity(Intent(requireContext(), AddEditDoctorActivity::class.java))
@@ -80,6 +72,7 @@ class DoctorsFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        collectJob?.cancel()
         _binding = null
     }
 }

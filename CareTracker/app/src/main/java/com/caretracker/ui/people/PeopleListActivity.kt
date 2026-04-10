@@ -14,12 +14,7 @@ class PeopleListActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPeopleListBinding
     private val viewModel: PersonViewModel by viewModels()
-    private val adapter = PeopleAdapter { person ->
-        val intent = Intent(this, AddEditPersonActivity::class.java).apply {
-            putExtra("PERSON_ID", person.id)
-        }
-        startActivity(intent)
-    }
+    private lateinit var adapter: PeopleAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +22,16 @@ class PeopleListActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         supportActionBar?.title = "Care Circle"
+
+        adapter = PeopleAdapter(
+            onClick = { person ->
+                startActivity(
+                    Intent(this, AddEditPersonActivity::class.java)
+                        .putExtra("PERSON_ID", person.id)
+                )
+            },
+            onDelete = { person -> viewModel.deletePerson(person) }
+        )
 
         binding.rvPeople.adapter = adapter
 
@@ -38,7 +43,6 @@ class PeopleListActivity : AppCompatActivity() {
     }
 
     private fun observePeople() {
-        // Assuming PersonViewModel has a Flow or LiveData named allPeople
         lifecycleScope.launch {
             viewModel.allPeople.collect { people ->
                 adapter.submitList(people)

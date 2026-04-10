@@ -5,9 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.HorizontalScrollView
-import android.widget.LinearLayout
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -51,7 +48,7 @@ class MedicationsFragment : Fragment() {
         binding.rvMedications.layoutManager = LinearLayoutManager(requireContext())
         binding.rvMedications.adapter = adapter
 
-        // Build person switcher chips
+        // Observe people and build chip row
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.allPeople.collect { people -> buildPersonChips(people) }
         }
@@ -74,28 +71,30 @@ class MedicationsFragment : Fragment() {
 
     private fun buildPersonChips(people: List<Person>) {
         binding.chipGroupPeople.removeAllViews()
+        if (people.isEmpty()) return
+
+        // Auto-select first person if current selection is gone
+        if (people.none { it.id == selectedPersonId }) {
+            selectedPersonId = people.first().id
+            viewModel.setPersonId(selectedPersonId)
+        }
+
         people.forEach { person ->
             val chip = Chip(requireContext()).apply {
                 text = "${person.avatar} ${person.name}"
                 isCheckable = true
                 isChecked = person.id == selectedPersonId
+                tag = person.id
                 setOnClickListener {
                     selectedPersonId = person.id
                     viewModel.setPersonId(person.id)
-                    // Update chip checked states
                     for (i in 0 until binding.chipGroupPeople.childCount) {
                         val c = binding.chipGroupPeople.getChildAt(i) as? Chip
                         c?.isChecked = (c?.tag as? Long) == person.id
                     }
                 }
-                tag = person.id
             }
             binding.chipGroupPeople.addView(chip)
-        }
-        // Auto-select first person if none selected yet
-        if (people.isNotEmpty() && !people.any { it.id == selectedPersonId }) {
-            selectedPersonId = people.first().id
-            viewModel.setPersonId(selectedPersonId)
         }
     }
 

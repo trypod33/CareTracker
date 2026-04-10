@@ -6,11 +6,32 @@
     android:layout_height="match_parent"
     android:background="@color/ct_background">
 
+    <!-- Show All chip toggle -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="8dp"
+        android:background="?attr/colorSurface">
+        <com.google.android.material.chip.ChipGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipShowAll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Show All Doctors"
+                style="@style/Widget.Material3.Chip.Filter" />
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvDoctors"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="8dp"
+        android:paddingTop="64dp"
         android:paddingBottom="80dp"
         android:clipToPadding="false" />
 
