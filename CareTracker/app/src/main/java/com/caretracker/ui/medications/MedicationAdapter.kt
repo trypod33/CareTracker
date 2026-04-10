@@ -1,5 +1,6 @@
 package com.caretracker.ui.medications
 
+import android.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -8,8 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.caretracker.data.models.Medication
 import com.caretracker.databinding.ItemMedicationBinding
 
-class MedicationAdapter(private val onClick: (Medication) -> Unit) :
-    ListAdapter<Medication, MedicationAdapter.MedicationViewHolder>(DiffCallback) {
+class MedicationAdapter(
+    private val onClick: (Medication) -> Unit,
+    private val onDelete: (Medication) -> Unit
+) : ListAdapter<Medication, MedicationAdapter.MedicationViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MedicationViewHolder {
         return MedicationViewHolder(
@@ -23,7 +26,28 @@ class MedicationAdapter(private val onClick: (Medication) -> Unit) :
         holder.binding.tvMedDosage.text = "${med.dosage} ${med.unit}"
         holder.binding.tvMedFrequency.text = med.frequency.replace("_", " ").replaceFirstChar { it.uppercase() }
         holder.binding.tvMedPills.text = "${med.pillsRemaining} pills remaining"
+
+        // Short tap — edit
         holder.itemView.setOnClickListener { onClick(med) }
+
+        // Long press — Edit / Delete menu
+        holder.itemView.setOnLongClickListener { view ->
+            AlertDialog.Builder(view.context)
+                .setTitle(med.name)
+                .setItems(arrayOf("\u270F\uFE0F  Edit", "\uD83D\uDDD1\uFE0F  Delete")) { _, which ->
+                    when (which) {
+                        0 -> onClick(med)
+                        1 -> AlertDialog.Builder(view.context)
+                            .setTitle("Delete \"${med.name}\"?")
+                            .setMessage("This will permanently delete this medication. This cannot be undone.")
+                            .setPositiveButton("Delete") { _, _ -> onDelete(med) }
+                            .setNegativeButton("Cancel", null)
+                            .show()
+                    }
+                }
+                .show()
+            true
+        }
     }
 
     class MedicationViewHolder(val binding: ItemMedicationBinding) :

@@ -16,6 +16,7 @@ class AddEditMedActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddEditMedBinding
     private val viewModel: MedicationViewModel by viewModels()
     private var medId: Long = 0L
+    private var personId: Long = 1L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,21 +24,22 @@ class AddEditMedActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         medId = intent.getLongExtra("MED_ID", 0L)
+        personId = intent.getLongExtra("PERSON_ID", 1L)
         supportActionBar?.title = if (medId != 0L) "Edit Medication" else "Add Medication"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         setupDropdowns()
-
         if (medId != 0L) loadMedData()
-
         binding.btnSaveMed.setOnClickListener { saveMed() }
     }
+
+    override fun onSupportNavigateUp(): Boolean { finish(); return true }
 
     private fun setupDropdowns() {
         val units = arrayOf("mg", "mcg", "g", "ml", "IU", "units", "tablet", "capsule")
         binding.etUnit.setAdapter(
             ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, units)
         )
-
         val frequencies = arrayOf("daily", "twice_daily", "three_times_daily", "every_x_hours", "weekly", "as_needed")
         binding.etFrequency.setAdapter(
             ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, frequencies)
@@ -46,9 +48,10 @@ class AddEditMedActivity : AppCompatActivity() {
 
     private fun loadMedData() {
         lifecycleScope.launch {
-            viewModel.allMedications.collect { meds ->
+            viewModel.medications.collect { meds ->
                 val med = meds.find { it.id == medId }
                 med?.let {
+                    personId = it.personId   // keep the original owner
                     binding.etMedName.setText(it.name)
                     binding.etDosage.setText(it.dosage)
                     binding.etUnit.setText(it.unit, false)
@@ -67,10 +70,9 @@ class AddEditMedActivity : AppCompatActivity() {
             binding.etMedName.error = "Medication name is required"
             return
         }
-
         val medication = Medication(
             id = medId,
-            personId = 1L,
+            personId = personId,   // correctly stamped to the selected person
             name = name,
             dosage = binding.etDosage.text.toString().trim(),
             unit = binding.etUnit.text.toString().trim().ifEmpty { "mg" },
@@ -79,7 +81,6 @@ class AddEditMedActivity : AppCompatActivity() {
             instructions = binding.etInstructions.text.toString().trim(),
             notes = binding.etNotes.text.toString().trim()
         )
-
         viewModel.saveMedication(medication)
         finish()
     }

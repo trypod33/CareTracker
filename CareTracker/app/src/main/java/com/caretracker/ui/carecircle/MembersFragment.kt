@@ -34,12 +34,15 @@ class MembersFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = PeopleAdapter { person ->
-            val intent = Intent(requireContext(), AddEditPersonActivity::class.java).apply {
-                putExtra("PERSON_ID", person.id)
-            }
-            startActivity(intent)
-        }
+        adapter = PeopleAdapter(
+            onClick = { person ->
+                startActivity(
+                    Intent(requireContext(), AddEditPersonActivity::class.java)
+                        .putExtra("PERSON_ID", person.id)
+                )
+            },
+            onDelete = { person -> viewModel.deletePerson(person) }
+        )
 
         binding.rvMembers.layoutManager = LinearLayoutManager(requireContext())
         binding.rvMembers.adapter = adapter

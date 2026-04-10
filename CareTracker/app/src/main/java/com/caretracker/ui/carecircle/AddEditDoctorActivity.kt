@@ -2,6 +2,8 @@ package com.caretracker.ui.carecircle
 
 import android.os.Bundle
 import android.view.Gravity
+import android.view.View
+import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -9,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.caretracker.R
 import com.caretracker.data.models.Doctor
+import com.caretracker.data.models.Person
 import com.caretracker.databinding.ActivityAddEditDoctorBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -19,31 +22,22 @@ class AddEditDoctorActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddEditDoctorBinding
     private val viewModel: DoctorViewModel by viewModels()
     private var doctorId: Long = 0L
-    private var selectedAvatar: String = "\uD83E\uDDBA" // default 🧺 → use 🩺
+    private var selectedAvatar: String = "\uD83E\uFA7A"
+    private var previousLinkedPersonIds: Set<Long> = emptySet()
+
+    // Checkboxes map: personId -> CheckBox view
+    private val personCheckBoxes = mutableMapOf<Long, CheckBox>()
 
     private val medicalEmojis = listOf(
-        "\uD83E\uFA7A", // 🩺
-        "\uD83D\uDC89", // 💉
-        "\uD83D\uDC8A", // 💊
-        "\uD83E\uDE7A", // 🩺 bandage
-        "\uD83C\uDFE5", // 🏥
-        "\u2695\uFE0F",  // ⚕️
-        "\uD83E\uDDEC", // 🧬
-        "\uD83D\uDD2C", // 🔬
-        "\uD83E\uDDE0", // 🧠
-        "\u2764\uFE0F"   // ❤️
+        "\uD83E\uFA7A", "\uD83D\uDC89", "\uD83D\uDC8A",
+        "\uD83E\uDE7A", "\uD83C\uDFE5", "\u2695\uFE0F",
+        "\uD83E\uDDEC", "\uD83D\uDD2C", "\uD83E\uDDE0", "\u2764\uFE0F"
     )
     private val peopleEmojis = listOf(
-        "\uD83D\uDC68\u200D\u2695\uFE0F", // 👨‍⚕️
-        "\uD83D\uDC69\u200D\u2695\uFE0F", // 👩‍⚕️
-        "\uD83D\uDC64", // 👤
-        "\uD83D\uDE0A", // 😊
-        "\uD83D\uDC75", // 👵
-        "\uD83D\uDC74", // 👴
-        "\uD83D\uDC69", // 👩
-        "\uD83D\uDC68", // 👨
-        "\uD83E\uDD1D", // 🤝
-        "\uD83C\uDF1F"  // 🌟
+        "\uD83D\uDC68\u200D\u2695\uFE0F", "\uD83D\uDC69\u200D\u2695\uFE0F",
+        "\uD83D\uDC64", "\uD83D\uDE0A", "\uD83D\uDC75",
+        "\uD83D\uDC74", "\uD83D\uDC69", "\uD83D\uDC68",
+        "\uD83E\uDD1D", "\uD83C\uDF1F"
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,13 +48,42 @@ class AddEditDoctorActivity : AppCompatActivity() {
 
         doctorId = intent.getLongExtra("DOCTOR_ID", 0L)
         supportActionBar?.title = if (doctorId != 0L) "Edit Doctor" else "Add Doctor"
-        if (doctorId != 0L) loadDoctorData()
 
         buildEmojiRows()
+        buildPatientCheckboxes()
+
+        if (doctorId != 0L) loadDoctorData()
+
         binding.btnSaveDoctor.setOnClickListener { saveDoctor() }
     }
 
     override fun onSupportNavigateUp(): Boolean { finish(); return true }
+
+    // ── Patient checkboxes ────────────────────────────────────────────────────
+
+    private fun buildPatientCheckboxes() {
+        lifecycleScope.launch {
+            viewModel.allPeople.collect { people ->
+                binding.layoutPatients.removeAllViews()
+                personCheckBoxes.clear()
+                people.forEach { person ->
+                    val cb = CheckBox(this@AddEditDoctorActivity).apply {
+                        text = "${person.avatar}  ${person.name}  \u2022  ${person.role ?: ""}"
+                        tag = person.id
+                        isChecked = personCheckBoxes[person.id]?.isChecked ?: false
+                    }
+                    personCheckBoxes[person.id] = cb
+                    binding.layoutPatients.addView(cb)
+                }
+                // Re-check previously linked people after list reloads
+                previousLinkedPersonIds.forEach { id ->
+                    personCheckBoxes[id]?.isChecked = true
+                }
+            }
+        }
+    }
+
+    // ── Emoji avatar rows ─────────────────────────────────────────────────────
 
     private fun buildEmojiRows() {
         addEmojisToRow(binding.rowMedical, medicalEmojis)
@@ -75,9 +98,7 @@ class AddEditDoctorActivity : AppCompatActivity() {
                 text = emoji
                 textSize = 24f
                 gravity = Gravity.CENTER
-                layoutParams = LinearLayout.LayoutParams(size, size).also {
-                    it.marginEnd = 4
-                }
+                layoutParams = LinearLayout.LayoutParams(size, size).also { it.marginEnd = 4 }
                 background = getDrawable(
                     if (emoji == selectedAvatar) R.drawable.bg_avatar_selected
                     else R.drawable.bg_avatar_unselected
@@ -92,9 +113,7 @@ class AddEditDoctorActivity : AppCompatActivity() {
         }
     }
 
-    private fun updatePreview(emoji: String) {
-        binding.tvSelectedAvatar.text = emoji
-    }
+    private fun updatePreview(emoji: String) { binding.tvSelectedAvatar.text = emoji }
 
     private fun refreshAllRows() {
         refreshRow(binding.rowMedical, medicalEmojis)
@@ -112,8 +131,11 @@ class AddEditDoctorActivity : AppCompatActivity() {
         }
     }
 
+    // ── Load existing doctor ──────────────────────────────────────────────────
+
     private fun loadDoctorData() {
         lifecycleScope.launch {
+            // Load doctor fields
             viewModel.allDoctors.collect { doctors ->
                 val doctor = doctors.find { it.id == doctorId }
                 doctor?.let {
@@ -130,7 +152,19 @@ class AddEditDoctorActivity : AppCompatActivity() {
                 }
             }
         }
+
+        lifecycleScope.launch {
+            // Load existing patient links and pre-check boxes
+            // getLinkedDoctorIds actually returns personIds linked to this doctor
+            val linkedIds = viewModel.getLinkedPersonIds(doctorId)
+            previousLinkedPersonIds = linkedIds.toSet()
+            linkedIds.forEach { personId ->
+                personCheckBoxes[personId]?.isChecked = true
+            }
+        }
     }
+
+    // ── Save ──────────────────────────────────────────────────────────────────
 
     private fun saveDoctor() {
         val name = binding.etDoctorName.text.toString().trim()
@@ -138,16 +172,48 @@ class AddEditDoctorActivity : AppCompatActivity() {
             binding.etDoctorName.error = "Doctor name is required"
             return
         }
-        val doctor = Doctor(
-            id = doctorId,
-            name = name,
-            specialty = binding.etSpecialty.text.toString().trim(),
-            phone = binding.etPhone.text.toString().trim(),
-            address = binding.etAddress.text.toString().trim(),
-            notes = binding.etNotes.text.toString().trim(),
-            avatar = selectedAvatar
-        )
-        viewModel.saveDoctor(doctor)
-        finish()
+
+        lifecycleScope.launch {
+            val doctor = Doctor(
+                id = doctorId,
+                name = name,
+                specialty = binding.etSpecialty.text.toString().trim(),
+                phone = binding.etPhone.text.toString().trim(),
+                address = binding.etAddress.text.toString().trim(),
+                notes = binding.etNotes.text.toString().trim(),
+                avatar = selectedAvatar
+            )
+
+            // Insert/update doctor first to get the id
+            val savedId: Long = if (doctorId == 0L) {
+                // new doctor — insert returns the new id
+                var newId = 0L
+                viewModel.saveDoctor(doctor)
+                // Wait briefly for the insert then get it from allDoctors
+                // Better: use a suspend insert in repo
+                // For now collect once to get the new id
+                viewModel.allDoctors.collect { doctors ->
+                    val saved = doctors.find {
+                        it.name == name &&
+                        it.specialty == doctor.specialty &&
+                        it.phone == doctor.phone
+                    }
+                    if (saved != null) { newId = saved.id; return@collect }
+                }
+                newId
+            } else {
+                viewModel.saveDoctor(doctor)
+                doctorId
+            }
+
+            if (savedId != 0L) {
+                val selectedIds = personCheckBoxes
+                    .filter { (_, cb) -> cb.isChecked }
+                    .keys.toSet()
+                viewModel.savePatientLinks(savedId, selectedIds, previousLinkedPersonIds)
+            }
+
+            finish()
+        }
     }
 }

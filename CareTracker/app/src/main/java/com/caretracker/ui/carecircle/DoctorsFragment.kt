@@ -31,23 +31,47 @@ class DoctorsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = DoctorAdapter { doctor ->
-            val intent = Intent(requireContext(), AddEditDoctorActivity::class.java).apply {
-                putExtra("DOCTOR_ID", doctor.id)
-            }
-            startActivity(intent)
-        }
+        adapter = DoctorAdapter(
+            onClick = { doctor ->
+                startActivity(
+                    Intent(requireContext(), AddEditDoctorActivity::class.java)
+                        .putExtra("DOCTOR_ID", doctor.id)
+                )
+            },
+            onDelete = { doctor -> viewModel.deleteDoctor(doctor) }
+        )
 
         binding.rvDoctors.layoutManager = LinearLayoutManager(requireContext())
         binding.rvDoctors.adapter = adapter
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.allDoctors.collect { doctors ->
-                adapter.submitList(doctors)
-                binding.tvEmptyDoctors.visibility =
-                    if (doctors.isEmpty()) View.VISIBLE else View.GONE
+        // Observe active person and show only their doctors by default
+        // Toggle "Show All" via chip
+        var showAll = false
+
+        fun refreshDoctors() {
+            viewLifecycleOwner.lifecycleScope.launch {
+                if (showAll) {
+                    viewModel.allDoctors.collect { doctors ->
+                        adapter.submitList(doctors)
+                        binding.tvEmptyDoctors.visibility =
+                            if (doctors.isEmpty()) View.VISIBLE else View.GONE
+                    }
+                } else {
+                    viewModel.doctorsForActivePerson.collect { doctors ->
+                        adapter.submitList(doctors)
+                        binding.tvEmptyDoctors.visibility =
+                            if (doctors.isEmpty()) View.VISIBLE else View.GONE
+                    }
+                }
             }
         }
+
+        binding.chipShowAll.setOnCheckedChangeListener { _, isChecked ->
+            showAll = isChecked
+            refreshDoctors()
+        }
+
+        refreshDoctors()
 
         binding.fabAddDoctor.setOnClickListener {
             startActivity(Intent(requireContext(), AddEditDoctorActivity::class.java))
