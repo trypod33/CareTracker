@@ -72,7 +72,23 @@ class HabitAdapter(
         b.tvHabitFrequency.text = habit.frequency.replaceFirstChar { it.uppercase() }
         b.tvHabitTarget.text = "Goal: ${habit.targetValue} ${habit.unit}"
         b.tvHabitDescription.text = habit.description
+
+        // Short tap — open edit screen
         b.root.setOnClickListener { onClick(habit) }
+
+        // Long press — show Edit / Delete menu
+        b.root.setOnLongClickListener {
+            AlertDialog.Builder(it.context)
+                .setTitle(habit.name)
+                .setItems(arrayOf("\u270F\uFE0F  Edit", "\uD83D\uDDD1\uFE0F  Delete")) { _, which ->
+                    when (which) {
+                        0 -> onClick(habit)   // reuse same edit flow
+                        1 -> confirmDelete(it.context, habit)
+                    }
+                }
+                .show()
+            true
+        }
 
         if (isMeasurable) {
             b.layoutQuickLog.visibility = View.VISIBLE
@@ -92,7 +108,7 @@ class HabitAdapter(
                 }
             }
 
-            // Long press: custom amount dialog
+            // Long press on button: custom amount dialog
             b.btnQuickLog.setOnLongClickListener {
                 val ctx = it.context
                 val input = EditText(ctx).apply {
@@ -131,6 +147,15 @@ class HabitAdapter(
             b.layoutQuickLog.visibility = View.GONE
             b.tvTodayTotal.visibility = View.GONE
         }
+    }
+
+    private fun confirmDelete(context: android.content.Context, habit: Habit) {
+        AlertDialog.Builder(context)
+            .setTitle("Delete \"${habit.name}\"?")
+            .setMessage("This will permanently delete the habit and all its logs. This cannot be undone.")
+            .setPositiveButton("Delete") { _, _ -> viewModel.deleteHabit(habit) }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     class HabitViewHolder(val binding: ItemHabitBinding) :

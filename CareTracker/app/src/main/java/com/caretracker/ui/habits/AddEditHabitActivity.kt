@@ -24,13 +24,14 @@ class AddEditHabitActivity : AppCompatActivity() {
 
         habitId = intent.getLongExtra("habitId", 0L)
         supportActionBar?.title = if (habitId != 0L) "Edit Habit" else "Add Habit"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         setupDropdowns()
-
         if (habitId != 0L) loadHabitData()
-
         binding.btnSaveHabit.setOnClickListener { saveHabit() }
     }
+
+    override fun onSupportNavigateUp(): Boolean { finish(); return true }
 
     private fun setupDropdowns() {
         val frequencies = arrayOf("daily", "weekly", "weekdays", "weekends")
@@ -40,9 +41,9 @@ class AddEditHabitActivity : AppCompatActivity() {
 
         val units = arrayOf(
             "times",
-            "oz", "ml",
-            "miles", "km",
             "steps",
+            "miles", "km",
+            "oz", "ml",
             "minutes", "hours",
             "glasses", "cups",
             "calories",
