@@ -20,7 +20,7 @@ import com.caretracker.data.models.*
         Doctor::class,
         PersonDoctorCrossRef::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -34,18 +34,12 @@ abstract class CareTrackerDatabase : RoomDatabase() {
     abstract fun doctorDao(): DoctorDao
 
     companion object {
-        /**
-         * Migration 2 → 3:
-         *  - Add isActiveProfile column to people table
-         *  - Create person_doctor_links join table
-         */
+        /** Migration 2 → 3: add isActiveProfile + person_doctor_links join table */
         val MIGRATION_2_3 = object : Migration(2, 3) {
             override fun migrate(db: SupportSQLiteDatabase) {
-                // Add isActiveProfile to people (default 0 = false)
                 db.execSQL(
                     "ALTER TABLE people ADD COLUMN isActiveProfile INTEGER NOT NULL DEFAULT 0"
                 )
-                // Create many-to-many join table for person ↔ doctor links
                 db.execSQL(
                     """
                     CREATE TABLE IF NOT EXISTS person_doctor_links (
@@ -57,6 +51,15 @@ abstract class CareTrackerDatabase : RoomDatabase() {
                 )
                 db.execSQL(
                     "CREATE INDEX IF NOT EXISTS index_person_doctor_links_doctorId ON person_doctor_links (doctorId)"
+                )
+            }
+        }
+
+        /** Migration 3 → 4: add avatar column to doctors table */
+        val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    "ALTER TABLE doctors ADD COLUMN avatar TEXT NOT NULL DEFAULT '\uD83E\uDE7A'"
                 )
             }
         }

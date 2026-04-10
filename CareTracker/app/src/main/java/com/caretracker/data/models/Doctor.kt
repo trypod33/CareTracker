@@ -10,5 +10,6 @@ data class Doctor(
     val specialty: String = "",
     val phone: String = "",
     val address: String = "",
-    val notes: String = ""
+    val notes: String = "",
+    val avatar: String = "\uD83E\uDE7A"  // default 🩺 stethoscope
 )
