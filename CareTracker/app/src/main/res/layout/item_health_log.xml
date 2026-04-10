@@ -33,6 +33,16 @@
             android:textColor="@color/ct_text_secondary"
             android:text="Timestamp" />
 
+        <TextView
+            android:id="@+id/tvLogNotes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="13sp"
+            android:textColor="@color/ct_text_secondary"
+            android:visibility="gone"
+            android:text="" />
+
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>
