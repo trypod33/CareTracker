@@ -9,7 +9,7 @@ data class HabitLog(
     val habitId: Long,
     val personId: Long,
     val logDate: String = "",   // "yyyy-MM-dd"
-    val value: Int = 1,
+    val value: Double = 1.0,    // supports decimals like 16.9 oz
     val notes: String = "",
     val loggedAt: Long = System.currentTimeMillis()
 )

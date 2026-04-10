@@ -11,14 +11,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.caretracker.databinding.FragmentHabitsBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HabitsFragment : Fragment() {
+
     private var _binding: FragmentHabitsBinding? = null
     private val binding get() = _binding!!
     private val viewModel: HabitViewModel by viewModels()
-    private lateinit var adapter: HabitAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -30,20 +31,22 @@ class HabitsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = HabitAdapter { habit ->
-            val intent = Intent(requireContext(), AddEditHabitActivity::class.java).apply {
-                putExtra("HABIT_ID", habit.id)
-            }
-            startActivity(intent)
+        // Pass lifecycleScope + viewModel so adapter can launch coroutines for quick-log
+        val adapter = HabitAdapter(
+            scope     = viewLifecycleOwner.lifecycleScope,
+            viewModel = viewModel
+        ) { habit ->
+            startActivity(
+                Intent(requireContext(), AddEditHabitActivity::class.java)
+                    .putExtra("habitId", habit.id)
+            )
         }
 
         binding.rvHabits.layoutManager = LinearLayoutManager(requireContext())
         binding.rvHabits.adapter = adapter
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.habits.collect { habits ->
-                adapter.submitList(habits)
-            }
+            viewModel.habits.collectLatest { adapter.submitList(it) }
         }
 
         binding.fabAddHabit.setOnClickListener {

@@ -31,4 +31,7 @@ class HabitRepository @Inject constructor(
 
     fun getRecentLogs(habitId: Long): Flow<List<HabitLog>> =
         habitDao.getRecentLogs(habitId)
+
+    suspend fun getTodayTotal(habitId: Long, date: String): Double =
+        habitDao.getTodayTotal(habitId, date)
 }

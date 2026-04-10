@@ -33,4 +33,8 @@ interface HabitDao {
 
     @Query("SELECT COUNT(*) FROM habit_logs WHERE habitId = :habitId AND logDate BETWEEN :start AND :end")
     suspend fun getStreakCount(habitId: Long, start: String, end: String): Int
+
+    /** Sum of all log values for a habit on a given date (e.g. total oz today) */
+    @Query("SELECT COALESCE(SUM(value), 0.0) FROM habit_logs WHERE habitId = :habitId AND logDate = :date")
+    suspend fun getTodayTotal(habitId: Long, date: String): Double
 }
