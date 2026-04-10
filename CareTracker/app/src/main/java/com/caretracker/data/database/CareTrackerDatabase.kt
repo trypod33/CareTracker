@@ -14,9 +14,10 @@ import com.caretracker.data.models.*
         MedicationLog::class,
         Habit::class,
         HabitLog::class,
-        HealthLog::class
+        HealthLog::class,
+        Doctor::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -27,4 +28,5 @@ abstract class CareTrackerDatabase : RoomDatabase() {
     abstract fun medicationDao(): MedicationDao
     abstract fun habitDao(): HabitDao
     abstract fun healthLogDao(): HealthLogDao
+    abstract fun doctorDao(): DoctorDao
 }

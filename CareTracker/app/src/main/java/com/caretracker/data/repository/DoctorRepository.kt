@@ -1,6 +1,6 @@
 package com.caretracker.data.repository
 
-import com.caretracker.data.dao.DoctorDao
+import com.caretracker.data.database.DoctorDao
 import com.caretracker.data.models.Doctor
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

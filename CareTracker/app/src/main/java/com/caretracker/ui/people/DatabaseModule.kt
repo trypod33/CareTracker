@@ -42,4 +42,7 @@ object DatabaseModule {
 
     @Provides
     fun provideHealthLogDao(database: CareTrackerDatabase): HealthLogDao = database.healthLogDao()
+
+    @Provides
+    fun provideDoctorDao(database: CareTrackerDatabase): DoctorDao = database.doctorDao()
 }
