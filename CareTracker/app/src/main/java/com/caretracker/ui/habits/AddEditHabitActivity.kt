@@ -22,7 +22,6 @@ class AddEditHabitActivity : AppCompatActivity() {
         binding = ActivityAddEditHabitBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Key matches what HabitsFragment passes: putExtra("habitId", habit.id)
         habitId = intent.getLongExtra("habitId", 0L)
         supportActionBar?.title = if (habitId != 0L) "Edit Habit" else "Add Habit"
 
@@ -39,8 +38,16 @@ class AddEditHabitActivity : AppCompatActivity() {
             ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, frequencies)
         )
 
-        // oz and ml added so the quick-log button appears for water/liquid habits
-        val units = arrayOf("times", "oz", "ml", "minutes", "hours", "steps", "glasses", "cups", "calories", "pages", "reps")
+        val units = arrayOf(
+            "times",
+            "oz", "ml",
+            "miles", "km",
+            "steps",
+            "minutes", "hours",
+            "glasses", "cups",
+            "calories",
+            "pages", "reps"
+        )
         binding.etUnit.setAdapter(
             ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, units)
         )

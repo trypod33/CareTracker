@@ -16,12 +16,22 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /** Units that get the quick-log button and running total display. */
-private val MEASURABLE_UNITS = setOf("oz", "ml", "cups", "glasses", "steps", "minutes", "mins", "hours", "calories", "cal")
+private val MEASURABLE_UNITS = setOf(
+    "oz", "ml",
+    "miles", "km",
+    "cups", "glasses",
+    "steps",
+    "minutes", "mins", "hours",
+    "calories", "cal",
+    "pages", "reps"
+)
 
-/** Default amounts per unit — shown on the button label. */
+/** Default quick-log amount per unit. */
 private val DEFAULT_AMOUNTS = mapOf(
     "oz"       to 16.9,
     "ml"       to 500.0,
+    "miles"    to 1.0,
+    "km"       to 1.0,
     "cups"     to 1.0,
     "glasses"  to 1.0,
     "steps"    to 1000.0,
@@ -29,7 +39,9 @@ private val DEFAULT_AMOUNTS = mapOf(
     "mins"     to 30.0,
     "hours"    to 1.0,
     "calories" to 100.0,
-    "cal"      to 100.0
+    "cal"      to 100.0,
+    "pages"    to 10.0,
+    "reps"     to 10.0
 )
 
 class HabitAdapter(
@@ -56,7 +68,6 @@ class HabitAdapter(
 
         fun defaultLabel() = "+ ${fmtAmt(defaultAmt)} ${habit.unit}"
 
-        // Basic fields
         b.tvHabitName.text = habit.name
         b.tvHabitFrequency.text = habit.frequency.replaceFirstChar { it.uppercase() }
         b.tvHabitTarget.text = "Goal: ${habit.targetValue} ${habit.unit}"
@@ -66,11 +77,8 @@ class HabitAdapter(
         if (isMeasurable) {
             b.layoutQuickLog.visibility = View.VISIBLE
             b.tvTodayTotal.visibility = View.VISIBLE
-
-            // Always start with the default label
             b.btnQuickLog.text = defaultLabel()
 
-            // Load today's running total
             scope.launch {
                 val total = viewModel.getTodayTotal(habit.id)
                 b.tvTodayTotal.text = "Today: ${fmtAmt(total)} ${habit.unit}"
@@ -108,10 +116,8 @@ class HabitAdapter(
                         if (entered != null && entered > 0) {
                             scope.launch {
                                 val newTotal = viewModel.quickLog(habit, entered)
-                                // Briefly show what was just logged as confirmation
                                 b.tvTodayTotal.text = "Today: ${fmtAmt(newTotal)} ${habit.unit}"
                                 b.btnQuickLog.text = "\u2713 ${fmtAmt(entered)} ${habit.unit} logged"
-                                // After 2 seconds, reset button back to default label
                                 delay(2000)
                                 b.btnQuickLog.text = defaultLabel()
                             }
