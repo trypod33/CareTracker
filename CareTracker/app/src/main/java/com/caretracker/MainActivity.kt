@@ -33,27 +33,28 @@ class MainActivity : AppCompatActivity() {
         toggle.syncState()
 
         if (savedInstanceState == null) {
-            replaceFragment(DashboardFragment())
+            replaceFragment(DashboardFragment(), "Dashboard")
             binding.navView.setCheckedItem(R.id.nav_dashboard)
         }
 
         binding.navView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_dashboard    -> replaceFragment(DashboardFragment())
-                R.id.nav_habits       -> replaceFragment(HabitsFragment())
-                R.id.nav_health       -> replaceFragment(HealthFragment())
-                R.id.nav_medications  -> replaceFragment(MedicationsFragment())
-                R.id.nav_calendar     -> replaceFragment(CalendarFragment())
-                R.id.nav_care_circle  -> replaceFragment(CareCircleFragment())
-                R.id.nav_reports      -> replaceFragment(ReportsFragment())
-                else                  -> replaceFragment(DashboardFragment())
+                R.id.nav_dashboard   -> replaceFragment(DashboardFragment(),   "Dashboard")
+                R.id.nav_habits      -> replaceFragment(HabitsFragment(),      "Habits")
+                R.id.nav_health      -> replaceFragment(HealthFragment(),      "Health")
+                R.id.nav_medications -> replaceFragment(MedicationsFragment(), "Medications")
+                R.id.nav_calendar    -> replaceFragment(CalendarFragment(),    "Calendar")
+                R.id.nav_care_circle -> replaceFragment(CareCircleFragment(),  "Care Circle")
+                R.id.nav_reports     -> replaceFragment(ReportsFragment(),     "Reports")
+                else                 -> replaceFragment(DashboardFragment(),   "Dashboard")
             }
             binding.drawerLayout.closeDrawers()
             true
         }
     }
 
-    private fun replaceFragment(fragment: Fragment) {
+    private fun replaceFragment(fragment: Fragment, pageTitle: String) {
+        binding.tvPageTitle.text = pageTitle
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, fragment)
             .commit()

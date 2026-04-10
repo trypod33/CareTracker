@@ -12,6 +12,7 @@
         android:orientation="vertical"
         android:background="@color/ct_background">
 
+        <!-- Primary toolbar: CareTracker brand -->
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -20,10 +21,27 @@
             app:title="CareTracker"
             app:titleTextColor="@color/ct_text" />
 
+        <!-- Secondary subtitle bar: current page name -->
+        <TextView
+            android:id="@+id/tvPageTitle"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:background="@color/ct_surface"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:gravity="center_vertical"
+            android:text="Dashboard"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.08"
+            android:textAllCaps="true"
+            android:textColor="@color/ct_primary_light" />
+
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragmentContainer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
     </LinearLayout>
 
