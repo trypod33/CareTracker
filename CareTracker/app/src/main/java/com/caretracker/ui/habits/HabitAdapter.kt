@@ -6,13 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.caretracker.data.models.Habit
 import com.caretracker.databinding.ItemHabitBinding
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /** Units that get the quick-log button and running total display. */
@@ -51,20 +51,26 @@ class HabitAdapter(
         val isMeasurable = unit in MEASURABLE_UNITS
         val defaultAmt = DEFAULT_AMOUNTS[unit] ?: 1.0
 
+        fun fmtAmt(v: Double) =
+            if (v == kotlin.math.floor(v)) v.toInt().toString() else "%.1f".format(v)
+
+        fun defaultLabel() = "+ ${fmtAmt(defaultAmt)} ${habit.unit}"
+
         // Basic fields
         b.tvHabitName.text = habit.name
         b.tvHabitFrequency.text = habit.frequency.replaceFirstChar { it.uppercase() }
         b.tvHabitTarget.text = "Goal: ${habit.targetValue} ${habit.unit}"
         b.tvHabitDescription.text = habit.description
-        b.root.setOnClickListener { onClick(habit) }  // fixed: b.root not b.itemView
+        b.root.setOnClickListener { onClick(habit) }
 
         if (isMeasurable) {
             b.layoutQuickLog.visibility = View.VISIBLE
             b.tvTodayTotal.visibility = View.VISIBLE
 
-            fun fmtAmt(v: Double) = if (v == kotlin.math.floor(v)) v.toInt().toString() else "%.1f".format(v)
-            b.btnQuickLog.text = "+ ${fmtAmt(defaultAmt)} ${habit.unit}"
+            // Always start with the default label
+            b.btnQuickLog.text = defaultLabel()
 
+            // Load today's running total
             scope.launch {
                 val total = viewModel.getTodayTotal(habit.id)
                 b.tvTodayTotal.text = "Today: ${fmtAmt(total)} ${habit.unit}"
@@ -74,8 +80,7 @@ class HabitAdapter(
             b.btnQuickLog.setOnClickListener {
                 scope.launch {
                     val newTotal = viewModel.quickLog(habit, defaultAmt)
-                    fun fmtA(v: Double) = if (v == kotlin.math.floor(v)) v.toInt().toString() else "%.1f".format(v)
-                    b.tvTodayTotal.text = "Today: ${fmtA(newTotal)} ${habit.unit}"
+                    b.tvTodayTotal.text = "Today: ${fmtAmt(newTotal)} ${habit.unit}"
                 }
             }
 
@@ -103,9 +108,12 @@ class HabitAdapter(
                         if (entered != null && entered > 0) {
                             scope.launch {
                                 val newTotal = viewModel.quickLog(habit, entered)
-                                fun fmtA(v: Double) = if (v == kotlin.math.floor(v)) v.toInt().toString() else "%.1f".format(v)
-                                b.tvTodayTotal.text = "Today: ${fmtA(newTotal)} ${habit.unit}"
-                                b.btnQuickLog.text = "+ ${fmtA(entered)} ${habit.unit}"
+                                // Briefly show what was just logged as confirmation
+                                b.tvTodayTotal.text = "Today: ${fmtAmt(newTotal)} ${habit.unit}"
+                                b.btnQuickLog.text = "\u2713 ${fmtAmt(entered)} ${habit.unit} logged"
+                                // After 2 seconds, reset button back to default label
+                                delay(2000)
+                                b.btnQuickLog.text = defaultLabel()
                             }
                         }
                     }
