@@ -10,7 +10,9 @@ import com.caretracker.ui.dashboard.DashboardFragment
 import com.caretracker.ui.habits.HabitsFragment
 import com.caretracker.ui.health.HealthFragment
 import com.caretracker.ui.medications.MedicationsFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
