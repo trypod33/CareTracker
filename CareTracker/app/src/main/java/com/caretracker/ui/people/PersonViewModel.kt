@@ -16,7 +16,8 @@ class PersonViewModel @Inject constructor(
     private val repository: PersonRepository
 ) : ViewModel() {
 
-    val allPeople: StateFlow<List<Person>> = repository.allPeople
+    // repository.getAllPeople() matches PersonRepository fun getAllPeople()
+    val allPeople: StateFlow<List<Person>> = repository.getAllPeople()
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
@@ -26,16 +27,22 @@ class PersonViewModel @Inject constructor(
     fun savePerson(person: Person) {
         viewModelScope.launch {
             if (person.id == 0L) {
-                repository.insertPerson(person)
+                repository.insert(person)
             } else {
-                repository.updatePerson(person)
+                repository.update(person)
             }
         }
     }
 
     fun deletePerson(person: Person) {
         viewModelScope.launch {
-            repository.deletePerson(person)
+            repository.delete(person)
+        }
+    }
+
+    fun switchActivePerson(personId: Long) {
+        viewModelScope.launch {
+            repository.switchActivePerson(personId)
         }
     }
 }
