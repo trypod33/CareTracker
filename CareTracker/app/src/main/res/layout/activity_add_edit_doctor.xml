@@ -78,6 +78,7 @@
             android:text="Choose Icon"
             android:textAppearance="@style/TextAppearance.Material3.LabelLarge" />
 
+        <!-- Preview -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -102,6 +103,7 @@
                 android:textColor="?attr/colorOnSurfaceVariant" />
         </LinearLayout>
 
+        <!-- Medical row -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -109,13 +111,20 @@
             android:text="Medical"
             android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
             android:textColor="?attr/colorOnSurfaceVariant" />
-        <LinearLayout
-            android:id="@+id/rowMedical"
+        <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="4dp" />
+            android:layout_marginTop="4dp"
+            android:scrollbars="none">
+            <LinearLayout
+                android:id="@+id/rowMedical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="2dp" />
+        </HorizontalScrollView>
 
+        <!-- People row -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -123,12 +132,18 @@
             android:text="People"
             android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
             android:textColor="?attr/colorOnSurfaceVariant" />
-        <LinearLayout
-            android:id="@+id/rowPeople"
+        <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="4dp" />
+            android:layout_marginTop="4dp"
+            android:scrollbars="none">
+            <LinearLayout
+                android:id="@+id/rowPeople"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="2dp" />
+        </HorizontalScrollView>
 
         <Button
             android:id="@+id/btnSaveDoctor"
@@ -136,5 +151,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="Save Doctor" />
+
     </LinearLayout>
 </ScrollView>
