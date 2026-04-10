@@ -12,14 +12,59 @@
         android:orientation="vertical"
         android:background="@color/ct_background">
 
-        <!-- Primary toolbar: CareTracker brand -->
+        <!-- Primary toolbar: CareTracker brand + active profile chip -->
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:title="CareTracker"
-            app:titleTextColor="@color/ct_text" />
+            app:titleTextColor="@color/ct_text">
+
+            <!-- Profile switcher chip, pinned to the right -->
+            <LinearLayout
+                android:id="@+id/profileChip"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/bg_chip"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:id="@+id/tvProfileAvatar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="\ud83d\udc64"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tvProfileName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:text="Select Profile"
+                    android:textColor="@color/ct_text"
+                    android:textSize="12sp"
+                    android:maxWidth="120dp"
+                    android:ellipsize="end"
+                    android:singleLine="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:text="\u25be"
+                    android:textColor="@color/ct_text"
+                    android:textSize="10sp" />
+
+            </LinearLayout>
+        </com.google.android.material.appbar.MaterialToolbar>
 
         <!-- Secondary subtitle bar: current page name -->
         <TextView

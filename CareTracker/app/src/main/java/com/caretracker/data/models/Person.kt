@@ -9,8 +9,11 @@ data class Person(
     val name: String,
     val birthDate: String? = null,
     val relationship: String? = null,
-    val role: String? = null, // e.g., "Loved One", "Caregiver"
+    // "Self" | "Caregiver" | "Loved One"
+    val role: String? = null,
     val color: String = "#38bdf8",
-    val avatar: String = "👤",
-    val notes: String? = null
+    val avatar: String = "\ud83d\udc64",
+    val notes: String? = null,
+    // true = this is the currently active profile
+    val isActiveProfile: Boolean = false
 )

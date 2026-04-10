@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="52dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- Avatar emoji -->
+    <TextView
+        android:id="@+id/tvAvatar"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <!-- Name + role -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="12dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/ct_text" />
+
+        <TextView
+            android:id="@+id/tvRole"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="11sp"
+            android:textColor="@color/ct_primary_light"
+            android:textAllCaps="true"
+            android:letterSpacing="0.05" />
+
+    </LinearLayout>
+
+    <!-- Active checkmark -->
+    <TextView
+        android:id="@+id/tvActiveCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="\u2713"
+        android:textSize="18sp"
+        android:textColor="@color/ct_primary_light"
+        android:visibility="gone" />
+
+</LinearLayout>
