@@ -56,24 +56,21 @@ class HabitAdapter(
         b.tvHabitFrequency.text = habit.frequency.replaceFirstChar { it.uppercase() }
         b.tvHabitTarget.text = "Goal: ${habit.targetValue} ${habit.unit}"
         b.tvHabitDescription.text = habit.description
-        b.itemView.setOnClickListener { onClick(habit) }
+        b.root.setOnClickListener { onClick(habit) }  // fixed: b.root not b.itemView
 
         if (isMeasurable) {
-            // Show quick-log section
             b.layoutQuickLog.visibility = View.VISIBLE
             b.tvTodayTotal.visibility = View.VISIBLE
 
-            // Format button label nicely: 16.9 → "+ 16.9 oz", 1.0 → "+ 1 oz"
             fun fmtAmt(v: Double) = if (v == kotlin.math.floor(v)) v.toInt().toString() else "%.1f".format(v)
             b.btnQuickLog.text = "+ ${fmtAmt(defaultAmt)} ${habit.unit}"
 
-            // Load today's total
             scope.launch {
                 val total = viewModel.getTodayTotal(habit.id)
                 b.tvTodayTotal.text = "Today: ${fmtAmt(total)} ${habit.unit}"
             }
 
-            // Single tap: log the default amount
+            // Single tap: log default amount
             b.btnQuickLog.setOnClickListener {
                 scope.launch {
                     val newTotal = viewModel.quickLog(habit, defaultAmt)
@@ -82,7 +79,7 @@ class HabitAdapter(
                 }
             }
 
-            // Long press: ask for a custom amount
+            // Long press: custom amount dialog
             b.btnQuickLog.setOnLongClickListener {
                 val ctx = it.context
                 val input = EditText(ctx).apply {
