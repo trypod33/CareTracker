@@ -26,12 +26,13 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.people.AddEditPersonActivity" android:exported="false"/>
-        <activity android:name=".ui.medications.AddEditMedActivity" android:exported="false"/>
-        <activity android:name=".ui.calendar.AddEditAppointmentActivity" android:exported="false"/>
-        <activity android:name=".ui.contacts.AddEditContactActivity" android:exported="false"/>
-        <activity android:name=".ui.health.HealthLogActivity" android:exported="false"/>
-        <activity android:name=".ui.habits.AddEditHabitActivity" android:exported="false"/>
+        <activity android:name=".ui.people.AddEditPersonActivity"         android:exported="false" />
+        <activity android:name=".ui.medications.AddEditMedActivity"        android:exported="false" />
+        <activity android:name=".ui.calendar.AddEditAppointmentActivity"   android:exported="false" />
+        <activity android:name=".ui.contacts.AddEditContactActivity"       android:exported="false" />
+        <activity android:name=".ui.health.HealthLogActivity"              android:exported="false" />
+        <activity android:name=".ui.habits.AddEditHabitActivity"           android:exported="false" />
+        <activity android:name=".ui.carecircle.AddEditDoctorActivity"      android:exported="false" />
 
         <receiver
             android:name=".utils.AlarmReceiver"
