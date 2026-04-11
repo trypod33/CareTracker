@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Add / Edit Medication form — matches design mockup:
-    • Sections: Basic Info, Schedule, Prescriber & Pharmacy, Inventory
-    • New field: Person Name (who is taking the medication)
-    • Card color picker row
-    • Add Medication / Cancel buttons
+    Add / Edit Medication form
+    Fix: replaced ?attr/colorBackground (not in Material3 theme) with @color/ct_background
 -->
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -12,7 +9,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="?attr/colorBackground">
+    android:background="@color/ct_background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,11 +17,7 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- ════════════════════════════════════════════════════════════════
-             Section header helper style is applied inline for portability.
-             ════════════════════════════════════════════════════════════════ -->
-
-        <!-- ── ADD MEDICATION title ──────────────────────────────────────── -->
+        <!-- ADD MEDICATION title -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -32,12 +25,12 @@
             android:textSize="11sp"
             android:letterSpacing="0.12"
             android:textStyle="bold"
-            android:textColor="?attr/colorOnBackground"
+            android:textColor="?attr/colorOnSurface"
             android:layout_marginBottom="12dp" />
 
-        <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
              SECTION: BASIC INFO
-             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -64,7 +57,7 @@
                 android:imeOptions="actionNext" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Medication Name + Generic Name (side-by-side) -->
+        <!-- Medication Name + Generic Name -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -101,7 +94,7 @@
 
         </LinearLayout>
 
-        <!-- Dosage + Unit + Form (3-column row) -->
+        <!-- Dosage + Unit + Form -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -152,9 +145,9 @@
 
         </LinearLayout>
 
-        <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
              SECTION: SCHEDULE
-             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -223,7 +216,7 @@
                 android:imeOptions="actionNext" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Take with food checkbox -->
+        <!-- Take with food -->
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/cbTakeWithFood"
             android:layout_width="wrap_content"
@@ -248,9 +241,9 @@
                 android:gravity="top" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
              SECTION: PRESCRIBER & PHARMACY
-             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -266,7 +259,7 @@
             android:textColor="?attr/colorPrimary"
             android:layout_marginBottom="8dp" />
 
-        <!-- Prescriber + Pharmacy + Rx Number (3-column) -->
+        <!-- Prescriber + Pharmacy + Rx Number -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -317,9 +310,9 @@
 
         </LinearLayout>
 
-        <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
              SECTION: INVENTORY
-             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -411,9 +404,9 @@
 
         </LinearLayout>
 
-        <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
              SECTION: CARD COLOR
-             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -429,7 +422,6 @@
             android:textColor="?attr/colorPrimary"
             android:layout_marginBottom="10dp" />
 
-        <!-- Color swatch row — managed entirely in code via MedColorPickerView or a RadioGroup -->
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -446,7 +438,7 @@
 
         </HorizontalScrollView>
 
-        <!-- ── Action buttons ──────────────────────────────────────────── -->
+        <!-- Action buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
