@@ -11,8 +11,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.caretracker.R
 import com.caretracker.data.models.Doctor
+import com.caretracker.data.models.Person
 import com.caretracker.databinding.ActivityAddEditDoctorBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -50,21 +52,31 @@ class AddEditDoctorActivity : AppCompatActivity() {
 
         buildEmojiRows()
 
-        // Bug fix: load existing links FIRST (one-shot), THEN build checkboxes
-        // with correct pre-checked state. Previously: .collect{} on allDoctors
-        // blocked, and linked IDs were loaded before checkboxes were created.
-        lifecycleScope.launch {
-            if (doctorId != 0L) {
-                // 1. Load linked person IDs (one-shot suspend, not a Flow)
-                val linkedIds = viewModel.getLinkedPersonIds(doctorId)
-                previousLinkedPersonIds = linkedIds.toSet()
+        // Step 1: one-shot load of existing linked person IDs (edit mode only).
+        // Must run before collectLatest below so previousLinkedPersonIds is set
+        // before rebuildCheckboxes() is called for the first time.
+        if (doctorId != 0L) {
+            lifecycleScope.launch {
+                previousLinkedPersonIds = viewModel.getLinkedPersonIds(doctorId).toSet()
+                // Force a rebuild now that IDs are known
+                rebuildCheckboxes(viewModel.allPeople.value)
             }
-            // 2. Now build checkboxes with correct pre-checked state
-            buildPatientCheckboxes()
+        }
 
-            // 3. Load doctor fields (one-shot via .first())
-            if (doctorId != 0L) {
-                val doctor = viewModel.allDoctors.first().find { it.id == doctorId }
+        // Step 2: observe allPeople — rebuild checkboxes whenever list changes.
+        // collectLatest keeps it live so members added later also appear.
+        lifecycleScope.launch {
+            viewModel.allPeople.collectLatest { people ->
+                rebuildCheckboxes(people)
+            }
+        }
+
+        // Step 3: load doctor fields for edit (waits until StateFlow has data).
+        if (doctorId != 0L) {
+            lifecycleScope.launch {
+                val doctor = viewModel.allDoctors
+                    .first { it.isNotEmpty() }
+                    .find { it.id == doctorId }
                 doctor?.let {
                     binding.etDoctorName.setText(it.name)
                     binding.etSpecialty.setText(it.specialty)
@@ -85,26 +97,24 @@ class AddEditDoctorActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean { finish(); return true }
 
-    // ── Patient checkboxes ───────────────────────────────────────────
+    // ── Patient checkboxes ──────────────────────────────────────────
 
-    private suspend fun buildPatientCheckboxes() {
-        val people = viewModel.allPeople.first()
+    private fun rebuildCheckboxes(people: List<Person>) {
         binding.layoutPatients.removeAllViews()
         personCheckBoxes.clear()
 
         if (people.isEmpty()) {
-            val tv = TextView(this).apply {
-                text = "No members added yet. Add a member in Care Circle first."
-                setPadding(8, 8, 8, 8)
-            }
-            binding.layoutPatients.addView(tv)
+            binding.layoutPatients.addView(TextView(this).apply {
+                text = "No members added yet. Add members in Care Circle first."
+                setPadding(4, 8, 4, 8)
+            })
             return
         }
 
         people.forEach { person ->
             val cb = CheckBox(this).apply {
                 text = "${person.avatar}  ${person.name}" +
-                    if (!person.role.isNullOrBlank()) "  •  ${person.role}" else ""
+                    if (!person.role.isNullOrBlank()) "  \u2022  ${person.role}" else ""
                 tag = person.id
                 isChecked = previousLinkedPersonIds.contains(person.id)
             }
@@ -113,7 +123,7 @@ class AddEditDoctorActivity : AppCompatActivity() {
         }
     }
 
-    // ── Emoji avatar rows ───────────────────────────────────────────
+    // ── Emoji avatar rows ──────────────────────────────────────────
 
     private fun buildEmojiRows() {
         addEmojisToRow(binding.rowMedical, medicalEmojis)
@@ -161,7 +171,7 @@ class AddEditDoctorActivity : AppCompatActivity() {
         }
     }
 
-    // ── Save ──────────────────────────────────────────────────────
+    // ── Save ────────────────────────────────────────────────────────────
 
     private fun saveDoctor() {
         val name = binding.etDoctorName.text.toString().trim()
