@@ -1,39 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.CareTracker" parent="Theme.Material3.Dark.NoActionBar">
 
-        <!-- Primary Brand (Violet) -->
+    <style name="Theme.CareTracker" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Brand colors -->
         <item name="colorPrimary">@color/ct_primary</item>
-        <item name="colorOnPrimary">@color/ct_surface</item>
-        <item name="colorPrimaryContainer">@color/ct_primary_dark</item>
-        <item name="colorOnPrimaryContainer">@color/ct_primary_light</item>
-
-        <!-- Secondary / Accent (Cyan) -->
+        <item name="colorPrimaryVariant">@color/ct_primary_dark</item>
+        <item name="colorOnPrimary">@color/ct_text</item>
         <item name="colorSecondary">@color/ct_accent</item>
         <item name="colorOnSecondary">@color/ct_background</item>
-        <item name="colorSecondaryContainer">@color/ct_surface_variant</item>
-        <item name="colorOnSecondaryContainer">@color/ct_text</item>
 
-        <!-- Backgrounds -->
-        <item name="android:windowBackground">@color/ct_background</item>
+        <!-- Surfaces -->
         <item name="colorSurface">@color/ct_surface</item>
         <item name="colorOnSurface">@color/ct_text</item>
-
-        <!-- Cards and Input Fields -->
-        <item name="colorSurfaceVariant">@color/ct_surface_variant</item>
+        <!-- Fix: use a visible color for variant text/hints on dark surfaces -->
         <item name="colorOnSurfaceVariant">@color/ct_text_secondary</item>
 
-        <!-- Outlines and Dividers -->
-        <item name="colorOutline">@color/ct_primary_light</item>
-        <item name="colorOutlineVariant">@color/ct_divider</item>
+        <!-- Background -->
+        <item name="android:colorBackground">@color/ct_background</item>
+        <item name="colorOnBackground">@color/ct_text</item>
 
         <!-- Error -->
         <item name="colorError">@color/ct_error</item>
-        <item name="colorOnError">@color/ct_surface</item>
+        <item name="colorOnError">@color/ct_text</item>
 
-        <!-- Status and Navigation Bars -->
-        <item name="android:statusBarColor">@color/ct_background</item>
-        <item name="android:navigationBarColor">@color/ct_surface</item>
+        <!-- TextInputLayout hint label color -->
+        <item name="colorControlNormal">@color/ct_text_secondary</item>
+        <item name="colorControlActivated">@color/ct_primary_light</item>
+        <item name="colorControlHighlight">@color/ct_primary_dark</item>
+        <item name="android:textColorHint">@color/ct_text_hint</item>
 
+        <!-- Action bar -->
+        <item name="android:statusBarColor">@color/ct_surface</item>
+        <item name="actionBarStyle">@style/CareTracker.ActionBar</item>
     </style>
+
+    <style name="CareTracker.ActionBar" parent="Widget.MaterialComponents.ActionBar.Solid">
+        <item name="background">@color/ct_surface</item>
+        <item name="titleTextStyle">@style/CareTracker.ActionBar.Title</item>
+    </style>
+
+    <style name="CareTracker.ActionBar.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@color/ct_text</item>
+    </style>
+
+    <!-- Outlined TextInputLayout that inherits fixed hint colors -->
+    <style name="CareTracker.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/ct_text_secondary</item>
+        <item name="hintTextColor">@color/ct_hint_label</item>
+        <item name="android:textColorHint">@color/ct_text_hint</item>
+    </style>
+
 </resources>

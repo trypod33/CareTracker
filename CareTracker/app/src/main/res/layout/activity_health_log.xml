@@ -19,269 +19,424 @@
             android:text="UPDATE HEALTH DATA"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="?attr/colorOnSurface"
+            android:textColor="@color/ct_text"
             android:letterSpacing="0.05"
             android:layout_marginBottom="12dp" />
 
         <!-- DATE -->
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="DATE" android:textSize="11sp" android:textStyle="bold"
-            android:textColor="?attr/colorOnSurfaceVariant" android:letterSpacing="0.08"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:textColor="@color/ct_text_secondary"
+            android:letterSpacing="0.08"
             android:layout_marginBottom="4dp" />
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            android:hint="Tap to pick a date"
+            style="@style/CareTracker.TextInputLayout">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusable="false"
                 android:clickable="true"
+                android:textColor="@color/ct_text"
                 android:inputType="none" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- ─────────────── BODY MEASUREMENTS ─────────────── -->
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="💪 BODY MEASUREMENTS"
-            android:textSize="12sp" android:textStyle="bold" android:textColor="?attr/colorPrimary"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="💪 Body Measurements"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/ct_primary_light"
             android:layout_marginBottom="8dp" />
 
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="horizontal" android:weightSum="3"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3"
             android:layout_marginBottom="16dp">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1.5" android:hint="WEIGHT"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:hint="Weight"
                 android:layout_marginEnd="6dp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                style="@style/CareTracker.TextInputLayout">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etWeight"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/ct_text"
                     android:inputType="numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <Spinner
                 android:id="@+id/spinnerWeightUnit"
-                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="0.7"
                 android:layout_marginEnd="6dp"
                 android:entries="@array/weight_units" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1.3" android:hint="HEART RATE (BPM)"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.3"
+                android:hint="Heart Rate (bpm)"
+                style="@style/CareTracker.TextInputLayout">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etHeartRate"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/ct_text"
                     android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
 
         <!-- ─────────────── VITALS ─────────────── -->
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="❤️ VITALS"
-            android:textSize="12sp" android:textStyle="bold" android:textColor="?attr/colorError"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="❤️ Vitals"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/ct_error"
             android:layout_marginBottom="8dp" />
 
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="horizontal" android:weightSum="3"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3"
             android:layout_marginBottom="8dp">
+
             <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:hint="BP SYSTOLIC"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="BP Systolic"
                 android:layout_marginEnd="6dp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                style="@style/CareTracker.TextInputLayout">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etBpSystolic"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:inputType="number" /></com.google.android.material.textfield.TextInputLayout>
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/ct_text"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:hint="BP DIASTOLIC"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="BP Diastolic"
                 android:layout_marginEnd="6dp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                style="@style/CareTracker.TextInputLayout">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etBpDiastolic"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:inputType="number" /></com.google.android.material.textfield.TextInputLayout>
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/ct_text"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:hint="BLOOD SUGAR"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Blood Sugar"
+                style="@style/CareTracker.TextInputLayout">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etBloodSugar"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:inputType="numberDecimal" /></com.google.android.material.textfield.TextInputLayout>
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/ct_text"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
+
         </LinearLayout>
 
         <!-- BP time / BS time row -->
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="horizontal" android:weightSum="2"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
             android:layout_marginBottom="16dp">
+
             <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:hint="BP TIME (OPTIONAL)"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="BP Time (optional)"
                 android:layout_marginEnd="6dp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                style="@style/CareTracker.TextInputLayout">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etBpTime"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:focusable="false" android:clickable="true" android:inputType="none" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/ct_text"
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:inputType="none" />
             </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:hint="BS TIME (OPTIONAL)"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="BS Time (optional)"
+                style="@style/CareTracker.TextInputLayout">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etBsTime"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:focusable="false" android:clickable="true" android:inputType="none" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/ct_text"
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:inputType="none" />
             </com.google.android.material.textfield.TextInputLayout>
+
         </LinearLayout>
 
         <!-- ─────────────── SLEEP ─────────────── -->
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="🌙 SLEEP"
-            android:textSize="12sp" android:textStyle="bold" android:textColor="?attr/colorTertiary"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🌙 Sleep"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="?attr/colorTertiary"
             android:layout_marginBottom="8dp" />
 
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="horizontal" android:weightSum="2"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
             android:layout_marginBottom="4dp">
+
             <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:hint="SLEEP HOURS"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Sleep Hours"
                 android:layout_marginEnd="6dp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                style="@style/CareTracker.TextInputLayout">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etSleepHours"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:inputType="numberDecimal" /></com.google.android.material.textfield.TextInputLayout>
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/ct_text"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:orientation="vertical">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="SLEEP QUALITY (1-10)" android:textSize="11sp"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sleep Quality (1–10)"
+                    android:textSize="11sp"
+                    android:textColor="@color/ct_text_secondary" />
                 <SeekBar
                     android:id="@+id/seekSleepQuality"
-                    android:layout_width="match_parent" android:layout_height="wrap_content" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
                 <TextView
                     android:id="@+id/tvSleepQualityVal"
-                    android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="None" android:textSize="12sp"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="None"
+                    android:textSize="12sp"
+                    android:textColor="@color/ct_text_secondary" />
             </LinearLayout>
+
         </LinearLayout>
 
-        <!-- padding -->
         <Space android:layout_width="match_parent" android:layout_height="12dp" />
 
         <!-- ─────────────── WELLNESS ─────────────── -->
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="🌟 WELLNESS"
-            android:textSize="12sp" android:textStyle="bold" android:textColor="?attr/colorSecondary"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🌟 Wellness"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="?attr/colorSecondary"
             android:layout_marginBottom="8dp" />
 
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="horizontal" android:weightSum="2"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
             android:layout_marginBottom="16dp">
 
-            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:orientation="vertical"
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
                 android:layout_marginEnd="12dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="MOOD (1-10)" android:textSize="11sp"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
-                <SeekBar android:id="@+id/seekMood"
-                    android:layout_width="match_parent" android:layout_height="wrap_content" />
-                <TextView android:id="@+id/tvMoodVal"
-                    android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="None" android:textSize="12sp"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mood (1–10)"
+                    android:textSize="11sp"
+                    android:textColor="@color/ct_text_secondary" />
+                <SeekBar
+                    android:id="@+id/seekMood"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/tvMoodVal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="None"
+                    android:textSize="12sp"
+                    android:textColor="@color/ct_text_secondary" />
             </LinearLayout>
 
-            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:orientation="vertical">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="ENERGY LEVEL (1-10)" android:textSize="11sp"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
-                <SeekBar android:id="@+id/seekEnergy"
-                    android:layout_width="match_parent" android:layout_height="wrap_content" />
-                <TextView android:id="@+id/tvEnergyVal"
-                    android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="None" android:textSize="12sp"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Energy Level (1–10)"
+                    android:textSize="11sp"
+                    android:textColor="@color/ct_text_secondary" />
+                <SeekBar
+                    android:id="@+id/seekEnergy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/tvEnergyVal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="None"
+                    android:textSize="12sp"
+                    android:textColor="@color/ct_text_secondary" />
             </LinearLayout>
 
         </LinearLayout>
 
         <!-- ─────────────── ACTIVITY & NUTRITION ─────────────── -->
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="🏃 ACTIVITY &amp; NUTRITION"
-            android:textSize="12sp" android:textStyle="bold" android:textColor="?attr/colorOnSurface"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🏃 Activity &amp; Nutrition"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/ct_text"
             android:layout_marginBottom="8dp" />
 
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="horizontal" android:weightSum="2"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
             android:layout_marginBottom="8dp">
+
             <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:hint="STEPS"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Steps"
                 android:layout_marginEnd="6dp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                style="@style/CareTracker.TextInputLayout">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etSteps"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:inputType="number" android:hint="e.g. 8000" /></com.google.android.material.textfield.TextInputLayout>
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/ct_text"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:hint="EXERCISE (MINUTES)"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Exercise (minutes)"
+                style="@style/CareTracker.TextInputLayout">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etExercise"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:inputType="number" /></com.google.android.material.textfield.TextInputLayout>
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/ct_text"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
         </LinearLayout>
 
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="horizontal" android:weightSum="2"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
             android:layout_marginBottom="16dp">
+
             <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:hint="WATER (OZ)"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Water (oz)"
                 android:layout_marginEnd="6dp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                style="@style/CareTracker.TextInputLayout">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etWater"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:inputType="numberDecimal" /></com.google.android.material.textfield.TextInputLayout>
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/ct_text"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:hint="CALORIES"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Calories"
+                style="@style/CareTracker.TextInputLayout">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etCalories"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:inputType="number" /></com.google.android.material.textfield.TextInputLayout>
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/ct_text"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
         </LinearLayout>
 
         <!-- ─────────────── NOTES ─────────────── -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="NOTES"
+            android:hint="Notes"
             android:layout_marginBottom="20dp"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            style="@style/CareTracker.TextInputLayout">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etNotes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/ct_text"
                 android:minLines="3"
                 android:gravity="top"
                 android:inputType="textMultiLine" />
