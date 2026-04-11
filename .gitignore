@@ -1,0 +1,46 @@
+# Android Studio / IntelliJ IDEA
+.idea/
+*.iml
+
+# Gradle build outputs and caches
+.gradle/
+build/
+**/build/
+
+# Local properties (SDK path, signing config) — NEVER commit this
+local.properties
+
+# VS Code workspace settings
+.vscode/
+
+# Eclipse / old ADT settings
+.settings/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# APKs and signed release bundles
+*.apk
+*.aab
+*.ap_
+
+# ProGuard mapping (keep if you need to de-obfuscate crash reports)
+# mapping.txt
+
+# Keystore files (should NEVER be committed)
+*.jks
+*.keystore
+
+# Kotlin / Java compiled output
+*.class
+
+# Generated R files and other generated sources
+gen/
+generated/
+
+# Profiling / testing output
+*.hprof
+
+# Gradle wrapper jar (keep gradlew script but ignore the binary jar if desired)
+# gradle/wrapper/gradle-wrapper.jar

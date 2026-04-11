@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.TextView
+import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +23,30 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * Bottom sheet that lets the user switch between person profiles.
+ *
+ * Results are communicated back to the host via the Fragment Result API
+ * (setFragmentResult) rather than public lambda properties, which avoids
+ * memory leaks when the fragment is recreated by the system.
+ *
+ * Listen in the host (e.g. MainActivity) with:
+ *
+ *   supportFragmentManager.setFragmentResultListener(
+ *       ProfileSwitcherFragment.REQUEST_KEY, this
+ *   ) { _, bundle ->
+ *       when (bundle.getString(ProfileSwitcherFragment.KEY_ACTION)) {
+ *           ProfileSwitcherFragment.ACTION_PROFILE_SELECTED -> {
+ *               val name   = bundle.getString(ProfileSwitcherFragment.KEY_NAME)
+ *               val avatar = bundle.getString(ProfileSwitcherFragment.KEY_AVATAR)
+ *               // update UI
+ *           }
+ *           ProfileSwitcherFragment.ACTION_ADD_PERSON -> {
+ *               // navigate to Care Circle
+ *           }
+ *       }
+ *   }
+ */
 @AndroidEntryPoint
 class ProfileSwitcherFragment : BottomSheetDialogFragment() {
 
@@ -29,9 +55,6 @@ class ProfileSwitcherFragment : BottomSheetDialogFragment() {
 
     private var _binding: FragmentProfileSwitcherBinding? = null
     private val binding get() = _binding!!
-
-    var onProfileSelected: ((Person) -> Unit)? = null
-    var onAddPersonClicked: (() -> Unit)? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,14 +76,25 @@ class ProfileSwitcherFragment : BottomSheetDialogFragment() {
                 lifecycleScope.launch {
                     personRepository.switchActivePerson(person.id)
                     sessionManager.activePersonId = person.id
-                    onProfileSelected?.invoke(person)
+                    setFragmentResult(
+                        REQUEST_KEY,
+                        bundleOf(
+                            KEY_ACTION to ACTION_PROFILE_SELECTED,
+                            KEY_PERSON_ID to person.id,
+                            KEY_NAME to person.name,
+                            KEY_AVATAR to person.avatar
+                        )
+                    )
                     dismiss()
                 }
             }
         }
 
         binding.btnAddPerson.setOnClickListener {
-            onAddPersonClicked?.invoke()
+            setFragmentResult(
+                REQUEST_KEY,
+                bundleOf(KEY_ACTION to ACTION_ADD_PERSON)
+            )
             dismiss()
         }
     }
@@ -103,5 +137,14 @@ class ProfileSwitcherFragment : BottomSheetDialogFragment() {
 
     companion object {
         const val TAG = "ProfileSwitcherFragment"
+
+        // Fragment Result API keys
+        const val REQUEST_KEY          = "profile_switcher_result"
+        const val KEY_ACTION           = "action"
+        const val KEY_PERSON_ID        = "person_id"
+        const val KEY_NAME             = "name"
+        const val KEY_AVATAR           = "avatar"
+        const val ACTION_PROFILE_SELECTED = "profile_selected"
+        const val ACTION_ADD_PERSON    = "add_person"
     }
 }

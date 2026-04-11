@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import com.caretracker.databinding.ActivityMainBinding
 import com.caretracker.ui.calendar.CalendarFragment
@@ -59,26 +60,44 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Profile chip tap → show switcher bottom sheet
-        binding.profileChip.setOnClickListener {
-            val sheet = ProfileSwitcherFragment()
-            sheet.onProfileSelected = { person ->
-                binding.tvProfileAvatar.text = person.avatar
-                binding.tvProfileName.text = person.name
-                // Refresh current fragment so it reloads data for new person
-                val current = supportFragmentManager
-                    .findFragmentById(R.id.fragmentContainer)
-                current?.let {
-                    supportFragmentManager.beginTransaction()
-                        .detach(it).attach(it).commit()
+        // Listen for results from ProfileSwitcherFragment via the Fragment Result API.
+        // This replaces the old public lambda properties (onProfileSelected / onAddPersonClicked)
+        // and is safe across fragment recreation.
+        supportFragmentManager.setFragmentResultListener(
+            ProfileSwitcherFragment.REQUEST_KEY, this
+        ) { _, bundle ->
+            when (bundle.getString(ProfileSwitcherFragment.KEY_ACTION)) {
+                ProfileSwitcherFragment.ACTION_PROFILE_SELECTED -> {
+                    // The DB observer above (observeActivePerson) will update the chip
+                    // automatically. If you need an immediate UI update before the DB
+                    // emits, you can read the bundle extras here:
+                    val avatar = bundle.getString(ProfileSwitcherFragment.KEY_AVATAR) ?: "\uD83D\uDC64"
+                    val name   = bundle.getString(ProfileSwitcherFragment.KEY_NAME)   ?: ""
+                    binding.tvProfileAvatar.text = avatar
+                    binding.tvProfileName.text   = name
+
+                    // Refresh the current fragment so it reloads data for the new person.
+                    // Each fragment should ideally observe sessionManager.activePersonId
+                    // via a SharedViewModel, but this detach/attach keeps existing code
+                    // working while that migration happens.
+                    supportFragmentManager
+                        .findFragmentById(R.id.fragmentContainer)
+                        ?.let { current ->
+                            supportFragmentManager.beginTransaction()
+                                .detach(current).attach(current).commit()
+                        }
+                }
+                ProfileSwitcherFragment.ACTION_ADD_PERSON -> {
+                    replaceFragment(CareCircleFragment(), "Care Circle")
+                    binding.navView.setCheckedItem(R.id.nav_care_circle)
                 }
             }
-            sheet.onAddPersonClicked = {
-                // Navigate to Care Circle where persons are managed
-                replaceFragment(CareCircleFragment(), "Care Circle")
-                binding.navView.setCheckedItem(R.id.nav_care_circle)
-            }
-            sheet.show(supportFragmentManager, ProfileSwitcherFragment.TAG)
+        }
+
+        // Profile chip tap → show switcher bottom sheet
+        binding.profileChip.setOnClickListener {
+            ProfileSwitcherFragment()
+                .show(supportFragmentManager, ProfileSwitcherFragment.TAG)
         }
 
         if (savedInstanceState == null) {
