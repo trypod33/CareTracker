@@ -1,27 +1,26 @@
 package com.caretracker.data.repository
 
-import com.caretracker.data.database.HealthLogDao
-import com.caretracker.data.models.HealthLog
+import com.caretracker.data.dao.DailyHealthEntryDao
+import com.caretracker.data.models.DailyHealthEntry
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class HealthRepository @Inject constructor(
-    private val healthLogDao: HealthLogDao
+    private val dao: DailyHealthEntryDao
 ) {
-    fun getAllLogsForPerson(personId: Long): Flow<List<HealthLog>> =
-        healthLogDao.getAllLogsForPerson(personId)
+    fun getAllForPerson(personId: Long): Flow<List<DailyHealthEntry>> =
+        dao.getAllForPerson(personId)
 
-    fun getLogsForPersonByType(personId: Long, metricId: Long): Flow<List<HealthLog>> =
-        healthLogDao.getLogsForPersonByType(personId, metricId)
+    suspend fun getEntryForDate(personId: Long, date: String): DailyHealthEntry? =
+        dao.getEntryForDate(personId, date)
 
-    suspend fun insertLog(log: HealthLog): Long =
-        healthLogDao.insert(log)
+    suspend fun getById(id: Long): DailyHealthEntry? = dao.getById(id)
 
-    suspend fun updateLog(log: HealthLog) =
-        healthLogDao.update(log)
+    suspend fun save(entry: DailyHealthEntry) {
+        if (entry.id == 0L) dao.insert(entry) else dao.update(entry)
+    }
 
-    suspend fun deleteLog(log: HealthLog) =
-        healthLogDao.delete(log)
+    suspend fun delete(entry: DailyHealthEntry) = dao.delete(entry)
 }

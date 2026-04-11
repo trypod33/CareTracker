@@ -2,51 +2,43 @@ package com.caretracker.ui.health
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.caretracker.data.models.HealthLog
+import com.caretracker.data.models.DailyHealthEntry
 import com.caretracker.data.repository.HealthRepository
+import com.caretracker.utils.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HealthViewModel @Inject constructor(
-    private val repository: HealthRepository
+    private val repository: HealthRepository,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
-    private val _personId = MutableStateFlow(1L)
-    val personId: StateFlow<Long> = _personId.asStateFlow()
-
+    // Mirror SessionManager so the list auto-refreshes on person switch
     @OptIn(ExperimentalCoroutinesApi::class)
-    val healthLogs: StateFlow<List<HealthLog>> = _personId
-        .flatMapLatest { repository.getAllLogsForPerson(it) }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyList()
-        )
-
-    fun setPersonId(id: Long) { _personId.value = id }
-
-    fun saveLog(log: HealthLog) {
-        viewModelScope.launch {
-            if (log.id == 0L) {
-                repository.insertLog(log)
-            } else {
-                repository.updateLog(log)
+    val entries: StateFlow<List<DailyHealthEntry>> =
+        sessionManager.activePersonIdFlow
+            .flatMapLatest { pid ->
+                if (pid == -1L) flowOf(emptyList())
+                else repository.getAllForPerson(pid)
             }
-        }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    fun save(entry: DailyHealthEntry) {
+        viewModelScope.launch { repository.save(entry) }
     }
 
-    fun deleteLog(log: HealthLog) {
-        viewModelScope.launch {
-            repository.deleteLog(log)
-        }
+    fun delete(entry: DailyHealthEntry) {
+        viewModelScope.launch { repository.delete(entry) }
+    }
+
+    suspend fun getById(id: Long): DailyHealthEntry? = repository.getById(id)
+
+    suspend fun getEntryForDate(date: String): DailyHealthEntry? {
+        val pid = sessionManager.activePersonId
+        return if (pid == -1L) null else repository.getEntryForDate(pid, date)
     }
 }
