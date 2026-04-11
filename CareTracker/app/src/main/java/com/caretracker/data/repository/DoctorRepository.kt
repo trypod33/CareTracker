@@ -38,7 +38,17 @@ class DoctorRepository @Inject constructor(private val doctorDao: DoctorDao) {
     fun getPersonsForDoctor(doctorId: Long): Flow<DoctorWithPersons> =
         doctorDao.getPersonsForDoctor(doctorId)
 
-    /** Returns list of doctor IDs already linked to a person — used to pre-fill checkboxes. */
+    /**
+     * IDs of doctors linked to a person.
+     * Used in AddEditPersonActivity to pre-check doctor checkboxes.
+     */
     suspend fun getLinkedDoctorIds(personId: Long): List<Long> =
         doctorDao.getLinkedDoctorIds(personId)
+
+    /**
+     * IDs of PERSONS linked to a doctor.
+     * Used in AddEditDoctorActivity to pre-check member checkboxes.
+     */
+    suspend fun getLinkedPersonIds(doctorId: Long): List<Long> =
+        doctorDao.getLinkedPersonIds(doctorId)
 }

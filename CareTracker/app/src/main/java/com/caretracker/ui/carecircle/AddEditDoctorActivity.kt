@@ -11,9 +11,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.caretracker.R
 import com.caretracker.data.models.Doctor
-import com.caretracker.data.models.Person
 import com.caretracker.databinding.ActivityAddEditDoctorBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -25,7 +25,6 @@ class AddEditDoctorActivity : AppCompatActivity() {
     private var selectedAvatar: String = "\uD83E\uFA7A"
     private var previousLinkedPersonIds: Set<Long> = emptySet()
 
-    // Checkboxes map: personId -> CheckBox view
     private val personCheckBoxes = mutableMapOf<Long, CheckBox>()
 
     private val medicalEmojis = listOf(
@@ -50,9 +49,36 @@ class AddEditDoctorActivity : AppCompatActivity() {
         supportActionBar?.title = if (doctorId != 0L) "Edit Doctor" else "Add Doctor"
 
         buildEmojiRows()
-        buildPatientCheckboxes()
 
-        if (doctorId != 0L) loadDoctorData()
+        // Bug fix: load existing links FIRST (one-shot), THEN build checkboxes
+        // with correct pre-checked state. Previously: .collect{} on allDoctors
+        // blocked, and linked IDs were loaded before checkboxes were created.
+        lifecycleScope.launch {
+            if (doctorId != 0L) {
+                // 1. Load linked person IDs (one-shot suspend, not a Flow)
+                val linkedIds = viewModel.getLinkedPersonIds(doctorId)
+                previousLinkedPersonIds = linkedIds.toSet()
+            }
+            // 2. Now build checkboxes with correct pre-checked state
+            buildPatientCheckboxes()
+
+            // 3. Load doctor fields (one-shot via .first())
+            if (doctorId != 0L) {
+                val doctor = viewModel.allDoctors.first().find { it.id == doctorId }
+                doctor?.let {
+                    binding.etDoctorName.setText(it.name)
+                    binding.etSpecialty.setText(it.specialty)
+                    binding.etPhone.setText(it.phone)
+                    binding.etAddress.setText(it.address)
+                    binding.etNotes.setText(it.notes)
+                    if (it.avatar.isNotEmpty()) {
+                        selectedAvatar = it.avatar
+                        updatePreview(selectedAvatar)
+                        refreshAllRows()
+                    }
+                }
+            }
+        }
 
         binding.btnSaveDoctor.setOnClickListener { saveDoctor() }
     }
@@ -61,25 +87,29 @@ class AddEditDoctorActivity : AppCompatActivity() {
 
     // ── Patient checkboxes ───────────────────────────────────────────
 
-    private fun buildPatientCheckboxes() {
-        lifecycleScope.launch {
-            viewModel.allPeople.collect { people ->
-                binding.layoutPatients.removeAllViews()
-                personCheckBoxes.clear()
-                people.forEach { person ->
-                    val cb = CheckBox(this@AddEditDoctorActivity).apply {
-                        text = "${person.avatar}  ${person.name}  \u2022  ${person.role ?: ""}"
-                        tag = person.id
-                        isChecked = personCheckBoxes[person.id]?.isChecked ?: false
-                    }
-                    personCheckBoxes[person.id] = cb
-                    binding.layoutPatients.addView(cb)
-                }
-                // Re-check previously linked people after list reloads
-                previousLinkedPersonIds.forEach { id ->
-                    personCheckBoxes[id]?.isChecked = true
-                }
+    private suspend fun buildPatientCheckboxes() {
+        val people = viewModel.allPeople.first()
+        binding.layoutPatients.removeAllViews()
+        personCheckBoxes.clear()
+
+        if (people.isEmpty()) {
+            val tv = TextView(this).apply {
+                text = "No members added yet. Add a member in Care Circle first."
+                setPadding(8, 8, 8, 8)
             }
+            binding.layoutPatients.addView(tv)
+            return
+        }
+
+        people.forEach { person ->
+            val cb = CheckBox(this).apply {
+                text = "${person.avatar}  ${person.name}" +
+                    if (!person.role.isNullOrBlank()) "  •  ${person.role}" else ""
+                tag = person.id
+                isChecked = previousLinkedPersonIds.contains(person.id)
+            }
+            personCheckBoxes[person.id] = cb
+            binding.layoutPatients.addView(cb)
         }
     }
 
@@ -131,38 +161,6 @@ class AddEditDoctorActivity : AppCompatActivity() {
         }
     }
 
-    // ── Load existing doctor ───────────────────────────────────────────
-
-    private fun loadDoctorData() {
-        lifecycleScope.launch {
-            // Load doctor fields
-            viewModel.allDoctors.collect { doctors ->
-                val doctor = doctors.find { it.id == doctorId }
-                doctor?.let {
-                    binding.etDoctorName.setText(it.name)
-                    binding.etSpecialty.setText(it.specialty)
-                    binding.etPhone.setText(it.phone)
-                    binding.etAddress.setText(it.address)
-                    binding.etNotes.setText(it.notes)
-                    if (it.avatar.isNotEmpty()) {
-                        selectedAvatar = it.avatar
-                        updatePreview(selectedAvatar)
-                        refreshAllRows()
-                    }
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            // Load existing patient links and pre-check boxes
-            val linkedIds = viewModel.getLinkedPersonIds(doctorId)
-            previousLinkedPersonIds = linkedIds.toSet()
-            linkedIds.forEach { personId ->
-                personCheckBoxes[personId]?.isChecked = true
-            }
-        }
-    }
-
     // ── Save ──────────────────────────────────────────────────────
 
     private fun saveDoctor() {
@@ -183,11 +181,6 @@ class AddEditDoctorActivity : AppCompatActivity() {
                 avatar = selectedAvatar
             )
 
-            // Insert or update, then resolve the saved doctor's ID.
-            // For new doctors: call saveDoctor() which returns the new Row ID directly.
-            // This removes the old pattern of calling saveDoctor() then polling allDoctors
-            // (which caused the 'newId assigned but never accessed' and 'unreachable code'
-            // warnings because return@collect exits the lambda, not the outer coroutine).
             val savedId: Long = if (doctorId == 0L) {
                 viewModel.saveDoctorAndGetId(doctor)
             } else {

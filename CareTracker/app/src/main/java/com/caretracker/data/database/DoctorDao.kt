@@ -40,17 +40,29 @@ interface DoctorDao {
 
     // ── Filtered queries ──────────────────────────────────────────────────────
 
-    /** All doctors linked to a specific person (used when viewing a Loved One's profile). */
+    /** All doctors linked to a specific person. */
     @Transaction
     @Query("SELECT * FROM people WHERE id = :personId")
     fun getDoctorsForPerson(personId: Long): Flow<PersonWithDoctors>
 
-    /** All persons linked to a specific doctor (used in Doctor detail view). */
+    /** All persons linked to a specific doctor. */
     @Transaction
     @Query("SELECT * FROM doctors WHERE id = :doctorId")
     fun getPersonsForDoctor(doctorId: Long): Flow<DoctorWithPersons>
 
-    /** IDs of doctors already linked to a person — used to pre-check boxes in the link UI. */
+    /**
+     * IDs of doctors already linked to a person.
+     * Used to pre-check boxes in AddEditDoctorActivity.
+     */
     @Query("SELECT doctorId FROM person_doctor_links WHERE personId = :personId")
     suspend fun getLinkedDoctorIds(personId: Long): List<Long>
+
+    /**
+     * IDs of PERSONS already linked to a doctor.
+     * Used in AddEditDoctorActivity to pre-check which members see this doctor.
+     * (Bug fix: previously this was calling getLinkedDoctorIds with a doctorId,
+     *  returning doctor IDs instead of person IDs.)
+     */
+    @Query("SELECT personId FROM person_doctor_links WHERE doctorId = :doctorId")
+    suspend fun getLinkedPersonIds(doctorId: Long): List<Long>
 }
