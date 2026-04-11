@@ -3,6 +3,7 @@ package com.caretracker.di
 import android.content.Context
 import androidx.room.Room
 import com.caretracker.data.dao.DailyHealthEntryDao
+import com.caretracker.data.dao.VitalReadingDao
 import com.caretracker.data.database.*
 import dagger.Module
 import dagger.Provides
@@ -27,7 +28,8 @@ object DatabaseModule {
                 CareTrackerDatabase.MIGRATION_2_3,
                 CareTrackerDatabase.MIGRATION_3_4,
                 CareTrackerDatabase.MIGRATION_4_5,
-                CareTrackerDatabase.MIGRATION_5_6
+                CareTrackerDatabase.MIGRATION_5_6,
+                CareTrackerDatabase.MIGRATION_6_7
             )
             .fallbackToDestructiveMigration()
             .build()
@@ -57,4 +59,8 @@ object DatabaseModule {
     @Provides
     fun provideDailyHealthEntryDao(database: CareTrackerDatabase): DailyHealthEntryDao =
         database.dailyHealthEntryDao()
+
+    @Provides
+    fun provideVitalReadingDao(database: CareTrackerDatabase): VitalReadingDao =
+        database.vitalReadingDao()
 }
