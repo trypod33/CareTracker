@@ -6,6 +6,7 @@ import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.caretracker.data.dao.DailyHealthEntryDao
+import com.caretracker.data.dao.VitalReadingDao
 import com.caretracker.data.models.*
 
 @Database(
@@ -20,9 +21,10 @@ import com.caretracker.data.models.*
         HealthLog::class,
         Doctor::class,
         PersonDoctorCrossRef::class,
-        DailyHealthEntry::class
+        DailyHealthEntry::class,
+        VitalReading::class          // ← added
     ],
-    version = 6,
+    version = 7,                     // ← bumped from 6
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -35,6 +37,7 @@ abstract class CareTrackerDatabase : RoomDatabase() {
     abstract fun healthLogDao(): HealthLogDao
     abstract fun doctorDao(): DoctorDao
     abstract fun dailyHealthEntryDao(): DailyHealthEntryDao
+    abstract fun vitalReadingDao(): VitalReadingDao   // ← added
 
     companion object {
         val MIGRATION_2_3 = object : Migration(2, 3) {
@@ -80,14 +83,6 @@ abstract class CareTrackerDatabase : RoomDatabase() {
             }
         }
 
-        /**
-         * Migration 5 → 6: add daily_health_entries table.
-         * Column types must exactly match Room's generated schema for DailyHealthEntry:
-         * - Float?  → REAL
-         * - Int?    → INTEGER
-         * - Long?   → INTEGER  (bpTimestamp, bsTimestamp, createdAt)
-         * - String? → TEXT
-         */
         val MIGRATION_5_6 = object : Migration(5, 6) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("""
@@ -119,6 +114,39 @@ abstract class CareTrackerDatabase : RoomDatabase() {
                     "CREATE INDEX IF NOT EXISTS `index_daily_health_entries_personId` " +
                     "ON `daily_health_entries` (`personId`)"
                 )
+            }
+        }
+
+        // Migration 6 → 7: add vital_readings table for timestamped individual readings
+        val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS `vital_readings` (
+                        `id`               INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        `personId`         INTEGER NOT NULL,
+                        `readingDate`      TEXT NOT NULL,
+                        `readingTimestamp` INTEGER NOT NULL,
+                        `readingType`      TEXT NOT NULL,
+                        `bpSystolic`       INTEGER,
+                        `bpDiastolic`      INTEGER,
+                        `bpPosition`       TEXT,
+                        `bloodSugar`       REAL,
+                        `bsContext`        TEXT,
+                        `heartRate`        INTEGER,
+                        `hrContext`        TEXT,
+                        `weightValue`      REAL,
+                        `weightUnit`       TEXT,
+                        `oxygenSat`        INTEGER,
+                        `temperature`      REAL,
+                        `tempUnit`         TEXT,
+                        `notes`            TEXT,
+                        `createdAt`        INTEGER NOT NULL,
+                        FOREIGN KEY(`personId`) REFERENCES `people`(`id`) ON DELETE CASCADE
+                    )
+                """.trimIndent())
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_vital_readings_personId` ON `vital_readings` (`personId`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_vital_readings_readingType` ON `vital_readings` (`readingType`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_vital_readings_readingDate` ON `vital_readings` (`readingDate`)")
             }
         }
     }
