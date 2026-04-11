@@ -27,11 +27,13 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardPeople"
-                style="@style/Widget.Material3.CardView.Elevated"
+                style="@style/Widget.MaterialComponents.CardView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_margin="8dp">
+                android:layout_margin="8dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/ct_surface">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -44,11 +46,13 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardHealth"
-                style="@style/Widget.Material3.CardView.Elevated"
+                style="@style/Widget.MaterialComponents.CardView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_margin="8dp">
+                android:layout_margin="8dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/ct_surface">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -68,11 +72,13 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardMeds"
-                style="@style/Widget.Material3.CardView.Elevated"
+                style="@style/Widget.MaterialComponents.CardView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_margin="8dp">
+                android:layout_margin="8dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/ct_surface">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -85,11 +91,13 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardAppointments"
-                style="@style/Widget.Material3.CardView.Elevated"
+                style="@style/Widget.MaterialComponents.CardView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_margin="8dp">
+                android:layout_margin="8dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/ct_surface">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -104,10 +112,11 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardHabits"
-            style="@style/Widget.Material3.CardView.Elevated"
+            style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            app:cardElevation="4dp"
             app:cardBackgroundColor="@color/ct_surface_variant">
             <LinearLayout
                 android:layout_width="match_parent"
@@ -121,10 +130,12 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardContacts"
-            style="@style/Widget.Material3.CardView.Elevated"
+            style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp">
+            android:layout_margin="8dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="@color/ct_surface">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
