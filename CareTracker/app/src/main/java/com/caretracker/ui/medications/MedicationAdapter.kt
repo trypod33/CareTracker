@@ -10,7 +10,7 @@ import com.caretracker.data.models.Medication
 import com.caretracker.databinding.ItemMedicationBinding
 
 class MedicationAdapter(
-    private val onClick: (Medication) -> Unit,
+    private val onClick:  (Medication) -> Unit,
     private val onDelete: (Medication) -> Unit
 ) : ListAdapter<Medication, MedicationAdapter.MedicationViewHolder>(DiffCallback) {
 
@@ -22,41 +22,53 @@ class MedicationAdapter(
 
     override fun onBindViewHolder(holder: MedicationViewHolder, position: Int) {
         val med = getItem(position)
-        holder.binding.tvMedName.text = med.name
-        holder.binding.tvMedDosage.text = "${med.dosage} ${med.unit}"
-        holder.binding.tvMedFrequency.text = med.frequency.replace("_", " ").replaceFirstChar { it.uppercase() }
-        holder.binding.tvMedPills.text = "${med.pillsRemaining} pills remaining"
+        val b   = holder.binding
+
+        // Header
+        b.tvMedName.text     = med.name
+        b.tvMedDosage.text   = "${med.dosage} ${med.unit}"
+        b.tvMedFrequency.text = med.frequency.replace("_", " ").replaceFirstChar { it.uppercase() }
+        b.tvPrescriber.text  = ""  // extend model with prescriber name field if needed
+
+        // Inventory section
+        b.tvPillCount.text   = "${med.pillsRemaining} pills"
+        val refillTotal = if (med.pillsPerDose > 0) med.pillsPerDose else 30
+        b.progressPills.max      = refillTotal
+        b.progressPills.progress = med.pillsRemaining.coerceAtMost(refillTotal)
+
+        // Taken status
+        b.tvTakenStatus.text = "Not taken today"   // TODO: wire to dose log
+
+        // Card background tint
+        try {
+            val tint = android.graphics.Color.parseColor(med.color)
+            // Apply a subtle tint to the icon background only
+            (b.ivMedIcon.background as? android.graphics.drawable.GradientDrawable)
+                ?.setColor(tint)
+        } catch (_: Exception) { /* ignore invalid color strings */ }
 
         // Short tap — edit
         holder.itemView.setOnClickListener { onClick(med) }
 
-        // Long press — Edit / Delete menu
-        holder.itemView.setOnLongClickListener { view ->
-            AlertDialog.Builder(view.context)
-                .setTitle(med.name)
-                .setItems(arrayOf("\u270F\uFE0F  Edit", "\uD83D\uDDD1\uFE0F  Delete")) { _, which ->
-                    when (which) {
-                        0 -> onClick(med)
-                        1 -> AlertDialog.Builder(view.context)
-                            .setTitle("Delete \"${med.name}\"?")
-                            .setMessage("This will permanently delete this medication. This cannot be undone.")
-                            .setPositiveButton("Delete") { _, _ -> onDelete(med) }
-                            .setNegativeButton("Cancel", null)
-                            .show()
-                    }
-                }
+        // Action buttons on the card
+        b.btnEditMed.setOnClickListener   { onClick(med) }
+        b.btnDeleteMed.setOnClickListener {
+            AlertDialog.Builder(it.context)
+                .setTitle("Delete \"${med.name}\"?")
+                .setMessage("This will permanently delete this medication.")
+                .setPositiveButton("Delete") { _, _ -> onDelete(med) }
+                .setNegativeButton("Cancel", null)
                 .show()
-            true
         }
+        b.btnTakeMed.setOnClickListener   { /* TODO: log dose */ }
+        b.btnRefillMed.setOnClickListener { /* TODO: refill dialog */ }
     }
 
     class MedicationViewHolder(val binding: ItemMedicationBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     companion object DiffCallback : DiffUtil.ItemCallback<Medication>() {
-        override fun areItemsTheSame(oldItem: Medication, newItem: Medication) =
-            oldItem.id == newItem.id
-        override fun areContentsTheSame(oldItem: Medication, newItem: Medication) =
-            oldItem == newItem
+        override fun areItemsTheSame(a: Medication, b: Medication) = a.id == b.id
+        override fun areContentsTheSame(a: Medication, b: Medication) = a == b
     }
 }
