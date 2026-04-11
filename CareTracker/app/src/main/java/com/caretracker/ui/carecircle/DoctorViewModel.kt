@@ -49,12 +49,22 @@ class DoctorViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     // ── CRUD ──────────────────────────────────────────────────────────────────
+
+    /** Insert or update a doctor. For updates, use saveDoctor(). */
     fun saveDoctor(doctor: Doctor) {
         viewModelScope.launch {
             if (doctor.id == 0L) repository.insertDoctor(doctor)
             else repository.updateDoctor(doctor)
         }
     }
+
+    /**
+     * Insert a new doctor and return its generated row ID.
+     * Use this instead of [saveDoctor] when you need the ID immediately
+     * after insert (e.g. to save patient links in the same operation).
+     */
+    suspend fun saveDoctorAndGetId(doctor: Doctor): Long =
+        repository.insertDoctor(doctor)
 
     fun deleteDoctor(doctor: Doctor) {
         viewModelScope.launch { repository.deleteDoctor(doctor) }
