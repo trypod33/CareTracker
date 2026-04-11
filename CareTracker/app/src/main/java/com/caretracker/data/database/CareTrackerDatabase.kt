@@ -5,6 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.caretracker.data.dao.DailyHealthEntryDao
 import com.caretracker.data.models.*
 
 @Database(
@@ -18,9 +19,10 @@ import com.caretracker.data.models.*
         HabitLog::class,
         HealthLog::class,
         Doctor::class,
-        PersonDoctorCrossRef::class
+        PersonDoctorCrossRef::class,
+        DailyHealthEntry::class
     ],
-    version = 5,
+    version = 6,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -32,6 +34,7 @@ abstract class CareTrackerDatabase : RoomDatabase() {
     abstract fun habitDao(): HabitDao
     abstract fun healthLogDao(): HealthLogDao
     abstract fun doctorDao(): DoctorDao
+    abstract fun dailyHealthEntryDao(): DailyHealthEntryDao
 
     companion object {
         /** Migration 2 → 3 */
@@ -59,7 +62,6 @@ abstract class CareTrackerDatabase : RoomDatabase() {
         /** Migration 4 → 5: change habit_logs.value from INTEGER to REAL (Double) */
         val MIGRATION_4_5 = object : Migration(4, 5) {
             override fun migrate(db: SupportSQLiteDatabase) {
-                // SQLite doesn't support ALTER COLUMN — recreate the table
                 db.execSQL("""
                     CREATE TABLE IF NOT EXISTS habit_logs_new (
                         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -71,7 +73,6 @@ abstract class CareTrackerDatabase : RoomDatabase() {
                         loggedAt INTEGER NOT NULL
                     )
                 """.trimIndent())
-                // Copy existing rows, casting the old INTEGER value to REAL
                 db.execSQL("""
                     INSERT INTO habit_logs_new (id, habitId, personId, logDate, value, notes, loggedAt)
                     SELECT id, habitId, personId, logDate, CAST(value AS REAL), notes, loggedAt
@@ -79,6 +80,38 @@ abstract class CareTrackerDatabase : RoomDatabase() {
                 """.trimIndent())
                 db.execSQL("DROP TABLE habit_logs")
                 db.execSQL("ALTER TABLE habit_logs_new RENAME TO habit_logs")
+            }
+        }
+
+        /** Migration 5 → 6: add daily_health_entries table */
+        val MIGRATION_5_6 = object : Migration(5, 6) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS daily_health_entries (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        personId INTEGER NOT NULL,
+                        date TEXT NOT NULL,
+                        weightValue REAL,
+                        weightUnit TEXT,
+                        heartRate INTEGER,
+                        bpSystolic INTEGER,
+                        bpDiastolic INTEGER,
+                        bpTimestamp TEXT,
+                        bloodSugar REAL,
+                        bsTimestamp TEXT,
+                        sleepHours REAL,
+                        sleepQuality INTEGER,
+                        mood INTEGER,
+                        energyLevel INTEGER,
+                        steps INTEGER,
+                        exerciseMinutes INTEGER,
+                        waterOz REAL,
+                        calories INTEGER,
+                        notes TEXT
+                    )
+                """.trimIndent())
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_daily_health_entries_personId ON daily_health_entries (personId)")
+                db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_daily_health_entries_personId_date ON daily_health_entries (personId, date)")
             }
         }
     }
