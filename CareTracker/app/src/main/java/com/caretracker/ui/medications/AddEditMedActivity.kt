@@ -23,8 +23,13 @@ class AddEditMedActivity : AppCompatActivity() {
         binding = ActivityAddEditMedBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        medId = intent.getLongExtra("MED_ID", 0L)
+        medId    = intent.getLongExtra("MED_ID", 0L)
         personId = intent.getLongExtra("PERSON_ID", 1L)
+
+        // Tell the ViewModel which person we're working with so that
+        // the medications StateFlow emits the right person's list.
+        viewModel.setPersonId(personId)
+
         supportActionBar?.title = if (medId != 0L) "Edit Medication" else "Add Medication"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -48,18 +53,18 @@ class AddEditMedActivity : AppCompatActivity() {
 
     private fun loadMedData() {
         lifecycleScope.launch {
-            viewModel.medications.collect { meds ->
-                val med = meds.find { it.id == medId }
-                med?.let {
-                    personId = it.personId   // keep the original owner
-                    binding.etMedName.setText(it.name)
-                    binding.etDosage.setText(it.dosage)
-                    binding.etUnit.setText(it.unit, false)
-                    binding.etFrequency.setText(it.frequency, false)
-                    binding.etPillsRemaining.setText(it.pillsRemaining.toString())
-                    binding.etInstructions.setText(it.instructions)
-                    binding.etNotes.setText(it.notes)
-                }
+            // Use direct DAO lookup by ID — avoids depending on the person-filtered
+            // StateFlow which requires setPersonId() to have already propagated.
+            val med = viewModel.getMedicationByIdDirect(medId)
+            med?.let {
+                personId = it.personId   // always preserve the original owner
+                binding.etMedName.setText(it.name)
+                binding.etDosage.setText(it.dosage)
+                binding.etUnit.setText(it.unit, false)
+                binding.etFrequency.setText(it.frequency, false)
+                binding.etPillsRemaining.setText(it.pillsRemaining.toString())
+                binding.etInstructions.setText(it.instructions)
+                binding.etNotes.setText(it.notes)
             }
         }
     }
@@ -71,15 +76,15 @@ class AddEditMedActivity : AppCompatActivity() {
             return
         }
         val medication = Medication(
-            id = medId,
+            id       = medId,
             personId = personId,   // correctly stamped to the selected person
-            name = name,
-            dosage = binding.etDosage.text.toString().trim(),
-            unit = binding.etUnit.text.toString().trim().ifEmpty { "mg" },
+            name     = name,
+            dosage   = binding.etDosage.text.toString().trim(),
+            unit     = binding.etUnit.text.toString().trim().ifEmpty { "mg" },
             frequency = binding.etFrequency.text.toString().trim().ifEmpty { "daily" },
             pillsRemaining = binding.etPillsRemaining.text.toString().toIntOrNull() ?: 0,
             instructions = binding.etInstructions.text.toString().trim(),
-            notes = binding.etNotes.text.toString().trim()
+            notes    = binding.etNotes.text.toString().trim()
         )
         viewModel.saveMedication(medication)
         finish()

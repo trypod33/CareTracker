@@ -11,10 +11,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.caretracker.data.models.Person
 import com.caretracker.databinding.FragmentMedicationsBinding
+import com.caretracker.utils.SessionManager
 import com.google.android.material.chip.Chip
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MedicationsFragment : Fragment() {
@@ -22,7 +24,11 @@ class MedicationsFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: MedicationViewModel by viewModels()
     private lateinit var adapter: MedicationAdapter
-    private var selectedPersonId: Long = 1L
+
+    @Inject lateinit var sessionManager: SessionManager
+
+    // Seed from SessionManager; falls back to 1L if nothing saved yet
+    private var selectedPersonId: Long = -1L
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -34,12 +40,19 @@ class MedicationsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Restore last active person from session
+        val savedId = sessionManager.activePersonId
+        if (savedId != -1L) {
+            selectedPersonId = savedId
+            viewModel.setPersonId(savedId)
+        }
+
         adapter = MedicationAdapter(
             onClick = { med ->
                 startActivity(
                     Intent(requireContext(), AddEditMedActivity::class.java)
                         .putExtra("MED_ID", med.id)
-                        .putExtra("PERSON_ID", selectedPersonId)
+                        .putExtra("PERSON_ID", med.personId)
                 )
             },
             onDelete = { med -> viewModel.deleteMedication(med) }
@@ -73,10 +86,11 @@ class MedicationsFragment : Fragment() {
         binding.chipGroupPeople.removeAllViews()
         if (people.isEmpty()) return
 
-        // Auto-select first person if current selection is gone
-        if (people.none { it.id == selectedPersonId }) {
+        // If no session person saved yet, or saved person no longer exists, pick first
+        if (selectedPersonId == -1L || people.none { it.id == selectedPersonId }) {
             selectedPersonId = people.first().id
             viewModel.setPersonId(selectedPersonId)
+            sessionManager.activePersonId = selectedPersonId
         }
 
         people.forEach { person ->
@@ -88,6 +102,7 @@ class MedicationsFragment : Fragment() {
                 setOnClickListener {
                     selectedPersonId = person.id
                     viewModel.setPersonId(person.id)
+                    sessionManager.activePersonId = person.id
                     for (i in 0 until binding.chipGroupPeople.childCount) {
                         val c = binding.chipGroupPeople.getChildAt(i) as? Chip
                         c?.isChecked = (c?.tag as? Long) == person.id

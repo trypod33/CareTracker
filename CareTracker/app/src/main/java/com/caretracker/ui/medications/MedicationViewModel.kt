@@ -23,18 +23,20 @@ class MedicationViewModel @Inject constructor(
     private val personRepository: PersonRepository
 ) : ViewModel() {
 
-    // ── Active person ─────────────────────────────────────────────────────────
+    // ── Active person ───────────────────────────────────────────────────────────────
     private val _personId = MutableStateFlow(1L)
     val personId: StateFlow<Long> = _personId.asStateFlow()
 
-    fun setPersonId(id: Long) { _personId.value = id }
+    fun setPersonId(id: Long) {
+        if (id != -1L) _personId.value = id
+    }
 
-    // ── Medications filtered by active person ─────────────────────────────────
+    // ── Medications filtered by active person ───────────────────────────────────
     val medications: StateFlow<List<Medication>> = _personId
         .flatMapLatest { repository.getMedicationsForPerson(it) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    // ── All people for person switcher chip row ───────────────────────────────
+    // ── All people for person switcher chip row ────────────────────────────────
     val allPeople = personRepository.getAllPeople()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
@@ -50,6 +52,15 @@ class MedicationViewModel @Inject constructor(
         viewModelScope.launch { repository.deleteMedication(medication) }
     }
 
-    suspend fun getMedicationById(id: Long): Medication? =
+    /**
+     * Fetch a medication directly by ID without any person filter.
+     * Use this in the edit screen where the ID is already known — avoids
+     * the race condition of waiting for the person-filtered Flow to emit.
+     */
+    suspend fun getMedicationByIdDirect(id: Long): Medication? =
         repository.getMedicationById(id)
+
+    /** Legacy alias — kept for any callers that used the old name. */
+    suspend fun getMedicationById(id: Long): Medication? =
+        getMedicationByIdDirect(id)
 }
