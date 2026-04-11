@@ -7,10 +7,14 @@ import android.view.View
 import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.caretracker.data.models.VitalReading
 import com.caretracker.databinding.ActivityAddVitalReadingBinding
 import com.caretracker.utils.SessionManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -30,7 +34,6 @@ class AddVitalReadingActivity : AppCompatActivity() {
     private var selectedCal: Calendar = Calendar.getInstance()
     private var editingId: Long = 0L
 
-    // Reading type constants
     private val TYPE_BP      = "BLOOD_PRESSURE"
     private val TYPE_BS      = "BLOOD_SUGAR"
     private val TYPE_HR      = "HEART_RATE"
@@ -50,12 +53,11 @@ class AddVitalReadingActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         editingId = intent.getLongExtra("READING_ID", 0L)
-        val presetType = intent.getStringExtra("READING_TYPE") // optional preset
+        val presetType = intent.getStringExtra("READING_TYPE")
 
         supportActionBar?.title = if (editingId != 0L) "Edit Vital Reading" else "Add Vital Reading"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        // Default to now
         binding.etDate.setText(dateFmt.format(selectedCal.time))
         binding.etTime.setText(timeFmt12.format(selectedCal.time))
 
@@ -115,7 +117,6 @@ class AddVitalReadingActivity : AppCompatActivity() {
             showSectionForType(readingTypeValues[pos])
         }
 
-        // Pre-select if launched from a specific metric button
         if (presetType != null) {
             val idx = readingTypeValues.indexOf(presetType)
             if (idx >= 0) {
@@ -125,7 +126,7 @@ class AddVitalReadingActivity : AppCompatActivity() {
         }
     }
 
-    // ─── Show/hide metric-specific input sections ──────────────────────────────
+    // ─── Show/hide metric-specific sections ────────────────────────────────────
     private fun showSectionForType(type: String) {
         binding.sectionBP.visibility     = if (type == TYPE_BP)     View.VISIBLE else View.GONE
         binding.sectionBS.visibility     = if (type == TYPE_BS)     View.VISIBLE else View.GONE
@@ -135,7 +136,7 @@ class AddVitalReadingActivity : AppCompatActivity() {
         binding.sectionTemp.visibility   = if (type == TYPE_TEMP)   View.VISIBLE else View.GONE
     }
 
-    // ─── Sub-dropdowns (position, context, units) ──────────────────────────────
+    // ─── Sub-dropdowns ─────────────────────────────────────────────────────────
     private fun setupSubDropdowns() {
         binding.spinnerBpPosition.setAdapter(ArrayAdapter(this,
             android.R.layout.simple_dropdown_item_1line,
@@ -160,38 +161,37 @@ class AddVitalReadingActivity : AppCompatActivity() {
 
     // ─── Load existing reading (edit mode) ────────────────────────────────────
     private fun loadExisting(id: Long) {
-        lifecycleScope.launchWhenStarted {
-            val r = viewModel.getById(id) ?: return@launchWhenStarted
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                val r = viewModel.getById(id) ?: return@repeatOnLifecycle
 
-            // Date/time
-            runCatching {
-                val cal = Calendar.getInstance().apply { timeInMillis = r.readingTimestamp }
-                selectedCal = cal
-                binding.etDate.setText(dateFmt.format(cal.time))
-                binding.etTime.setText(timeFmt12.format(cal.time))
+                runCatching {
+                    val cal = Calendar.getInstance().apply { timeInMillis = r.readingTimestamp }
+                    selectedCal = cal
+                    binding.etDate.setText(dateFmt.format(cal.time))
+                    binding.etTime.setText(timeFmt12.format(cal.time))
+                }
+
+                val idx = readingTypeValues.indexOf(r.readingType)
+                if (idx >= 0) {
+                    binding.spinnerReadingType.setText(readingTypeLabels[idx], false)
+                    showSectionForType(r.readingType)
+                }
+
+                r.bpSystolic?.let  { binding.etBpSystolic.setText(it.toString()) }
+                r.bpDiastolic?.let { binding.etBpDiastolic.setText(it.toString()) }
+                r.bpPosition?.let  { binding.spinnerBpPosition.setText(it, false) }
+                r.bloodSugar?.let  { binding.etBloodSugar.setText(it.toString()) }
+                r.bsContext?.let   { binding.spinnerBsContext.setText(it, false) }
+                r.heartRate?.let   { binding.etHeartRate.setText(it.toString()) }
+                r.hrContext?.let   { binding.spinnerHrContext.setText(it, false) }
+                r.weightValue?.let { binding.etWeight.setText(it.toString()) }
+                r.weightUnit?.let  { binding.spinnerWeightUnit.setText(it, false) }
+                r.oxygenSat?.let   { binding.etOxygenSat.setText(it.toString()) }
+                r.temperature?.let { binding.etTemperature.setText(it.toString()) }
+                r.tempUnit?.let    { binding.spinnerTempUnit.setText(it, false) }
+                r.notes?.let       { binding.etNotes.setText(it) }
             }
-
-            // Type
-            val idx = readingTypeValues.indexOf(r.readingType)
-            if (idx >= 0) {
-                binding.spinnerReadingType.setText(readingTypeLabels[idx], false)
-                showSectionForType(r.readingType)
-            }
-
-            // Values
-            r.bpSystolic?.let  { binding.etBpSystolic.setText(it.toString()) }
-            r.bpDiastolic?.let { binding.etBpDiastolic.setText(it.toString()) }
-            r.bpPosition?.let  { binding.spinnerBpPosition.setText(it, false) }
-            r.bloodSugar?.let  { binding.etBloodSugar.setText(it.toString()) }
-            r.bsContext?.let   { binding.spinnerBsContext.setText(it, false) }
-            r.heartRate?.let   { binding.etHeartRate.setText(it.toString()) }
-            r.hrContext?.let   { binding.spinnerHrContext.setText(it, false) }
-            r.weightValue?.let { binding.etWeight.setText(it.toString()) }
-            r.weightUnit?.let  { binding.spinnerWeightUnit.setText(it, false) }
-            r.oxygenSat?.let   { binding.etOxygenSat.setText(it.toString()) }
-            r.temperature?.let { binding.etTemperature.setText(it.toString()) }
-            r.tempUnit?.let    { binding.spinnerTempUnit.setText(it, false) }
-            r.notes?.let       { binding.etNotes.setText(it) }
         }
     }
 
