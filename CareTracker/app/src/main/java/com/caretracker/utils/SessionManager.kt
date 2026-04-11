@@ -2,22 +2,18 @@ package com.caretracker.utils
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Lightweight in-memory + SharedPreferences session holder.
+ * Singleton session holder.
  *
- * All fragments/ViewModels that need the current person ID should
- * inject SessionManager and call [activePersonId].
- *
- * The value is persisted across app restarts via SharedPreferences.
- * The DB remains the source of truth for profile metadata; this just
- * caches the active ID so we don't need an async DB call on every screen.
- *
- * Thread-safety note: [activePersonId] setter uses commit() (synchronous)
- * rather than apply() (asynchronous) to prevent race conditions when the
- * value is written and then immediately read back on a different coroutine.
+ * [activePersonId] is persisted in SharedPreferences AND exposed as a
+ * [StateFlow] so any fragment / ViewModel can react to changes immediately
+ * without needing a detach/reattach cycle.
  */
 @Singleton
 class SessionManager @Inject constructor(
@@ -25,12 +21,18 @@ class SessionManager @Inject constructor(
 ) {
     private val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
+    // In-memory StateFlow — initialized from prefs so it survives process death
+    private val _activePersonId = MutableStateFlow(prefs.getLong(KEY_ACTIVE_PERSON_ID, -1L))
+
+    /** Reactive stream of the currently selected person ID. -1 = none selected. */
+    val activePersonIdFlow: StateFlow<Long> = _activePersonId.asStateFlow()
+
     /** The ID of the currently active person profile. -1 means none selected yet. */
     var activePersonId: Long
-        get() = prefs.getLong(KEY_ACTIVE_PERSON_ID, -1L)
+        get() = _activePersonId.value
         set(value) {
-            // Use commit() (synchronous, returns Boolean) instead of apply()
-            // so rapid successive reads after a write always see the new value.
+            _activePersonId.value = value
+            // Persist synchronously so it survives process kill
             prefs.edit().putLong(KEY_ACTIVE_PERSON_ID, value).commit()
         }
 
@@ -39,6 +41,7 @@ class SessionManager @Inject constructor(
         get() = activePersonId != -1L
 
     fun clear() {
+        activePersonId = -1L
         prefs.edit().remove(KEY_ACTIVE_PERSON_ID).commit()
     }
 

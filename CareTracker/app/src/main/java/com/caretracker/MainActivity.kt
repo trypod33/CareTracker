@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import com.caretracker.databinding.ActivityMainBinding
 import com.caretracker.ui.calendar.CalendarFragment
@@ -36,7 +35,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
-        // Hide default title — we manage it ourselves
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
         val toggle = ActionBarDrawerToggle(
@@ -46,46 +44,38 @@ class MainActivity : AppCompatActivity() {
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        // Observe active person and keep profile chip in sync
+        // Observe active person — updates toolbar chip AND SessionManager StateFlow.
+        // Any fragment observing sessionManager.activePersonIdFlow will react automatically.
         lifecycleScope.launch {
             personRepository.observeActivePerson().collectLatest { person ->
                 if (person != null) {
+                    // Writing to activePersonId updates the StateFlow, which all
+                    // observing fragments (e.g. MedicationsFragment) react to instantly.
                     sessionManager.activePersonId = person.id
                     binding.tvProfileAvatar.text = person.avatar
-                    binding.tvProfileName.text = person.name
+                    binding.tvProfileName.text   = person.name
                 } else {
                     binding.tvProfileAvatar.text = "\uD83D\uDC64"
-                    binding.tvProfileName.text = "Select Profile"
+                    binding.tvProfileName.text   = "Select Profile"
                 }
             }
         }
 
-        // Listen for results from ProfileSwitcherFragment via the Fragment Result API.
-        // This replaces the old public lambda properties (onProfileSelected / onAddPersonClicked)
-        // and is safe across fragment recreation.
+        // Profile switcher result — update toolbar chip immediately;
+        // fragments react via SessionManager.activePersonIdFlow (no detach needed).
         supportFragmentManager.setFragmentResultListener(
             ProfileSwitcherFragment.REQUEST_KEY, this
         ) { _, bundle ->
             when (bundle.getString(ProfileSwitcherFragment.KEY_ACTION)) {
                 ProfileSwitcherFragment.ACTION_PROFILE_SELECTED -> {
-                    // The DB observer above (observeActivePerson) will update the chip
-                    // automatically. If you need an immediate UI update before the DB
-                    // emits, you can read the bundle extras here:
+                    val newId  = bundle.getLong(ProfileSwitcherFragment.KEY_PERSON_ID, -1L)
                     val avatar = bundle.getString(ProfileSwitcherFragment.KEY_AVATAR) ?: "\uD83D\uDC64"
                     val name   = bundle.getString(ProfileSwitcherFragment.KEY_NAME)   ?: ""
                     binding.tvProfileAvatar.text = avatar
                     binding.tvProfileName.text   = name
-
-                    // Refresh the current fragment so it reloads data for the new person.
-                    // Each fragment should ideally observe sessionManager.activePersonId
-                    // via a SharedViewModel, but this detach/attach keeps existing code
-                    // working while that migration happens.
-                    supportFragmentManager
-                        .findFragmentById(R.id.fragmentContainer)
-                        ?.let { current ->
-                            supportFragmentManager.beginTransaction()
-                                .detach(current).attach(current).commit()
-                        }
+                    // Write to SessionManager — this emits on activePersonIdFlow and all
+                    // observing fragments update their lists without a detach/reattach.
+                    if (newId != -1L) sessionManager.activePersonId = newId
                 }
                 ProfileSwitcherFragment.ACTION_ADD_PERSON -> {
                     replaceFragment(CareCircleFragment(), "Care Circle")
@@ -94,7 +84,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Profile chip tap → show switcher bottom sheet
+        // Profile chip tap → bottom sheet
         binding.profileChip.setOnClickListener {
             ProfileSwitcherFragment()
                 .show(supportFragmentManager, ProfileSwitcherFragment.TAG)

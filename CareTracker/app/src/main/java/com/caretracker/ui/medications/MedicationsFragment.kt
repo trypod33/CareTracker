@@ -9,10 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.caretracker.data.models.Person
 import com.caretracker.databinding.FragmentMedicationsBinding
 import com.caretracker.utils.SessionManager
-import com.google.android.material.chip.Chip
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -20,15 +18,13 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MedicationsFragment : Fragment() {
+
     private var _binding: FragmentMedicationsBinding? = null
     private val binding get() = _binding!!
     private val viewModel: MedicationViewModel by viewModels()
     private lateinit var adapter: MedicationAdapter
 
     @Inject lateinit var sessionManager: SessionManager
-
-    // Seed from SessionManager; falls back to 1L if nothing saved yet
-    private var selectedPersonId: Long = -1L
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -40,15 +36,8 @@ class MedicationsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Restore last active person from session
-        val savedId = sessionManager.activePersonId
-        if (savedId != -1L) {
-            selectedPersonId = savedId
-            viewModel.setPersonId(savedId)
-        }
-
         adapter = MedicationAdapter(
-            onClick = { med ->
+            onClick  = { med ->
                 startActivity(
                     Intent(requireContext(), AddEditMedActivity::class.java)
                         .putExtra("MED_ID", med.id)
@@ -61,55 +50,54 @@ class MedicationsFragment : Fragment() {
         binding.rvMedications.layoutManager = LinearLayoutManager(requireContext())
         binding.rvMedications.adapter = adapter
 
-        // Observe people and build chip row
+        // ── React to top-right profile chip changes via SessionManager StateFlow ──
+        // This means the list updates instantly when the user switches profiles,
+        // with NO need for a fragment detach/reattach.
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.allPeople.collect { people -> buildPersonChips(people) }
+            sessionManager.activePersonIdFlow.collectLatest { personId ->
+                if (personId == -1L) {
+                    // No person selected yet — show placeholder, hide list
+                    binding.tvBannerName.text = "Select a person using the button in the top right"
+                    binding.tvBannerAvatar.text = "\uD83D\uDC64"
+                    binding.tvEmptyMeds.visibility = View.VISIBLE
+                    binding.tvEmptyMeds.text = "Select a person using the ▶ button in the top right"
+                    adapter.submitList(emptyList())
+                } else {
+                    // Tell the ViewModel to filter by this person
+                    viewModel.setPersonId(personId)
+                }
+            }
         }
 
-        // Observe filtered medications
+        // ── Update banner name from the people list ─────────────────────────────
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.allPeople.collectLatest { people ->
+                val activePerson = people.firstOrNull { it.id == sessionManager.activePersonId }
+                if (activePerson != null) {
+                    binding.tvBannerAvatar.text = activePerson.avatar
+                    binding.tvBannerName.text   = activePerson.name
+                }
+            }
+        }
+
+        // ── Observe filtered medication list ──────────────────────────────────
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.medications.collectLatest { meds ->
                 adapter.submitList(meds)
-                binding.tvEmptyMeds.visibility = if (meds.isEmpty()) View.VISIBLE else View.GONE
+                binding.tvEmptyMeds.visibility =
+                    if (meds.isEmpty() && sessionManager.activePersonId != -1L)
+                        View.VISIBLE else View.GONE
             }
         }
 
+        // FAB: open AddEditMed for the currently selected person
         binding.fabAddMed.setOnClickListener {
+            val personId = sessionManager.activePersonId
+            if (personId == -1L) return@setOnClickListener   // no person selected
             startActivity(
                 Intent(requireContext(), AddEditMedActivity::class.java)
-                    .putExtra("PERSON_ID", selectedPersonId)
+                    .putExtra("PERSON_ID", personId)
             )
-        }
-    }
-
-    private fun buildPersonChips(people: List<Person>) {
-        binding.chipGroupPeople.removeAllViews()
-        if (people.isEmpty()) return
-
-        // If no session person saved yet, or saved person no longer exists, pick first
-        if (selectedPersonId == -1L || people.none { it.id == selectedPersonId }) {
-            selectedPersonId = people.first().id
-            viewModel.setPersonId(selectedPersonId)
-            sessionManager.activePersonId = selectedPersonId
-        }
-
-        people.forEach { person ->
-            val chip = Chip(requireContext()).apply {
-                text = "${person.avatar} ${person.name}"
-                isCheckable = true
-                isChecked = person.id == selectedPersonId
-                tag = person.id
-                setOnClickListener {
-                    selectedPersonId = person.id
-                    viewModel.setPersonId(person.id)
-                    sessionManager.activePersonId = person.id
-                    for (i in 0 until binding.chipGroupPeople.childCount) {
-                        val c = binding.chipGroupPeople.getChildAt(i) as? Chip
-                        c?.isChecked = (c?.tag as? Long) == person.id
-                    }
-                }
-            }
-            binding.chipGroupPeople.addView(chip)
         }
     }
 
