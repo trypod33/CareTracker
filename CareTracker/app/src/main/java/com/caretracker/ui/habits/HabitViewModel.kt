@@ -6,6 +6,7 @@ import com.caretracker.data.models.Habit
 import com.caretracker.data.models.HabitLog
 import com.caretracker.data.repository.HabitRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,6 +26,7 @@ class HabitViewModel @Inject constructor(
     private val _personId = MutableStateFlow(1L)
     val personId: StateFlow<Long> = _personId.asStateFlow()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val habits: StateFlow<List<Habit>> = _personId
         .flatMapLatest { repository.getHabitsForPerson(it) }
         .stateIn(

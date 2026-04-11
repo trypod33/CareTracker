@@ -59,7 +59,7 @@ class AddEditDoctorActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean { finish(); return true }
 
-    // ── Patient checkboxes ────────────────────────────────────────────────────
+    // ── Patient checkboxes ───────────────────────────────────────────
 
     private fun buildPatientCheckboxes() {
         lifecycleScope.launch {
@@ -83,7 +83,7 @@ class AddEditDoctorActivity : AppCompatActivity() {
         }
     }
 
-    // ── Emoji avatar rows ─────────────────────────────────────────────────────
+    // ── Emoji avatar rows ───────────────────────────────────────────
 
     private fun buildEmojiRows() {
         addEmojisToRow(binding.rowMedical, medicalEmojis)
@@ -131,7 +131,7 @@ class AddEditDoctorActivity : AppCompatActivity() {
         }
     }
 
-    // ── Load existing doctor ──────────────────────────────────────────────────
+    // ── Load existing doctor ───────────────────────────────────────────
 
     private fun loadDoctorData() {
         lifecycleScope.launch {
@@ -155,7 +155,6 @@ class AddEditDoctorActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             // Load existing patient links and pre-check boxes
-            // getLinkedDoctorIds actually returns personIds linked to this doctor
             val linkedIds = viewModel.getLinkedPersonIds(doctorId)
             previousLinkedPersonIds = linkedIds.toSet()
             linkedIds.forEach { personId ->
@@ -164,7 +163,7 @@ class AddEditDoctorActivity : AppCompatActivity() {
         }
     }
 
-    // ── Save ──────────────────────────────────────────────────────────────────
+    // ── Save ──────────────────────────────────────────────────────
 
     private fun saveDoctor() {
         val name = binding.etDoctorName.text.toString().trim()
@@ -184,23 +183,13 @@ class AddEditDoctorActivity : AppCompatActivity() {
                 avatar = selectedAvatar
             )
 
-            // Insert/update doctor first to get the id
+            // Insert or update, then resolve the saved doctor's ID.
+            // For new doctors: call saveDoctor() which returns the new Row ID directly.
+            // This removes the old pattern of calling saveDoctor() then polling allDoctors
+            // (which caused the 'newId assigned but never accessed' and 'unreachable code'
+            // warnings because return@collect exits the lambda, not the outer coroutine).
             val savedId: Long = if (doctorId == 0L) {
-                // new doctor — insert returns the new id
-                var newId = 0L
-                viewModel.saveDoctor(doctor)
-                // Wait briefly for the insert then get it from allDoctors
-                // Better: use a suspend insert in repo
-                // For now collect once to get the new id
-                viewModel.allDoctors.collect { doctors ->
-                    val saved = doctors.find {
-                        it.name == name &&
-                        it.specialty == doctor.specialty &&
-                        it.phone == doctor.phone
-                    }
-                    if (saved != null) { newId = saved.id; return@collect }
-                }
-                newId
+                viewModel.saveDoctorAndGetId(doctor)
             } else {
                 viewModel.saveDoctor(doctor)
                 doctorId

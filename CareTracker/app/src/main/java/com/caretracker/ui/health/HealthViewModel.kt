@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.caretracker.data.models.HealthLog
 import com.caretracker.data.repository.HealthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,6 +23,7 @@ class HealthViewModel @Inject constructor(
     private val _personId = MutableStateFlow(1L)
     val personId: StateFlow<Long> = _personId.asStateFlow()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val healthLogs: StateFlow<List<HealthLog>> = _personId
         .flatMapLatest { repository.getAllLogsForPerson(it) }
         .stateIn(
