@@ -2,7 +2,6 @@ package com.caretracker.ui.carecircle
 
 import android.os.Bundle
 import android.view.Gravity
-import android.view.View
 import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -13,6 +12,7 @@ import com.caretracker.R
 import com.caretracker.data.models.Doctor
 import com.caretracker.data.models.Person
 import com.caretracker.databinding.ActivityAddEditDoctorBinding
+import com.caretracker.utils.PhoneFormatter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
@@ -52,26 +52,22 @@ class AddEditDoctorActivity : AppCompatActivity() {
 
         buildEmojiRows()
 
-        // Step 1: one-shot load of existing linked person IDs (edit mode only).
-        // Must run before collectLatest below so previousLinkedPersonIds is set
-        // before rebuildCheckboxes() is called for the first time.
+        // Load linked person IDs first (edit only), then rebuild checkboxes
         if (doctorId != 0L) {
             lifecycleScope.launch {
                 previousLinkedPersonIds = viewModel.getLinkedPersonIds(doctorId).toSet()
-                // Force a rebuild now that IDs are known
                 rebuildCheckboxes(viewModel.allPeople.value)
             }
         }
 
-        // Step 2: observe allPeople — rebuild checkboxes whenever list changes.
-        // collectLatest keeps it live so members added later also appear.
+        // Keep checkboxes live as people list changes
         lifecycleScope.launch {
             viewModel.allPeople.collectLatest { people ->
                 rebuildCheckboxes(people)
             }
         }
 
-        // Step 3: load doctor fields for edit (waits until StateFlow has data).
+        // Load doctor fields for edit
         if (doctorId != 0L) {
             lifecycleScope.launch {
                 val doctor = viewModel.allDoctors
@@ -80,7 +76,8 @@ class AddEditDoctorActivity : AppCompatActivity() {
                 doctor?.let {
                     binding.etDoctorName.setText(it.name)
                     binding.etSpecialty.setText(it.specialty)
-                    binding.etPhone.setText(it.phone)
+                    // Display formatted; strip to digits-only before saving
+                    binding.etPhone.setText(PhoneFormatter.formatPhone(it.phone))
                     binding.etAddress.setText(it.address)
                     binding.etNotes.setText(it.notes)
                     if (it.avatar.isNotEmpty()) {
@@ -171,7 +168,7 @@ class AddEditDoctorActivity : AppCompatActivity() {
         }
     }
 
-    // ── Save ────────────────────────────────────────────────────────────
+    // ── Save ───────────────────────────────────────────────────────────
 
     private fun saveDoctor() {
         val name = binding.etDoctorName.text.toString().trim()
@@ -185,7 +182,10 @@ class AddEditDoctorActivity : AppCompatActivity() {
                 id = doctorId,
                 name = name,
                 specialty = binding.etSpecialty.text.toString().trim(),
-                phone = binding.etPhone.text.toString().trim(),
+                // Store digits-only in DB; adapter formats on display
+                phone = PhoneFormatter.digitsOnly(
+                    binding.etPhone.text.toString().trim()
+                ),
                 address = binding.etAddress.text.toString().trim(),
                 notes = binding.etNotes.text.toString().trim(),
                 avatar = selectedAvatar

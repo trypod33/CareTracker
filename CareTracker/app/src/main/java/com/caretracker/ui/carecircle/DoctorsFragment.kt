@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -30,9 +29,9 @@ class DoctorsFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: DoctorViewModel by viewModels()
     private lateinit var adapter: DoctorAdapter
-    private var collectJob: Job? = null
+    private var doctorJob: Job? = null
 
-    // -1L means "All" chip selected
+    /** -1L = "All" chip; any other value = filter by that person */
     private var selectedPersonId: Long = -1L
 
     @Inject lateinit var sessionManager: SessionManager
@@ -60,18 +59,20 @@ class DoctorsFragment : Fragment() {
         binding.rvDoctors.layoutManager = LinearLayoutManager(requireContext())
         binding.rvDoctors.adapter = adapter
 
-        // Pre-select active person (or All if none)
-        selectedPersonId = sessionManager.activePersonId
+        // Default to active person if one is selected, otherwise show All
+        val activePerson = sessionManager.activePersonId
+        selectedPersonId = if (activePerson != -1L) activePerson else -1L
 
-        // Build member filter chips once people are loaded
+        // Observe people for chips ONLY — does NOT call loadDoctors() to avoid
+        // cancelling the active doctor-list job via collectLatest.
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.allPeople.collectLatest { people ->
+            viewModel.allPeople.collect { people ->
                 buildMemberChips(people)
-                // Reload doctor list whenever people changes (covers the case where
-                // someone is added/removed after this screen is already open)
-                loadDoctors(selectedPersonId)
             }
         }
+
+        // Initial doctor list load
+        loadDoctors(selectedPersonId)
 
         binding.fabAddDoctor.setOnClickListener {
             startActivity(Intent(requireContext(), AddEditDoctorActivity::class.java))
@@ -81,58 +82,50 @@ class DoctorsFragment : Fragment() {
     // ── Member filter chip row ─────────────────────────────────────────────
 
     private fun buildMemberChips(people: List<Person>) {
-        val chipContainer = binding.layoutMemberChips
-        chipContainer.removeAllViews()
-
-        // "All" chip
-        chipContainer.addView(makeChip("All", -1L, selectedPersonId == -1L))
-
-        // One chip per member
+        val container = binding.layoutMemberChips
+        container.removeAllViews()
+        container.addView(makeChip("All", -1L))
         people.forEach { person ->
-            chipContainer.addView(
-                makeChip("${person.avatar} ${person.name}", person.id,
-                    selectedPersonId == person.id)
-            )
+            container.addView(makeChip("${person.avatar} ${person.name}", person.id))
         }
     }
 
-    private fun makeChip(label: String, personId: Long, selected: Boolean): TextView {
-        val dp8 = (8 * resources.displayMetrics.density).toInt()
-        val dp16 = (16 * resources.displayMetrics.density).toInt()
+    private fun makeChip(label: String, personId: Long): TextView {
+        val density = resources.displayMetrics.density
+        val dp8  = (8  * density).toInt()
+        val dp16 = (16 * density).toInt()
+        val dp36 = (36 * density).toInt()
         return TextView(requireContext()).apply {
             text = label
             textSize = 13f
+            minHeight = dp36
+            gravity = android.view.Gravity.CENTER
             setPadding(dp16, dp8, dp16, dp8)
-            isSelected = selected
             background = ContextCompat.getDrawable(
                 requireContext(),
-                if (selected) R.drawable.bg_chip_selected else R.drawable.bg_chip_unselected
+                if (selectedPersonId == personId) R.drawable.bg_chip_selected
+                else R.drawable.bg_chip_unselected
             )
-            val lp = LinearLayout.LayoutParams(
+            layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-            lp.marginEnd = dp8
-            layoutParams = lp
+            ).also { it.marginEnd = dp8 }
             setOnClickListener {
                 selectedPersonId = personId
-                // Rebuild chips to update selected state
+                // Redraw all chips with updated selection
                 buildMemberChips(viewModel.allPeople.value)
                 loadDoctors(personId)
             }
         }
     }
 
-    // ── Doctor list loader ─────────────────────────────────────────────────
+    // ── Doctor list loader ────────────────────────────────────────────────
 
     private fun loadDoctors(personId: Long) {
-        collectJob?.cancel()
-        collectJob = viewLifecycleOwner.lifecycleScope.launch {
-            val flow = if (personId == -1L) {
-                viewModel.allDoctors
-            } else {
-                viewModel.getDoctorsForPerson(personId)
-            }
+        doctorJob?.cancel()
+        doctorJob = viewLifecycleOwner.lifecycleScope.launch {
+            val flow = if (personId == -1L) viewModel.allDoctors
+                       else viewModel.getDoctorsForPerson(personId)
             flow.collectLatest { doctors ->
                 adapter.submitList(doctors)
                 binding.tvEmptyDoctors.visibility =
@@ -143,7 +136,7 @@ class DoctorsFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        collectJob?.cancel()
+        doctorJob?.cancel()
         _binding = null
     }
 }

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.caretracker.data.models.Doctor
 import com.caretracker.databinding.ItemDoctorBinding
+import com.caretracker.utils.PhoneFormatter
 
 class DoctorAdapter(
     private val onClick: (Doctor) -> Unit,
@@ -20,13 +21,13 @@ class DoctorAdapter(
 
         fun bind(doctor: Doctor) {
             binding.tvDoctorName.text = doctor.name
-            binding.tvDoctorSpecialty.text = doctor.specialty.ifEmpty { "General Practice" }
-            binding.tvDoctorPhone.text = doctor.phone.ifEmpty { "No phone on file" }
+            binding.tvDoctorSpecialty.text =
+                doctor.specialty.ifEmpty { "General Practice" }
+            binding.tvDoctorPhone.text =
+                if (doctor.phone.isBlank()) "No phone on file"
+                else PhoneFormatter.formatPhone(doctor.phone)
 
-            // Short tap — edit
             binding.root.setOnClickListener { onClick(doctor) }
-
-            // Long press — Edit / Delete menu
             binding.root.setOnLongClickListener { view ->
                 showMenu(view.context, doctor)
                 true
@@ -42,7 +43,7 @@ class DoctorAdapter(
                     0 -> onClick(doctor)
                     1 -> AlertDialog.Builder(context)
                         .setTitle("Delete \"${doctor.name}\"?")
-                        .setMessage("This will permanently delete this doctor and remove all patient links. This cannot be undone.")
+                        .setMessage("This will permanently delete this doctor and remove all patient links.")
                         .setPositiveButton("Delete") { _, _ -> onDelete(doctor) }
                         .setNegativeButton("Cancel", null)
                         .show()

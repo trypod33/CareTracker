@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/ct_background">
 
     <!-- Member filter chip row -->
@@ -12,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="none"
+        android:fillViewport="false"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
         android:paddingTop="8dp"
@@ -27,24 +29,37 @@
 
     </HorizontalScrollView>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvDoctors"
+    <!-- Divider -->
+    <View
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="64dp"
-        android:paddingBottom="80dp"
-        android:clipToPadding="false" />
+        android:layout_height="1dp"
+        android:background="?attr/colorOutlineVariant" />
 
-    <TextView
-        android:id="@+id/tvEmptyDoctors"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="No doctors added yet."
-        android:textColor="@color/ct_text_secondary"
-        android:textSize="15sp"
-        android:padding="24dp"
-        android:visibility="gone" />
+    <!-- Doctor list fills remaining space -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvDoctors"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="80dp"
+            android:clipToPadding="false" />
+
+        <TextView
+            android:id="@+id/tvEmptyDoctors"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="No doctors added yet."
+            android:textColor="@color/ct_text_secondary"
+            android:textSize="15sp"
+            android:padding="24dp"
+            android:visibility="gone" />
+
+    </FrameLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddDoctor"
@@ -55,4 +70,4 @@
         android:contentDescription="Add Doctor"
         app:srcCompat="@android:drawable/ic_input_add" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>
