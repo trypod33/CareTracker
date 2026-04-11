@@ -1,6 +1,8 @@
 package com.caretracker.ui.medications
 
 import android.app.AlertDialog
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -25,41 +27,47 @@ class MedicationAdapter(
         val b   = holder.binding
 
         // Header
-        b.tvMedName.text     = med.name
-        b.tvMedDosage.text   = "${med.dosage} ${med.unit}"
+        b.tvMedName.text      = med.name
+        b.tvMedDosage.text    = "${med.dosage} ${med.unit}"
         b.tvMedFrequency.text = med.frequency.replace("_", " ").replaceFirstChar { it.uppercase() }
-        b.tvPrescriber.text  = ""  // extend model with prescriber name field if needed
+        b.tvMedPrescriber.text = ""
+        b.tvMedForm.text      = "Tablet"
+
+        // Show person name subtitle if available
+        b.tvMedPersonName.visibility = android.view.View.GONE
 
         // Inventory section
-        b.tvPillCount.text   = "${med.pillsRemaining} pills"
+        b.tvPillCount.text    = "${med.pillsRemaining} pills"
         val refillTotal = if (med.pillsPerDose > 0) med.pillsPerDose else 30
         b.progressPills.max      = refillTotal
         b.progressPills.progress = med.pillsRemaining.coerceAtMost(refillTotal)
 
         // Taken status
-        b.tvTakenStatus.text = "Not taken today"   // TODO: wire to dose log
+        b.tvTakenStatus.text = "Not taken today"
 
-        // Card background tint
+        // Card icon background tint
         try {
-            val tint = android.graphics.Color.parseColor(med.color)
-            // Apply a subtle tint to the icon background only
-            (b.ivMedIcon.background as? android.graphics.drawable.GradientDrawable)
-                ?.setColor(tint)
+            val tint = Color.parseColor(med.color)
+            (b.tvMedIcon.background as? GradientDrawable)?.setColor(tint)
         } catch (_: Exception) { /* ignore invalid color strings */ }
 
-        // Short tap — edit
+        // Tap = edit
         holder.itemView.setOnClickListener { onClick(med) }
-
-        // Action buttons on the card
         b.btnEditMed.setOnClickListener   { onClick(med) }
-        b.btnDeleteMed.setOnClickListener {
-            AlertDialog.Builder(it.context)
+
+        // Delete with confirmation
+        b.btnDeleteMed.setOnClickListener { v ->
+            AlertDialog.Builder(v.context)
                 .setTitle("Delete \"${med.name}\"?")
                 .setMessage("This will permanently delete this medication.")
                 .setPositiveButton("Delete") { _, _ -> onDelete(med) }
                 .setNegativeButton("Cancel", null)
                 .show()
         }
+
+        // Copy — re-use onClick so the activity opens pre-filled (edit with id=0 for duplicate)
+        b.btnCopyMed.setOnClickListener   { onClick(med) }
+
         b.btnTakeMed.setOnClickListener   { /* TODO: log dose */ }
         b.btnRefillMed.setOnClickListener { /* TODO: refill dialog */ }
     }

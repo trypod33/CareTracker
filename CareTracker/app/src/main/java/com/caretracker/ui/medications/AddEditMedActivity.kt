@@ -1,14 +1,19 @@
 package com.caretracker.ui.medications
 
 import android.app.DatePickerDialog
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.widget.ArrayAdapter
+import android.widget.ImageButton
+import android.widget.LinearLayout
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.caretracker.data.models.Medication
 import com.caretracker.databinding.ActivityAddEditMedBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
@@ -19,6 +24,12 @@ class AddEditMedActivity : AppCompatActivity() {
     private val viewModel: MedicationViewModel by viewModels()
     private var medId: Long = 0L
     private var personId: Long = 1L
+
+    private val cardColors = listOf(
+        "#4F98A3", "#6FAF6F", "#E8AF34", "#DD6974",
+        "#A86FDF", "#5591C7", "#BB653B", "#797876"
+    )
+    private var selectedColor = cardColors[0]
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +44,8 @@ class AddEditMedActivity : AppCompatActivity() {
         supportActionBar?.title = if (medId != 0L) "Edit Medication" else "Add Medication"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        setupDropdowns()
+        setupStaticDropdowns()
+        setupPeopleDropdown()
         setupColorPicker()
         setupDatePicker()
         if (medId != 0L) loadMedData()
@@ -44,129 +56,117 @@ class AddEditMedActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean { finish(); return true }
 
-    // -------------------------------------------------------------------------
-    // Dropdowns
-    // -------------------------------------------------------------------------
+    // ── Static dropdowns (unit / form) ────────────────────────────────────────
 
-    private fun setupDropdowns() {
-        // Unit dropdown
+    private fun setupStaticDropdowns() {
         val units = arrayOf("mg", "mcg", "g", "ml", "IU", "units", "tablet", "capsule")
         binding.etUnit.setAdapter(
             ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, units)
         )
-
-        // Form dropdown
-        val forms = arrayOf("Tablet", "Capsule", "Liquid", "Injection", "Patch",
-                            "Inhaler", "Drops", "Cream", "Other")
+        val forms = arrayOf("Tablet", "Capsule", "Liquid", "Injection",
+                            "Patch", "Inhaler", "Drops", "Cream", "Other")
         binding.etForm.setAdapter(
             ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, forms)
         )
+    }
 
-        // Person dropdown — populated from the ViewModel's people list
+    // ── People dropdown — collected from ViewModel StateFlow ─────────────────
+
+    private fun setupPeopleDropdown() {
         lifecycleScope.launch {
-            viewModel.getAllPeople().collect { people ->
-                val names = people.map { it.name }.toTypedArray()
+            viewModel.allPeople.collectLatest { people ->
+                val names = ArrayList<String>(people.map { person -> person.name })
                 binding.etPersonName.setAdapter(
                     ArrayAdapter(this@AddEditMedActivity,
                         android.R.layout.simple_dropdown_item_1line, names)
                 )
-                // Pre-select the person passed in via intent
+                // Pre-select the person passed via intent
                 if (personId != 0L) {
-                    people.firstOrNull { it.id == personId }?.let {
-                        binding.etPersonName.setText(it.name, false)
+                    people.firstOrNull { person -> person.id == personId }?.let { person ->
+                        binding.etPersonName.setText(person.name, false)
                     }
                 }
             }
         }
     }
 
-    // -------------------------------------------------------------------------
-    // Color picker — add colored circle buttons programmatically
-    // -------------------------------------------------------------------------
-
-    private val cardColors = listOf(
-        "#4F98A3", "#6FAF6F", "#E8AF34", "#DD6974",
-        "#A86FDF", "#5591C7", "#BB653B", "#797876"
-    )
-    private var selectedColor = cardColors[0]
+    // ── Color picker ─────────────────────────────────────────────────────────
 
     private fun setupColorPicker() {
-        val size = resources.getDimensionPixelSize(android.R.dimen.app_icon_size) // ~48dp
-        val gap  = resources.getDimensionPixelSize(android.R.dimen.notification_large_icon_width) / 8
+        val sizePx = (40 * resources.displayMetrics.density).toInt()
+        val gapPx  = (8  * resources.displayMetrics.density).toInt()
         cardColors.forEach { hex ->
-            val btn = android.widget.ImageButton(this).apply {
-                layoutParams = android.widget.LinearLayout.LayoutParams(size, size).also {
-                    it.marginEnd = gap
+            val btn = ImageButton(this).apply {
+                val lp = LinearLayout.LayoutParams(sizePx, sizePx)
+                lp.marginEnd = gapPx
+                layoutParams = lp
+                val circle = GradientDrawable().apply {
+                    shape = GradientDrawable.OVAL
+                    setColor(Color.parseColor(hex))
                 }
-                val drawable = android.graphics.drawable.GradientDrawable().also { d ->
-                    d.shape = android.graphics.drawable.GradientDrawable.OVAL
-                    d.setColor(android.graphics.Color.parseColor(hex))
-                }
-                background = drawable
-                contentDescription = "Color $hex"
+                background = circle
+                contentDescription = "Card color $hex"
+                alpha = if (hex == selectedColor) 1.0f else 0.4f
                 setOnClickListener {
                     selectedColor = hex
-                    // visually mark selected
-                    (binding.layoutColorPicker as android.widget.LinearLayout)
-                        .forEach { child ->
-                            (child as? android.widget.ImageButton)?.alpha = 0.4f
-                        }
+                    // Reset all swatches then highlight this one
+                    val container = binding.layoutColorPicker as LinearLayout
+                    for (i in 0 until container.childCount) {
+                        (container.getChildAt(i) as? ImageButton)?.alpha = 0.4f
+                    }
                     alpha = 1.0f
                 }
             }
-            if (hex == selectedColor) btn.alpha = 1.0f else btn.alpha = 0.4f
             binding.layoutColorPicker.addView(btn)
         }
     }
 
-    // -------------------------------------------------------------------------
-    // Date picker for Start Date field
-    // -------------------------------------------------------------------------
+    // ── Date picker ──────────────────────────────────────────────────────────
 
     private fun setupDatePicker() {
         binding.etStartDate.setOnClickListener {
             val cal = Calendar.getInstance()
             DatePickerDialog(
                 this,
-                { _, y, m, d -> binding.etStartDate.setText("%04d-%02d-%02d".format(y, m + 1, d)) },
-                cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)
+                { _, y, m, d ->
+                    binding.etStartDate.setText("%04d-%02d-%02d".format(y, m + 1, d))
+                },
+                cal.get(Calendar.YEAR),
+                cal.get(Calendar.MONTH),
+                cal.get(Calendar.DAY_OF_MONTH)
             ).show()
         }
     }
 
-    // -------------------------------------------------------------------------
-    // Load existing med into form (edit mode)
-    // -------------------------------------------------------------------------
+    // ── Load existing med into form (edit mode) ───────────────────────────────
 
     private fun loadMedData() {
         lifecycleScope.launch {
             val med = viewModel.getMedicationByIdDirect(medId)
-            med?.let {
-                personId = it.personId
-                binding.etMedName.setText(it.name)
-                binding.etGenericName.setText(it.notes)   // notes repurposed as generic name display
-                binding.etDosage.setText(it.dosage)
-                binding.etUnit.setText(it.unit, false)
-                binding.etForm.setText("Tablet", false)   // default; extend model if needed
-                binding.etFrequency.setText(it.frequency.replace("_", " "))
-                binding.etTimesPerDay.setText(it.pillsPerDose.toString())
-                binding.etScheduledTimes.setText(it.timesOfDay.joinToString(","))
-                binding.etInstructions.setText(it.instructions)
-                binding.etPrescriber.setText("")          // extend model if needed
-                binding.etPharmacy.setText("")             // extend model if needed
-                binding.etRxNumber.setText("")             // extend model if needed
-                binding.etPillsRemaining.setText(it.pillsRemaining.toString())
-                binding.etPillsPerRefill.setText(it.pillsPerDose.toString())
-                binding.etRefillReminderAt.setText(it.refillReminderAt.toString())
-                binding.etStartDate.setText(it.startDate)
-                selectedColor = it.color
+            med?.let { m ->
+                personId = m.personId
+                binding.etMedName.setText(m.name)
+                binding.etGenericName.setText(m.notes)
+                binding.etDosage.setText(m.dosage)
+                binding.etUnit.setText(m.unit, false)
+                binding.etForm.setText("Tablet", false)
+                binding.etFrequency.setText(m.frequency.replace("_", " "))
+                binding.etTimesPerDay.setText(m.pillsPerDose.toString())
+                binding.etScheduledTimes.setText(m.timesOfDay.joinToString(","))
+                binding.etInstructions.setText(m.instructions)
+                binding.etPrescriber.setText("")
+                binding.etPharmacy.setText("")
+                binding.etRxNumber.setText("")
+                binding.etPillsRemaining.setText(m.pillsRemaining.toString())
+                binding.etPillsPerRefill.setText(m.pillsPerDose.toString())
+                binding.etRefillReminderAt.setText(m.refillReminderAt.toString())
+                binding.etStartDate.setText(m.startDate)
+                selectedColor = m.color
             }
         }
     }
 
-    // -------------------------------------------------------------------------
-    // Save
-    // -------------------------------------------------------------------------
+    // ── Save ─────────────────────────────────────────────────────────────────
 
     private fun saveMed() {
         val name = binding.etMedName.text.toString().trim()
@@ -175,31 +175,27 @@ class AddEditMedActivity : AppCompatActivity() {
             return
         }
 
-        // Resolve personId from the dropdown selection if the user changed it
-        // (The ViewModel holds the person list; for now we keep the pre-set personId
-        //  unless the user typed a different name — a full lookup can be added later.)
-
-        val scheduledTimesList = binding.etScheduledTimes.text.toString()
+        val scheduledTimes = binding.etScheduledTimes.text.toString()
             .split(",")
             .map { it.trim() }
             .filter { it.isNotEmpty() }
 
         val medication = Medication(
-            id                 = medId,
-            personId           = personId,
-            name               = name,
-            dosage             = binding.etDosage.text.toString().trim(),
-            unit               = binding.etUnit.text.toString().trim().ifEmpty { "mg" },
-            frequency          = binding.etFrequency.text.toString().trim().replace(" ", "_")
-                                     .ifEmpty { "daily" },
-            timesOfDay         = scheduledTimesList,
-            instructions       = binding.etInstructions.text.toString().trim(),
-            pillsRemaining     = binding.etPillsRemaining.text.toString().toIntOrNull() ?: 0,
-            pillsPerDose       = binding.etPillsPerRefill.text.toString().toIntOrNull() ?: 1,
-            refillReminderAt   = binding.etRefillReminderAt.text.toString().toIntOrNull() ?: 7,
-            startDate          = binding.etStartDate.text.toString().trim(),
-            color              = selectedColor,
-            notes              = binding.etGenericName.text.toString().trim()
+            id               = medId,
+            personId         = personId,
+            name             = name,
+            dosage           = binding.etDosage.text.toString().trim(),
+            unit             = binding.etUnit.text.toString().trim().ifEmpty { "mg" },
+            frequency        = binding.etFrequency.text.toString().trim()
+                                   .replace(" ", "_").ifEmpty { "daily" },
+            timesOfDay       = scheduledTimes,
+            instructions     = binding.etInstructions.text.toString().trim(),
+            pillsRemaining   = binding.etPillsRemaining.text.toString().toIntOrNull() ?: 0,
+            pillsPerDose     = binding.etPillsPerRefill.text.toString().toIntOrNull() ?: 1,
+            refillReminderAt = binding.etRefillReminderAt.text.toString().toIntOrNull() ?: 7,
+            startDate        = binding.etStartDate.text.toString().trim(),
+            color            = selectedColor,
+            notes            = binding.etGenericName.text.toString().trim()
         )
         viewModel.saveMedication(medication)
         finish()
