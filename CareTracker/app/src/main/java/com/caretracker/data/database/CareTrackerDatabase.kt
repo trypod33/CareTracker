@@ -37,7 +37,6 @@ abstract class CareTrackerDatabase : RoomDatabase() {
     abstract fun dailyHealthEntryDao(): DailyHealthEntryDao
 
     companion object {
-        /** Migration 2 → 3 */
         val MIGRATION_2_3 = object : Migration(2, 3) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE people ADD COLUMN isActiveProfile INTEGER NOT NULL DEFAULT 0")
@@ -52,14 +51,12 @@ abstract class CareTrackerDatabase : RoomDatabase() {
             }
         }
 
-        /** Migration 3 → 4: add avatar to doctors */
         val MIGRATION_3_4 = object : Migration(3, 4) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE doctors ADD COLUMN avatar TEXT NOT NULL DEFAULT '\uD83E\uDE7A'")
             }
         }
 
-        /** Migration 4 → 5: change habit_logs.value from INTEGER to REAL (Double) */
         val MIGRATION_4_5 = object : Migration(4, 5) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("""
@@ -83,35 +80,45 @@ abstract class CareTrackerDatabase : RoomDatabase() {
             }
         }
 
-        /** Migration 5 → 6: add daily_health_entries table */
+        /**
+         * Migration 5 → 6: add daily_health_entries table.
+         * Column types must exactly match Room's generated schema for DailyHealthEntry:
+         * - Float?  → REAL
+         * - Int?    → INTEGER
+         * - Long?   → INTEGER  (bpTimestamp, bsTimestamp, createdAt)
+         * - String? → TEXT
+         */
         val MIGRATION_5_6 = object : Migration(5, 6) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("""
-                    CREATE TABLE IF NOT EXISTS daily_health_entries (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                        personId INTEGER NOT NULL,
-                        date TEXT NOT NULL,
-                        weightValue REAL,
-                        weightUnit TEXT,
-                        heartRate INTEGER,
-                        bpSystolic INTEGER,
-                        bpDiastolic INTEGER,
-                        bpTimestamp TEXT,
-                        bloodSugar REAL,
-                        bsTimestamp TEXT,
-                        sleepHours REAL,
-                        sleepQuality INTEGER,
-                        mood INTEGER,
-                        energyLevel INTEGER,
-                        steps INTEGER,
-                        exerciseMinutes INTEGER,
-                        waterOz REAL,
-                        calories INTEGER,
-                        notes TEXT
+                    CREATE TABLE IF NOT EXISTS `daily_health_entries` (
+                        `id`              INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        `personId`        INTEGER NOT NULL,
+                        `date`            TEXT NOT NULL,
+                        `weightValue`     REAL,
+                        `weightUnit`      TEXT,
+                        `heartRate`       INTEGER,
+                        `bpSystolic`      INTEGER,
+                        `bpDiastolic`     INTEGER,
+                        `bloodSugar`      REAL,
+                        `bpTimestamp`     INTEGER,
+                        `bsTimestamp`     INTEGER,
+                        `sleepHours`      REAL,
+                        `sleepQuality`    INTEGER,
+                        `mood`            INTEGER,
+                        `energyLevel`     INTEGER,
+                        `steps`           INTEGER,
+                        `exerciseMinutes` INTEGER,
+                        `waterOz`         REAL,
+                        `calories`        INTEGER,
+                        `notes`           TEXT,
+                        `createdAt`       INTEGER NOT NULL DEFAULT 0
                     )
                 """.trimIndent())
-                db.execSQL("CREATE INDEX IF NOT EXISTS index_daily_health_entries_personId ON daily_health_entries (personId)")
-                db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_daily_health_entries_personId_date ON daily_health_entries (personId, date)")
+                db.execSQL(
+                    "CREATE INDEX IF NOT EXISTS `index_daily_health_entries_personId` " +
+                    "ON `daily_health_entries` (`personId`)"
+                )
             }
         }
     }
