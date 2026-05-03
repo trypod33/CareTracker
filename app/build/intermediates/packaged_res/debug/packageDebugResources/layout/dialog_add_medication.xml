@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="wrap_content">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+        <TextView android:text="BASIC INFO" android:textSize="11sp" android:textColor="#4f9cf9" android:textStyle="bold" android:layout_marginBottom="10dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Medication Name *" android:layout_marginBottom="10dp">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etMedName" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Generic Name" android:layout_marginBottom="10dp">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etGenericName" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="10dp">
+            <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="2" android:hint="Dosage" android:layout_marginEnd="8dp">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etDosage" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="numberDecimal"/>
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:hint="Unit" android:layout_marginEnd="8dp">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etDosageUnit" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="mg"/>
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="2" android:hint="Form">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etForm" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Tablet"/>
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+        <TextView android:text="SCHEDULE" android:textSize="11sp" android:textColor="#4f9cf9" android:textStyle="bold" android:layout_marginTop="8dp" android:layout_marginBottom="10dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Frequency Description" android:layout_marginBottom="10dp">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etFrequency" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="10dp">
+            <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:hint="Times/Day" android:layout_marginEnd="8dp">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etTimesPerDay" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" android:text="1"/>
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="2" android:hint="Scheduled Times (08:00,20:00)">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etScheduledTimes" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+        <CheckBox android:id="@+id/cbWithFood" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Take with food" android:textColor="#cccccc" android:layout_marginBottom="10dp"/>
+        <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Special Instructions" android:layout_marginBottom="10dp">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etInstructions" android:layout_width="match_parent" android:layout_height="wrap_content" android:minLines="2"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <TextView android:text="PRESCRIBER &amp; PHARMACY" android:textSize="11sp" android:textColor="#4f9cf9" android:textStyle="bold" android:layout_marginTop="8dp" android:layout_marginBottom="10dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="10dp">
+            <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:hint="Prescriber" android:layout_marginEnd="8dp">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etPrescriber" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:hint="Pharmacy">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etPharmacy" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+        <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="RX Number" android:layout_marginBottom="10dp">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etRxNumber" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <TextView android:text="INVENTORY" android:textSize="11sp" android:textColor="#4f9cf9" android:textStyle="bold" android:layout_marginTop="8dp" android:layout_marginBottom="10dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="10dp">
+            <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:hint="Current Count" android:layout_marginEnd="8dp">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etCurrentCount" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" android:text="0"/>
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:hint="Pills Per Refill">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etPillsPerRefill" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" android:text="30"/>
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+        <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Refill Reminder At (pills remaining)" android:layout_marginBottom="16dp">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etRefillReminder" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" android:text="7"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <TextView android:text="CARD COLOR" android:textSize="11sp" android:textColor="#4f9cf9" android:textStyle="bold" android:layout_marginBottom="10dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        <RadioGroup android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+            <RadioButton android:id="@+id/rbBlue"   android:layout_width="36dp" android:layout_height="36dp" android:buttonTint="#4f9cf9" android:checked="true"/>
+            <RadioButton android:id="@+id/rbPurple" android:layout_width="36dp" android:layout_height="36dp" android:buttonTint="#9b59b6"/>
+            <RadioButton android:id="@+id/rbGreen"  android:layout_width="36dp" android:layout_height="36dp" android:buttonTint="#2ecc71"/>
+            <RadioButton android:id="@+id/rbOrange" android:layout_width="36dp" android:layout_height="36dp" android:buttonTint="#e67e22"/>
+            <RadioButton android:id="@+id/rbRed"    android:layout_width="36dp" android:layout_height="36dp" android:buttonTint="#e74c3c"/>
+            <RadioButton android:id="@+id/rbPink"   android:layout_width="36dp" android:layout_height="36dp" android:buttonTint="#e91e8c"/>
+            <RadioButton android:id="@+id/rbAmber"  android:layout_width="36dp" android:layout_height="36dp" android:buttonTint="#ff9800"/>
+            <RadioButton android:id="@+id/rbCyan"   android:layout_width="36dp" android:layout_height="36dp" android:buttonTint="#00bcd4"/>
+        </RadioGroup>
+    </LinearLayout>
+</ScrollView>

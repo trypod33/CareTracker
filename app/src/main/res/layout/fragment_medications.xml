@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#121212"
-    android:gravity="center"
     android:orientation="vertical">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Medications"
-        android:textSize="24sp"
-        android:textColor="#ffffff"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingHorizontal="16dp" android:paddingTop="16dp" android:paddingBottom="8dp" android:gravity="center_vertical">
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Medications" android:textSize="22sp" android:textColor="#ffffff" android:textStyle="bold"/>
+        <Button android:id="@+id/btnAddMedication" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="+ Add Medication" android:textSize="13sp" android:backgroundTint="#4f9cf9" android:textColor="#ffffff"/>
+    </LinearLayout>
+    <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content" android:scrollbars="none" android:paddingHorizontal="12dp" android:paddingBottom="8dp">
+        <com.google.android.material.chip.ChipGroup android:id="@+id/chipGroupFilter" android:layout_width="wrap_content" android:layout_height="wrap_content" app:singleSelection="true"/>
+    </HorizontalScrollView>
+    <TextView android:id="@+id/tvEmpty" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="No medications yet. Tap + Add Medication to get started." android:textColor="#888888" android:textSize="14sp" android:gravity="center" android:padding="32dp" android:visibility="gone"/>
+    <androidx.recyclerview.widget.RecyclerView android:id="@+id/rvMedications" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:paddingHorizontal="12dp" android:paddingBottom="16dp" android:clipToPadding="false"/>
 </LinearLayout>

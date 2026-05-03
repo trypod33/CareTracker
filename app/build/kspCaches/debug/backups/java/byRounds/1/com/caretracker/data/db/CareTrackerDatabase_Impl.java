@@ -11,6 +11,10 @@ import androidx.room.util.DBUtil;
 import androidx.room.util.TableInfo;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 import androidx.sqlite.db.SupportSQLiteOpenHelper;
+import com.caretracker.data.dao.BloodPressureDao;
+import com.caretracker.data.dao.BloodPressureDao_Impl;
+import com.caretracker.data.dao.BloodSugarDao;
+import com.caretracker.data.dao.BloodSugarDao_Impl;
 import com.caretracker.data.dao.CalendarDao;
 import com.caretracker.data.dao.CalendarDao_Impl;
 import com.caretracker.data.dao.HabitDao;
@@ -30,6 +34,7 @@ import java.lang.Override;
 import java.lang.String;
 import java.lang.SuppressWarnings;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -54,10 +59,14 @@ public final class CareTrackerDatabase_Impl extends CareTrackerDatabase {
 
   private volatile MoodDao _moodDao;
 
+  private volatile BloodPressureDao _bloodPressureDao;
+
+  private volatile BloodSugarDao _bloodSugarDao;
+
   @Override
   @NonNull
   protected SupportSQLiteOpenHelper createOpenHelper(@NonNull final DatabaseConfiguration config) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(1) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(2) {
       @Override
       public void createAllTables(@NonNull final SupportSQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS `users` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `username` TEXT NOT NULL, `email` TEXT NOT NULL, `passwordHash` TEXT NOT NULL, `displayName` TEXT, `avatarColor` TEXT NOT NULL, `role` TEXT NOT NULL, `isActive` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL)");
@@ -70,8 +79,12 @@ public final class CareTrackerDatabase_Impl extends CareTrackerDatabase {
         db.execSQL("CREATE TABLE IF NOT EXISTS `tasks` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` INTEGER NOT NULL, `title` TEXT NOT NULL, `description` TEXT, `priority` TEXT NOT NULL, `status` TEXT NOT NULL, `category` TEXT NOT NULL, `dueDate` TEXT, `dueTime` TEXT, `estimatedMinutes` INTEGER, `tags` TEXT, `completedAt` INTEGER, `createdAt` INTEGER NOT NULL)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `mood_journal` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` INTEGER NOT NULL, `entryDate` TEXT NOT NULL, `moodScore` INTEGER, `content` TEXT, `tags` TEXT, `createdAt` INTEGER NOT NULL)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `vital_logs` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` INTEGER NOT NULL, `entryDate` TEXT NOT NULL, `recordedAt` INTEGER NOT NULL, `type` TEXT NOT NULL, `value` REAL, `value2` REAL, `unit` TEXT NOT NULL, `notes` TEXT)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `blood_pressure_readings` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `entryId` INTEGER NOT NULL, `systolic` INTEGER NOT NULL, `diastolic` INTEGER NOT NULL, `readingTime` TEXT NOT NULL, `label` TEXT NOT NULL, FOREIGN KEY(`entryId`) REFERENCES `health_entries`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )");
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_blood_pressure_readings_entryId` ON `blood_pressure_readings` (`entryId`)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `blood_sugar_readings` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `entryId` INTEGER NOT NULL, `value` REAL NOT NULL, `readingTime` TEXT NOT NULL, `label` TEXT NOT NULL, FOREIGN KEY(`entryId`) REFERENCES `health_entries`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )");
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_blood_sugar_readings_entryId` ON `blood_sugar_readings` (`entryId`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f6572c2958340e8844873a019dc976b3')");
+        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2ae9d7fd6ba3b9715816d79e728f5402')");
       }
 
       @Override
@@ -86,6 +99,8 @@ public final class CareTrackerDatabase_Impl extends CareTrackerDatabase {
         db.execSQL("DROP TABLE IF EXISTS `tasks`");
         db.execSQL("DROP TABLE IF EXISTS `mood_journal`");
         db.execSQL("DROP TABLE IF EXISTS `vital_logs`");
+        db.execSQL("DROP TABLE IF EXISTS `blood_pressure_readings`");
+        db.execSQL("DROP TABLE IF EXISTS `blood_sugar_readings`");
         final List<? extends RoomDatabase.Callback> _callbacks = mCallbacks;
         if (_callbacks != null) {
           for (RoomDatabase.Callback _callback : _callbacks) {
@@ -107,6 +122,7 @@ public final class CareTrackerDatabase_Impl extends CareTrackerDatabase {
       @Override
       public void onOpen(@NonNull final SupportSQLiteDatabase db) {
         mDatabase = db;
+        db.execSQL("PRAGMA foreign_keys = ON");
         internalInitInvalidationTracker(db);
         final List<? extends RoomDatabase.Callback> _callbacks = mCallbacks;
         if (_callbacks != null) {
@@ -351,9 +367,44 @@ public final class CareTrackerDatabase_Impl extends CareTrackerDatabase {
                   + " Expected:\n" + _infoVitalLogs + "\n"
                   + " Found:\n" + _existingVitalLogs);
         }
+        final HashMap<String, TableInfo.Column> _columnsBloodPressureReadings = new HashMap<String, TableInfo.Column>(6);
+        _columnsBloodPressureReadings.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsBloodPressureReadings.put("entryId", new TableInfo.Column("entryId", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsBloodPressureReadings.put("systolic", new TableInfo.Column("systolic", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsBloodPressureReadings.put("diastolic", new TableInfo.Column("diastolic", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsBloodPressureReadings.put("readingTime", new TableInfo.Column("readingTime", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsBloodPressureReadings.put("label", new TableInfo.Column("label", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        final HashSet<TableInfo.ForeignKey> _foreignKeysBloodPressureReadings = new HashSet<TableInfo.ForeignKey>(1);
+        _foreignKeysBloodPressureReadings.add(new TableInfo.ForeignKey("health_entries", "CASCADE", "NO ACTION", Arrays.asList("entryId"), Arrays.asList("id")));
+        final HashSet<TableInfo.Index> _indicesBloodPressureReadings = new HashSet<TableInfo.Index>(1);
+        _indicesBloodPressureReadings.add(new TableInfo.Index("index_blood_pressure_readings_entryId", false, Arrays.asList("entryId"), Arrays.asList("ASC")));
+        final TableInfo _infoBloodPressureReadings = new TableInfo("blood_pressure_readings", _columnsBloodPressureReadings, _foreignKeysBloodPressureReadings, _indicesBloodPressureReadings);
+        final TableInfo _existingBloodPressureReadings = TableInfo.read(db, "blood_pressure_readings");
+        if (!_infoBloodPressureReadings.equals(_existingBloodPressureReadings)) {
+          return new RoomOpenHelper.ValidationResult(false, "blood_pressure_readings(com.caretracker.data.entities.BloodPressureReadingEntity).\n"
+                  + " Expected:\n" + _infoBloodPressureReadings + "\n"
+                  + " Found:\n" + _existingBloodPressureReadings);
+        }
+        final HashMap<String, TableInfo.Column> _columnsBloodSugarReadings = new HashMap<String, TableInfo.Column>(5);
+        _columnsBloodSugarReadings.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsBloodSugarReadings.put("entryId", new TableInfo.Column("entryId", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsBloodSugarReadings.put("value", new TableInfo.Column("value", "REAL", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsBloodSugarReadings.put("readingTime", new TableInfo.Column("readingTime", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsBloodSugarReadings.put("label", new TableInfo.Column("label", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        final HashSet<TableInfo.ForeignKey> _foreignKeysBloodSugarReadings = new HashSet<TableInfo.ForeignKey>(1);
+        _foreignKeysBloodSugarReadings.add(new TableInfo.ForeignKey("health_entries", "CASCADE", "NO ACTION", Arrays.asList("entryId"), Arrays.asList("id")));
+        final HashSet<TableInfo.Index> _indicesBloodSugarReadings = new HashSet<TableInfo.Index>(1);
+        _indicesBloodSugarReadings.add(new TableInfo.Index("index_blood_sugar_readings_entryId", false, Arrays.asList("entryId"), Arrays.asList("ASC")));
+        final TableInfo _infoBloodSugarReadings = new TableInfo("blood_sugar_readings", _columnsBloodSugarReadings, _foreignKeysBloodSugarReadings, _indicesBloodSugarReadings);
+        final TableInfo _existingBloodSugarReadings = TableInfo.read(db, "blood_sugar_readings");
+        if (!_infoBloodSugarReadings.equals(_existingBloodSugarReadings)) {
+          return new RoomOpenHelper.ValidationResult(false, "blood_sugar_readings(com.caretracker.data.entities.BloodSugarReadingEntity).\n"
+                  + " Expected:\n" + _infoBloodSugarReadings + "\n"
+                  + " Found:\n" + _existingBloodSugarReadings);
+        }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "f6572c2958340e8844873a019dc976b3", "0eaf612b44973b11acce5a5d555fab2f");
+    }, "2ae9d7fd6ba3b9715816d79e728f5402", "655fedccda67c1e1d20749b9e338c690");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(config.context).name(config.name).callback(_openCallback).build();
     final SupportSQLiteOpenHelper _helper = config.sqliteOpenHelperFactory.create(_sqliteConfig);
     return _helper;
@@ -364,15 +415,22 @@ public final class CareTrackerDatabase_Impl extends CareTrackerDatabase {
   protected InvalidationTracker createInvalidationTracker() {
     final HashMap<String, String> _shadowTablesMap = new HashMap<String, String>(0);
     final HashMap<String, Set<String>> _viewTables = new HashMap<String, Set<String>>(0);
-    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "users","habits","habit_logs","health_entries","medications","med_logs","calendar_events","tasks","mood_journal","vital_logs");
+    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "users","habits","habit_logs","health_entries","medications","med_logs","calendar_events","tasks","mood_journal","vital_logs","blood_pressure_readings","blood_sugar_readings");
   }
 
   @Override
   public void clearAllTables() {
     super.assertNotMainThread();
     final SupportSQLiteDatabase _db = super.getOpenHelper().getWritableDatabase();
+    final boolean _supportsDeferForeignKeys = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP;
     try {
+      if (!_supportsDeferForeignKeys) {
+        _db.execSQL("PRAGMA foreign_keys = FALSE");
+      }
       super.beginTransaction();
+      if (_supportsDeferForeignKeys) {
+        _db.execSQL("PRAGMA defer_foreign_keys = TRUE");
+      }
       _db.execSQL("DELETE FROM `users`");
       _db.execSQL("DELETE FROM `habits`");
       _db.execSQL("DELETE FROM `habit_logs`");
@@ -383,9 +441,14 @@ public final class CareTrackerDatabase_Impl extends CareTrackerDatabase {
       _db.execSQL("DELETE FROM `tasks`");
       _db.execSQL("DELETE FROM `mood_journal`");
       _db.execSQL("DELETE FROM `vital_logs`");
+      _db.execSQL("DELETE FROM `blood_pressure_readings`");
+      _db.execSQL("DELETE FROM `blood_sugar_readings`");
       super.setTransactionSuccessful();
     } finally {
       super.endTransaction();
+      if (!_supportsDeferForeignKeys) {
+        _db.execSQL("PRAGMA foreign_keys = TRUE");
+      }
       _db.query("PRAGMA wal_checkpoint(FULL)").close();
       if (!_db.inTransaction()) {
         _db.execSQL("VACUUM");
@@ -404,6 +467,8 @@ public final class CareTrackerDatabase_Impl extends CareTrackerDatabase {
     _typeConvertersMap.put(CalendarDao.class, CalendarDao_Impl.getRequiredConverters());
     _typeConvertersMap.put(TaskDao.class, TaskDao_Impl.getRequiredConverters());
     _typeConvertersMap.put(MoodDao.class, MoodDao_Impl.getRequiredConverters());
+    _typeConvertersMap.put(BloodPressureDao.class, BloodPressureDao_Impl.getRequiredConverters());
+    _typeConvertersMap.put(BloodSugarDao.class, BloodSugarDao_Impl.getRequiredConverters());
     return _typeConvertersMap;
   }
 
@@ -516,6 +581,34 @@ public final class CareTrackerDatabase_Impl extends CareTrackerDatabase {
           _moodDao = new MoodDao_Impl(this);
         }
         return _moodDao;
+      }
+    }
+  }
+
+  @Override
+  public BloodPressureDao bloodPressureDao() {
+    if (_bloodPressureDao != null) {
+      return _bloodPressureDao;
+    } else {
+      synchronized(this) {
+        if(_bloodPressureDao == null) {
+          _bloodPressureDao = new BloodPressureDao_Impl(this);
+        }
+        return _bloodPressureDao;
+      }
+    }
+  }
+
+  @Override
+  public BloodSugarDao bloodSugarDao() {
+    if (_bloodSugarDao != null) {
+      return _bloodSugarDao;
+    } else {
+      synchronized(this) {
+        if(_bloodSugarDao == null) {
+          _bloodSugarDao = new BloodSugarDao_Impl(this);
+        }
+        return _bloodSugarDao;
       }
     }
   }

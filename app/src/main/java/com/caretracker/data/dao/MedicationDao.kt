@@ -18,6 +18,8 @@ interface MedicationDao {
 
     @Query("SELECT * FROM med_logs WHERE medicationId = :medId ORDER BY takenAt DESC LIMIT 30")
     fun getRecentLogs(medId: Long): Flow<List<MedLogEntity>>
+    @Query("SELECT * FROM med_logs WHERE medicationId = :medId AND takenDate = :date")
+    suspend fun getMedLogsForDateOnce(medId: Long, date: String): List<MedLogEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMedication(med: MedicationEntity): Long

@@ -49,6 +49,7 @@ suspend fun deleteHealthEntry(entry: HealthEntryEntity) = healthDao.deleteEntry(
     suspend fun insertMedLog(log: MedLogEntity) = medicationDao.insertLog(log)
     suspend fun updateMedication(med: MedicationEntity) = medicationDao.updateMedication(med)
     suspend fun deleteMedication(med: MedicationEntity) = medicationDao.deleteMedication(med)
+    suspend fun getMedLogsForDateOnce(medId: Long, date: String) = medicationDao.getMedLogsForDateOnce(medId, date)
 
     // Calendar
     fun getEventsForUser(userId: Long) = calendarDao.getEventsForUser(userId)

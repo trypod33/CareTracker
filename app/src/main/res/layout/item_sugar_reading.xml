@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="4dp"
+    android:layout_marginBottom="6dp">
+
+    <EditText
+        android:id="@+id/etValue"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:hint="mg/dL"
+        android:inputType="numberDecimal"
+        android:textSize="13sp"
+        android:padding="6dp" />
+
+    <EditText
+        android:id="@+id/etTime"
+        android:layout_width="0dp"
+        android:layout_weight="1.2"
+        android:layout_height="wrap_content"
+        android:hint="07:00 AM"
+        android:textSize="13sp"
+        android:padding="6dp"
+        android:layout_marginStart="4dp" />
+
+    <EditText
+        android:id="@+id/etLabel"
+        android:layout_width="0dp"
+        android:layout_weight="1.4"
+        android:layout_height="wrap_content"
+        android:hint="Fasting"
+        android:textSize="13sp"
+        android:padding="6dp"
+        android:layout_marginStart="4dp" />
+
+    <ImageButton
+        android:id="@+id/btnDelete"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@android:drawable/ic_delete"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Remove"
+        android:layout_marginStart="4dp" />
+</LinearLayout>

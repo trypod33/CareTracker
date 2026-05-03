@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.caretracker.data.dao.*
 import com.caretracker.data.entities.*
 
@@ -18,9 +20,11 @@ import com.caretracker.data.entities.*
         CalendarEventEntity::class,
         TaskEntity::class,
         MoodJournalEntity::class,
-        VitalLogEntity::class
+        VitalLogEntity::class,
+        BloodPressureReadingEntity::class,
+        BloodSugarReadingEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class CareTrackerDatabase : RoomDatabase() {
@@ -31,10 +35,46 @@ abstract class CareTrackerDatabase : RoomDatabase() {
     abstract fun calendarDao(): CalendarDao
     abstract fun taskDao(): TaskDao
     abstract fun moodDao(): MoodDao
+    abstract fun bloodPressureDao(): BloodPressureDao
+    abstract fun bloodSugarDao(): BloodSugarDao
 
     companion object {
         @Volatile
         private var INSTANCE: CareTrackerDatabase? = null
+
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("""
+                    CREATE TABLE IF NOT EXISTS blood_pressure_readings (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        entryId INTEGER NOT NULL DEFAULT 0,
+                        systolic INTEGER NOT NULL,
+                        diastolic INTEGER NOT NULL,
+                        readingTime TEXT NOT NULL DEFAULT '',
+                        label TEXT NOT NULL DEFAULT '',
+                        FOREIGN KEY(entryId) REFERENCES health_entries(id) ON DELETE CASCADE
+                    )
+                """.trimIndent())
+                database.execSQL("""
+                    CREATE INDEX IF NOT EXISTS index_blood_pressure_readings_entryId
+                    ON blood_pressure_readings(entryId)
+                """.trimIndent())
+                database.execSQL("""
+                    CREATE TABLE IF NOT EXISTS blood_sugar_readings (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        entryId INTEGER NOT NULL DEFAULT 0,
+                        value REAL NOT NULL,
+                        readingTime TEXT NOT NULL DEFAULT '',
+                        label TEXT NOT NULL DEFAULT '',
+                        FOREIGN KEY(entryId) REFERENCES health_entries(id) ON DELETE CASCADE
+                    )
+                """.trimIndent())
+                database.execSQL("""
+                    CREATE INDEX IF NOT EXISTS index_blood_sugar_readings_entryId
+                    ON blood_sugar_readings(entryId)
+                """.trimIndent())
+            }
+        }
 
         fun getDatabase(context: Context): CareTrackerDatabase {
             return INSTANCE ?: synchronized(this) {
@@ -42,7 +82,9 @@ abstract class CareTrackerDatabase : RoomDatabase() {
                     context.applicationContext,
                     CareTrackerDatabase::class.java,
                     "caretracker_db"
-                ).build().also { INSTANCE = it }
+                )
+                .addMigrations(MIGRATION_1_2)
+                .build().also { INSTANCE = it }
             }
         }
     }

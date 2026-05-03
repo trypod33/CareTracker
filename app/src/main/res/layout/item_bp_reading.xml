@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="4dp"
+    android:layout_marginBottom="6dp">
+
+    <EditText
+        android:id="@+id/etSystolic"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:hint="Sys"
+        android:inputType="number"
+        android:textSize="13sp"
+        android:padding="6dp" />
+
+    <EditText
+        android:id="@+id/etDiastolic"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:hint="Dia"
+        android:inputType="number"
+        android:textSize="13sp"
+        android:padding="6dp"
+        android:layout_marginStart="4dp" />
+
+    <EditText
+        android:id="@+id/etTime"
+        android:layout_width="0dp"
+        android:layout_weight="1.2"
+        android:layout_height="wrap_content"
+        android:hint="08:30 AM"
+        android:textSize="13sp"
+        android:padding="6dp"
+        android:layout_marginStart="4dp" />
+
+    <EditText
+        android:id="@+id/etLabel"
+        android:layout_width="0dp"
+        android:layout_weight="1.2"
+        android:layout_height="wrap_content"
+        android:hint="Morning"
+        android:textSize="13sp"
+        android:padding="6dp"
+        android:layout_marginStart="4dp" />
+
+    <ImageButton
+        android:id="@+id/btnDelete"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@android:drawable/ic_delete"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Remove"
+        android:layout_marginStart="4dp" />
+</LinearLayout>

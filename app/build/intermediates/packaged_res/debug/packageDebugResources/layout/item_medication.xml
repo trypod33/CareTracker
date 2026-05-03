@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardBackgroundColor="#1e1e1e" app:cardCornerRadius="12dp" app:cardElevation="4dp">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+            <View android:id="@+id/viewMedColor" android:layout_width="12dp" android:layout_height="32dp" android:layout_marginEnd="12dp" android:background="@drawable/bg_color_pill"/>
+            <TextView android:id="@+id/tvMedName" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:textSize="17sp" android:textColor="#ffffff" android:textStyle="bold"/>
+            <ImageButton android:id="@+id/btnEdit" android:layout_width="36dp" android:layout_height="36dp" android:src="@drawable/ic_edit" android:background="?attr/selectableItemBackgroundBorderless" android:tint="#888888" android:contentDescription="Edit"/>
+            <ImageButton android:id="@+id/btnDelete" android:layout_width="36dp" android:layout_height="36dp" android:src="@drawable/ic_delete" android:background="?attr/selectableItemBackgroundBorderless" android:tint="#e74c3c" android:contentDescription="Delete"/>
+        </LinearLayout>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="10dp">
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                <TextView android:text="DOSAGE" android:textSize="10sp" android:textColor="#888888" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                <TextView android:id="@+id/tvDosage" android:textSize="14sp" android:textColor="#ffffff" android:textStyle="bold" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                <TextView android:text="FORM" android:textSize="10sp" android:textColor="#888888" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                <TextView android:id="@+id/tvForm" android:textSize="14sp" android:textColor="#ffffff" android:textStyle="bold" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="8dp">
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                <TextView android:text="FREQUENCY" android:textSize="10sp" android:textColor="#888888" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                <TextView android:id="@+id/tvFrequency" android:textSize="13sp" android:textColor="#cccccc" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                <TextView android:text="PRESCRIBER" android:textSize="10sp" android:textColor="#888888" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                <TextView android:id="@+id/tvPrescriber" android:textSize="13sp" android:textColor="#cccccc" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </LinearLayout>
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#2a2a2a" android:layout_marginVertical="12dp"/>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+            <TextView android:text="PILL INVENTORY" android:textSize="10sp" android:textColor="#888888" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"/>
+            <TextView android:id="@+id/tvPillCount" android:textSize="12sp" android:textColor="#4caf50" android:textStyle="bold" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <ProgressBar android:id="@+id/progressPills" style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent" android:layout_height="8dp" android:layout_marginTop="6dp" android:progressDrawable="@drawable/progress_pills" android:max="100"/>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginTop="12dp">
+            <TextView android:id="@+id/tvTakenStatus" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:textSize="13sp" android:textColor="#888888"/>
+            <Button android:id="@+id/btnTake" android:layout_width="wrap_content" android:layout_height="36dp" android:text="Take" android:textSize="13sp" android:backgroundTint="#2ecc71" android:textColor="#000000" android:layout_marginEnd="8dp"/>
+            <Button android:id="@+id/btnRefill" android:layout_width="wrap_content" android:layout_height="36dp" android:text="Refill" android:textSize="13sp" android:backgroundTint="#2a2a2a" android:textColor="#ffffff"/>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

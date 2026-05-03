@@ -4,7 +4,7 @@
             "outputFile": "com.caretracker.app-mergeDebugResources-53:/values-sw600dp-v13/values-sw600dp-v13.xml",
             "map": [
                 {
-                    "source": "/data/data/com.termux/files/home/.gradle/caches/9.4.1/transforms/5b4fcfca8c1d31fb6b9d645906bd0bcc/transformed/appcompat-1.6.1/res/values-sw600dp-v13/values-sw600dp-v13.xml",
+                    "source": "/data/data/com.termux/files/home/.gradle/caches/8.9/transforms/3f0467b21ba2af13a76dd245bce7c8b5/transformed/appcompat-1.6.1/res/values-sw600dp-v13/values-sw600dp-v13.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -14,7 +14,7 @@
                     }
                 },
                 {
-                    "source": "/data/data/com.termux/files/home/.gradle/caches/9.4.1/transforms/8cb3559dc1c171d4626f5bd68e48529c/transformed/material-1.11.0/res/values-sw600dp-v13/values-sw600dp-v13.xml",
+                    "source": "/data/data/com.termux/files/home/.gradle/caches/8.9/transforms/2f13fd4d75ff5b352c11ac9d1fec2ce5/transformed/material-1.11.0/res/values-sw600dp-v13/values-sw600dp-v13.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,10,11,12,13,14",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4",
