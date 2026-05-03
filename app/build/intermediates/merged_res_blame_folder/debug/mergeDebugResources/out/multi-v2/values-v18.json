@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.caretracker.app-mergeDebugResources-53:/values-v18/values-v18.xml",
+            "map": [
+                {
+                    "source": "/data/data/com.termux/files/home/.gradle/caches/9.4.1/transforms/5b4fcfca8c1d31fb6b9d645906bd0bcc/transformed/appcompat-1.6.1/res/values-v18/values-v18.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "48",
+                        "endOffsets": "99"
+                    }
+                }
+            ]
+        }
+    ]
+}

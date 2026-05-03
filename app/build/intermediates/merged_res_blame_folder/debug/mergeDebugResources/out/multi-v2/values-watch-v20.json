@@ -1,0 +1,20 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.caretracker.app-mergeDebugResources-53:/values-watch-v20/values-watch-v20.xml",
+            "map": [
+                {
+                    "source": "/data/data/com.termux/files/home/.gradle/caches/9.4.1/transforms/5b4fcfca8c1d31fb6b9d645906bd0bcc/transformed/appcompat-1.6.1/res/values-watch-v20/values-watch-v20.xml",
+                    "from": {
+                        "startLines": "2,5,8",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,214,385",
+                        "endLines": "4,7,10",
+                        "endColumns": "12,12,12",
+                        "endOffsets": "209,380,553"
+                    }
+                }
+            ]
+        }
+    ]
+}
