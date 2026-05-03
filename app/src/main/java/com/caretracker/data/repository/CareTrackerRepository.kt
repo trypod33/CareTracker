@@ -35,6 +35,7 @@ class CareTrackerRepository(
     fun getRecentHealthEntries(userId: Long) = healthDao.getRecentEntries(userId)
     suspend fun getHealthEntryForDate(userId: Long, date: String) = healthDao.getEntryForDate(userId, date)
     suspend fun insertHealthEntry(entry: HealthEntryEntity) = healthDao.insertEntry(entry)
+suspend fun deleteHealthEntry(entry: HealthEntryEntity) = healthDao.deleteEntry(entry)
     suspend fun updateHealthEntry(entry: HealthEntryEntity) = healthDao.updateEntry(entry)
     fun getVitalLogs(userId: Long) = healthDao.getVitalLogs(userId)
     suspend fun insertVitalLog(log: VitalLogEntity) = healthDao.insertVitalLog(log)

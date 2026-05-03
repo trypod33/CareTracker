@@ -4,25 +4,84 @@ package com.caretracker.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
+import androidx.viewbinding.ViewBindings;
 import com.caretracker.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
+import java.lang.String;
 
 public final class FragmentHealthBinding implements ViewBinding {
   @NonNull
-  private final LinearLayout rootView;
+  private final NestedScrollView rootView;
 
-  private FragmentHealthBinding(@NonNull LinearLayout rootView) {
+  @NonNull
+  public final Button btnLogHealth;
+
+  @NonNull
+  public final LinearLayout layoutEmpty;
+
+  @NonNull
+  public final RecyclerView rvHealthHistory;
+
+  @NonNull
+  public final TextView tvBloodPressure;
+
+  @NonNull
+  public final TextView tvBloodSugar;
+
+  @NonNull
+  public final TextView tvCalories;
+
+  @NonNull
+  public final TextView tvHealthDate;
+
+  @NonNull
+  public final TextView tvHeartRate;
+
+  @NonNull
+  public final TextView tvSleep;
+
+  @NonNull
+  public final TextView tvSteps;
+
+  @NonNull
+  public final TextView tvWater;
+
+  @NonNull
+  public final TextView tvWeight;
+
+  private FragmentHealthBinding(@NonNull NestedScrollView rootView, @NonNull Button btnLogHealth,
+      @NonNull LinearLayout layoutEmpty, @NonNull RecyclerView rvHealthHistory,
+      @NonNull TextView tvBloodPressure, @NonNull TextView tvBloodSugar,
+      @NonNull TextView tvCalories, @NonNull TextView tvHealthDate, @NonNull TextView tvHeartRate,
+      @NonNull TextView tvSleep, @NonNull TextView tvSteps, @NonNull TextView tvWater,
+      @NonNull TextView tvWeight) {
     this.rootView = rootView;
+    this.btnLogHealth = btnLogHealth;
+    this.layoutEmpty = layoutEmpty;
+    this.rvHealthHistory = rvHealthHistory;
+    this.tvBloodPressure = tvBloodPressure;
+    this.tvBloodSugar = tvBloodSugar;
+    this.tvCalories = tvCalories;
+    this.tvHealthDate = tvHealthDate;
+    this.tvHeartRate = tvHeartRate;
+    this.tvSleep = tvSleep;
+    this.tvSteps = tvSteps;
+    this.tvWater = tvWater;
+    this.tvWeight = tvWeight;
   }
 
   @Override
   @NonNull
-  public LinearLayout getRoot() {
+  public NestedScrollView getRoot() {
     return rootView;
   }
 
@@ -43,10 +102,87 @@ public final class FragmentHealthBinding implements ViewBinding {
 
   @NonNull
   public static FragmentHealthBinding bind(@NonNull View rootView) {
-    if (rootView == null) {
-      throw new NullPointerException("rootView");
-    }
+    // The body of this method is generated in a way you would not otherwise write.
+    // This is done to optimize the compiled bytecode for size and performance.
+    int id;
+    missingId: {
+      id = R.id.btnLogHealth;
+      Button btnLogHealth = ViewBindings.findChildViewById(rootView, id);
+      if (btnLogHealth == null) {
+        break missingId;
+      }
 
-    return new FragmentHealthBinding((LinearLayout) rootView);
+      id = R.id.layoutEmpty;
+      LinearLayout layoutEmpty = ViewBindings.findChildViewById(rootView, id);
+      if (layoutEmpty == null) {
+        break missingId;
+      }
+
+      id = R.id.rvHealthHistory;
+      RecyclerView rvHealthHistory = ViewBindings.findChildViewById(rootView, id);
+      if (rvHealthHistory == null) {
+        break missingId;
+      }
+
+      id = R.id.tvBloodPressure;
+      TextView tvBloodPressure = ViewBindings.findChildViewById(rootView, id);
+      if (tvBloodPressure == null) {
+        break missingId;
+      }
+
+      id = R.id.tvBloodSugar;
+      TextView tvBloodSugar = ViewBindings.findChildViewById(rootView, id);
+      if (tvBloodSugar == null) {
+        break missingId;
+      }
+
+      id = R.id.tvCalories;
+      TextView tvCalories = ViewBindings.findChildViewById(rootView, id);
+      if (tvCalories == null) {
+        break missingId;
+      }
+
+      id = R.id.tvHealthDate;
+      TextView tvHealthDate = ViewBindings.findChildViewById(rootView, id);
+      if (tvHealthDate == null) {
+        break missingId;
+      }
+
+      id = R.id.tvHeartRate;
+      TextView tvHeartRate = ViewBindings.findChildViewById(rootView, id);
+      if (tvHeartRate == null) {
+        break missingId;
+      }
+
+      id = R.id.tvSleep;
+      TextView tvSleep = ViewBindings.findChildViewById(rootView, id);
+      if (tvSleep == null) {
+        break missingId;
+      }
+
+      id = R.id.tvSteps;
+      TextView tvSteps = ViewBindings.findChildViewById(rootView, id);
+      if (tvSteps == null) {
+        break missingId;
+      }
+
+      id = R.id.tvWater;
+      TextView tvWater = ViewBindings.findChildViewById(rootView, id);
+      if (tvWater == null) {
+        break missingId;
+      }
+
+      id = R.id.tvWeight;
+      TextView tvWeight = ViewBindings.findChildViewById(rootView, id);
+      if (tvWeight == null) {
+        break missingId;
+      }
+
+      return new FragmentHealthBinding((NestedScrollView) rootView, btnLogHealth, layoutEmpty,
+          rvHealthHistory, tvBloodPressure, tvBloodSugar, tvCalories, tvHealthDate, tvHeartRate,
+          tvSleep, tvSteps, tvWater, tvWeight);
+    }
+    String missingId = rootView.getResources().getResourceName(id);
+    throw new NullPointerException("Missing required view with ID: ".concat(missingId));
   }
 }

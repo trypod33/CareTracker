@@ -17,4 +17,5 @@ class CareTrackerApp : Application() {
             database.moodDao()
         )
     }
+    var currentUserId: Long = 1L
 }

@@ -1,14 +1,270 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#121212"
-    android:gravity="center"
-    android:orientation="vertical">
-    <TextView
-        android:layout_width="wrap_content"
+    android:background="#121212">
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Health Tracking"
-        android:textSize="24sp"
-        android:textColor="#ffffff"/>
-</LinearLayout>
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Header row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Health"
+                    android:textSize="22sp"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/tvHealthDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="#888888"/>
+            </LinearLayout>
+            <Button
+                android:id="@+id/btnLogHealth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+ Log Health"
+                android:backgroundTint="#4f9cf9"
+                android:textColor="#ffffff"
+                android:textSize="13sp"
+                style="@style/Widget.MaterialComponents.Button"/>
+        </LinearLayout>
+
+        <!-- Stat cards row 1: Weight, BP, HR -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                app:cardBackgroundColor="#1e1e1e"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="vertical" android:padding="12dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="WEIGHT" android:textSize="10sp" android:textColor="#888888" android:letterSpacing="0.1"/>
+                    <TextView android:id="@+id/tvWeight" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:text="--"
+                        android:textSize="20sp" android:textColor="#ffffff" android:textStyle="bold"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="lbs" android:textSize="11sp" android:textColor="#888888"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="4dp"
+                app:cardBackgroundColor="#1e1e1e"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="vertical" android:padding="12dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="BLOOD PRESSURE" android:textSize="10sp" android:textColor="#888888" android:letterSpacing="0.1"/>
+                    <TextView android:id="@+id/tvBloodPressure" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:text="--/--"
+                        android:textSize="20sp" android:textColor="#cf6679" android:textStyle="bold"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="mmHg" android:textSize="11sp" android:textColor="#888888"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                app:cardBackgroundColor="#1e1e1e"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="vertical" android:padding="12dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="HEART RATE" android:textSize="10sp" android:textColor="#888888" android:letterSpacing="0.1"/>
+                    <TextView android:id="@+id/tvHeartRate" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:text="--"
+                        android:textSize="20sp" android:textColor="#ff6b6b" android:textStyle="bold"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="bpm" android:textSize="11sp" android:textColor="#888888"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+
+        <!-- Stat cards row 2: Blood Sugar, Sleep, Steps -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                app:cardBackgroundColor="#1e1e1e"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="vertical" android:padding="12dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="BLOOD SUGAR" android:textSize="10sp" android:textColor="#888888" android:letterSpacing="0.1"/>
+                    <TextView android:id="@+id/tvBloodSugar" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:text="--"
+                        android:textSize="20sp" android:textColor="#fbbf24" android:textStyle="bold"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="mg/dL" android:textSize="11sp" android:textColor="#888888"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="4dp"
+                app:cardBackgroundColor="#1e1e1e"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="vertical" android:padding="12dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="SLEEP" android:textSize="10sp" android:textColor="#888888" android:letterSpacing="0.1"/>
+                    <TextView android:id="@+id/tvSleep" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:text="--"
+                        android:textSize="20sp" android:textColor="#a78bfa" android:textStyle="bold"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="hours" android:textSize="11sp" android:textColor="#888888"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                app:cardBackgroundColor="#1e1e1e"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="vertical" android:padding="12dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="STEPS" android:textSize="10sp" android:textColor="#888888" android:letterSpacing="0.1"/>
+                    <TextView android:id="@+id/tvSteps" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:text="--"
+                        android:textSize="20sp" android:textColor="#34d399" android:textStyle="bold"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="today" android:textSize="11sp" android:textColor="#888888"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+
+        <!-- Water + Calories row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                app:cardBackgroundColor="#1e1e1e"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="vertical" android:padding="12dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="WATER TODAY" android:textSize="10sp" android:textColor="#888888" android:letterSpacing="0.1"/>
+                    <TextView android:id="@+id/tvWater" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:text="0.0"
+                        android:textSize="20sp" android:textColor="#4f9cf9" android:textStyle="bold"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="oz" android:textSize="11sp" android:textColor="#888888"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                app:cardBackgroundColor="#1e1e1e"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="vertical" android:padding="12dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="CALORIES" android:textSize="10sp" android:textColor="#888888" android:letterSpacing="0.1"/>
+                    <TextView android:id="@+id/tvCalories" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:text="--"
+                        android:textSize="20sp" android:textColor="#f97316" android:textStyle="bold"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="kcal" android:textSize="11sp" android:textColor="#888888"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+
+        <!-- History header -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RECENT HISTORY"
+            android:textSize="11sp"
+            android:textColor="#888888"
+            android:letterSpacing="0.1"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Empty state -->
+        <LinearLayout
+            android:id="@+id/layoutEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="32dp"
+            android:visibility="gone">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No health entries yet"
+                android:textSize="16sp"
+                android:textColor="#888888"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tap '+ Log Health' to add your first entry"
+                android:textSize="13sp"
+                android:textColor="#555555"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+
+        <!-- History list -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvHealthHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"/>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

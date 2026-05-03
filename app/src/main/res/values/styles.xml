@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">#4f9cf9</item>
+        <item name="colorPrimaryDark">#121212</item>
+        <item name="colorAccent">#4f9cf9</item>
+    </style>
+
+    <style name="FullWidthDialog" parent="Theme.MaterialComponents.Dialog">
+        <item name="android:windowMinWidthMajor">95%</item>
+        <item name="android:windowMinWidthMinor">95%</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="colorPrimary">#4f9cf9</item>
+        <item name="colorAccent">#4f9cf9</item>
+    </style>
+</resources>
