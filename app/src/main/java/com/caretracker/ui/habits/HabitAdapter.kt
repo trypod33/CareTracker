@@ -13,11 +13,12 @@ import com.caretracker.data.entities.HabitEntity
 data class HabitWithStatus(
     val habit: HabitEntity,
     val isDoneToday: Boolean,
-    val streak: Int
+    val streak: Int,
+    val currentCount: Int = 0
 )
 
 class HabitAdapter(
-    private val onToggle: (HabitEntity) -> Unit,
+    private val onTap: (HabitEntity) -> Unit,
     private val onLongPress: (HabitEntity) -> Unit
 ) : ListAdapter<HabitWithStatus, HabitAdapter.VH>(DIFF) {
 
@@ -33,6 +34,7 @@ class HabitAdapter(
         val tvName: TextView = view.findViewById(R.id.tvHabitName)
         val tvStreak: TextView = view.findViewById(R.id.tvHabitStreak)
         val tvCategory: TextView = view.findViewById(R.id.tvHabitCategory)
+        val tvCount: TextView = view.findViewById(R.id.tvHabitCount)
         val tvToggle: TextView = view.findViewById(R.id.tvToggle)
     }
 
@@ -46,15 +48,25 @@ class HabitAdapter(
         holder.tvStreak.text = if (item.streak > 0) "🔥${item.streak}d streak  " else "Start today!  "
         holder.tvCategory.text = item.habit.category.replaceFirstChar { it.uppercase() }
 
+        if (item.habit.targetCount > 1) {
+            holder.tvCount.visibility = View.VISIBLE
+            holder.tvCount.text = "${item.currentCount}/${item.habit.targetCount}"
+        } else {
+            holder.tvCount.visibility = View.GONE
+        }
+
         if (item.isDoneToday) {
             holder.tvToggle.text = "✓"
             holder.tvToggle.setBackgroundResource(R.drawable.bg_toggle_checked)
+        } else if (item.habit.targetCount > 1) {
+            holder.tvToggle.text = "+1"
+            holder.tvToggle.setBackgroundResource(R.drawable.bg_toggle_unchecked)
         } else {
             holder.tvToggle.text = "+"
             holder.tvToggle.setBackgroundResource(R.drawable.bg_toggle_unchecked)
         }
 
-        holder.itemView.setOnClickListener { onToggle(item.habit) }
+        holder.itemView.setOnClickListener { onTap(item.habit) }
         holder.itemView.setOnLongClickListener {
             onLongPress(item.habit)
             true

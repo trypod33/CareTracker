@@ -244,6 +244,16 @@
                 android:textSize="13sp" android:textColor="#8db87a" android:padding="4dp"/>
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/tvHabitInstructions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="8dp"
+            android:text="Tip: Tap once to log. Counter habits add +1 each tap. Long-press a habit to edit it or enter a number."
+            android:textSize="12sp"
+            android:textColor="#8a8a8a" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvHabits"
             android:layout_width="match_parent"

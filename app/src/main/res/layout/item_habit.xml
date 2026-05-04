@@ -4,13 +4,23 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="16dp"
-    android:background="#1e1e1e"
-    android:layout_marginBottom="8dp">
+    android:background="@drawable/bg_habit_item"
+    android:layout_marginBottom="8dp"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/tvHabitIcon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:text="⭐"
+        android:textSize="18sp" />
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:layout_marginStart="12dp"
         android:orientation="vertical">
 
         <TextView
@@ -22,19 +32,52 @@
             android:textStyle="bold"/>
 
         <TextView
-            android:id="@+id/tvHabitCategory"
+            android:id="@+id/tvHabitStreak"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="12sp"
-            android:textColor="#888888"/>
+            android:textColor="#f3b34c"
+            android:layout_marginTop="2dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tvHabitCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="11sp"
+                android:textColor="#aaaaaa"
+                android:background="@drawable/bg_category_chip"
+                android:paddingLeft="8dp"
+                android:paddingTop="2dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="2dp"/>
+
+            <TextView
+                android:id="@+id/tvHabitCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textSize="12sp"
+                android:textColor="#8db87a"
+                android:textStyle="bold"
+                android:visibility="gone"
+                android:text="0/1"/>
+        </LinearLayout>
     </LinearLayout>
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="✓"
-        android:textSize="20sp"
-        android:textColor="#4f9cf9"
-        android:layout_gravity="center_vertical"/>
-
+        android:id="@+id/tvToggle"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:gravity="center"
+        android:text="+"
+        android:textSize="16sp"
+        android:textColor="#d7f5df"
+        android:background="@drawable/bg_toggle_unchecked"/>
 </LinearLayout>
