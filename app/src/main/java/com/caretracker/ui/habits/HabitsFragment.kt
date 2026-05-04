@@ -116,7 +116,11 @@ class HabitsFragment : Fragment() {
     }
 
     private fun setupAdapters() {
-        habitAdapter = HabitAdapter { habit -> toggleHabit(habit) }
+        val app = requireActivity().application as CareTrackerApp
+        habitAdapter = HabitAdapter(
+            onToggle = { habit -> toggleHabit(habit) },
+            onLongPress = { habit -> showEditHabitDialog(habit, app) }
+        )
         binding.rvHabits.layoutManager = LinearLayoutManager(requireContext())
         binding.rvHabits.adapter = habitAdapter
 
@@ -309,6 +313,48 @@ class HabitsFragment : Fragment() {
             binding.tvPastEntriesHeader.isVisible = past.isNotEmpty()
             binding.rvJournalEntries.isVisible = past.isNotEmpty()
         }
+    }
+
+
+    private fun showEditHabitDialog(habit: HabitEntity, app: CareTrackerApp) {
+        val input = TextInputEditText(requireContext()).apply {
+            hint = "Habit name"
+            setText(habit.name)
+            setSelection(habit.name.length)
+            setPadding(48, 32, 48, 16)
+        }
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Edit Habit")
+            .setView(input)
+            .setPositiveButton("Save") { _, _ ->
+                val updatedName = input.text?.toString()?.trim().orEmpty()
+                if (updatedName.isNotEmpty()) {
+                    lifecycleScope.launch {
+                        app.repository.updateHabit(habit.copy(name = updatedName))
+                        Toast.makeText(requireContext(), "Habit updated", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+            .setNeutralButton("Delete") { _, _ ->
+                confirmDeleteHabit(habit, app)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun confirmDeleteHabit(habit: HabitEntity, app: CareTrackerApp) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Delete Habit")
+            .setMessage("Delete '${habit.name}'? This cannot be undone.")
+            .setPositiveButton("Delete") { _, _ ->
+                lifecycleScope.launch {
+                    app.repository.deleteHabit(habit)
+                    Toast.makeText(requireContext(), "Habit deleted", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun showAddHabitDialog(userId: Long, app: CareTrackerApp) {

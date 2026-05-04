@@ -17,7 +17,8 @@ data class HabitWithStatus(
 )
 
 class HabitAdapter(
-    private val onToggle: (HabitEntity) -> Unit
+    private val onToggle: (HabitEntity) -> Unit,
+    private val onLongPress: (HabitEntity) -> Unit
 ) : ListAdapter<HabitWithStatus, HabitAdapter.VH>(DIFF) {
 
     companion object {
@@ -44,6 +45,7 @@ class HabitAdapter(
         holder.tvName.text = item.habit.name
         holder.tvStreak.text = if (item.streak > 0) "🔥${item.streak}d streak  " else "Start today!  "
         holder.tvCategory.text = item.habit.category.replaceFirstChar { it.uppercase() }
+
         if (item.isDoneToday) {
             holder.tvToggle.text = "✓"
             holder.tvToggle.setBackgroundResource(R.drawable.bg_toggle_checked)
@@ -51,6 +53,11 @@ class HabitAdapter(
             holder.tvToggle.text = "+"
             holder.tvToggle.setBackgroundResource(R.drawable.bg_toggle_unchecked)
         }
+
         holder.itemView.setOnClickListener { onToggle(item.habit) }
+        holder.itemView.setOnLongClickListener {
+            onLongPress(item.habit)
+            true
+        }
     }
 }
