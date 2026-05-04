@@ -39,4 +39,9 @@ interface HabitDao {
 
     @Delete
     suspend fun deleteLog(log: HabitLogEntity)
+    @Query("SELECT count FROM habit_logs WHERE habitId = :habitId AND loggedDate = :date")
+    suspend fun getLogCount(habitId: Long, date: String): Int?
+
+    @Query("UPDATE habit_logs SET count = :count WHERE habitId = :habitId AND loggedDate = :date")
+    suspend fun updateLogCount(habitId: Long, date: String, count: Int)
 }

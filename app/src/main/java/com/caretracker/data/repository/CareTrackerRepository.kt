@@ -75,4 +75,9 @@ class CareTrackerRepository(
     suspend fun insertMoodEntry(entry: MoodJournalEntity) = moodDao.insertEntry(entry)
     suspend fun updateMoodEntry(entry: MoodJournalEntity) = moodDao.updateEntry(entry)
     suspend fun deleteMoodEntry(entry: MoodJournalEntity) = moodDao.deleteEntry(entry)
+    suspend fun getLogCount(habitId: Long, date: String) =
+        habitDao.getLogCount(habitId, date)
+
+    suspend fun updateLogCount(habitId: Long, date: String, count: Int) =
+        habitDao.updateLogCount(habitId, date, count)
 }
