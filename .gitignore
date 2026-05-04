@@ -1,0 +1,4 @@
+
+# Build outputs
+.gradle/
+app/build/
