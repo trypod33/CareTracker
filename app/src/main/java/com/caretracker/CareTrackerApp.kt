@@ -3,6 +3,8 @@ package com.caretracker
 import android.app.Application
 import com.caretracker.data.db.CareTrackerDatabase
 import com.caretracker.data.repository.CareTrackerRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class CareTrackerApp : Application() {
     val database by lazy { CareTrackerDatabase.getDatabase(this) }
@@ -17,5 +19,11 @@ class CareTrackerApp : Application() {
             database.moodDao()
         )
     }
-    var currentUserId: Long = 1L
+
+    private val _currentUserId = MutableStateFlow(1L)
+    val currentUserIdFlow: StateFlow<Long> = _currentUserId
+
+    var currentUserId: Long
+        get() = _currentUserId.value
+        set(value) { _currentUserId.value = value }
 }

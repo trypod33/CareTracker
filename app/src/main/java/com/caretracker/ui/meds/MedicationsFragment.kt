@@ -12,6 +12,7 @@ import com.caretracker.CareTrackerApp
 import com.caretracker.data.entities.MedicationEntity
 import com.caretracker.databinding.DialogAddMedicationBinding
 import com.caretracker.databinding.FragmentMedicationsBinding
+import android.widget.ArrayAdapter
 import com.google.android.material.chip.Chip
 import kotlinx.coroutines.launch
 
@@ -53,7 +54,10 @@ class MedicationsFragment : Fragment() {
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
+            var lastOptions = listOf<String>()
             vm.filterOptions.collect { options ->
+                if (options == lastOptions) return@collect
+                lastOptions = options
                 binding.chipGroupFilter.removeAllViews()
                 options.forEach { label ->
                     val chip = Chip(requireContext()).apply {
@@ -80,6 +84,14 @@ class MedicationsFragment : Fragment() {
 
     private fun showAddEditDialog(existing: MedicationEntity?) {
         val db = DialogAddMedicationBinding.inflate(layoutInflater)
+        val users = vm.users.value.filter { it.isActive }
+        val userLabels = users.map { u -> u.displayName?.trim()?.takeIf { it.isNotBlank() } ?: u.username }
+        val spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, userLabels)
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        db.spinnerPerson.adapter = spinnerAdapter
+        val targetUserId = existing?.userId ?: vm.getCurrentUserId()
+        val selectedIndex = users.indexOfFirst { it.id == targetUserId }.coerceAtLeast(0)
+        db.spinnerPerson.setSelection(selectedIndex)
         existing?.let { med ->
             db.etMedName.setText(med.name)
             db.etGenericName.setText(med.genericName)
@@ -115,7 +127,7 @@ class MedicationsFragment : Fragment() {
                 }
                 vm.saveMed(MedicationEntity(
                     id = existing?.id ?: 0L,
-                    userId = vm.getCurrentUserId(),
+                    userId = users.getOrNull(db.spinnerPerson.selectedItemPosition)?.id ?: vm.getCurrentUserId(),
                     name = db.etMedName.text.toString().trim(),
                     genericName = db.etGenericName.text.toString().takeIf { it.isNotBlank() },
                     dosage = db.etDosage.text.toString().takeIf { it.isNotBlank() },

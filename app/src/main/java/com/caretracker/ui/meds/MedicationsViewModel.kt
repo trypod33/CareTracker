@@ -3,6 +3,7 @@ package com.caretracker.ui.meds
 import androidx.lifecycle.*
 import com.caretracker.data.entities.MedLogEntity
 import com.caretracker.data.entities.MedicationEntity
+import com.caretracker.data.entities.UserEntity
 import com.caretracker.data.repository.CareTrackerRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -20,23 +21,48 @@ class MedicationsViewModel(private val repository: CareTrackerRepository) : View
     private val _meds = MutableStateFlow<List<MedWithStatus>>(emptyList())
     val meds: StateFlow<List<MedWithStatus>> = _meds.asStateFlow()
 
+    private val _users = MutableStateFlow<List<UserEntity>>(emptyList())
+
     private val _filter = MutableStateFlow("All")
+
+    val users: StateFlow<List<UserEntity>> = _users.asStateFlow()
     val filter: StateFlow<String> = _filter.asStateFlow()
 
-    val filteredMeds: StateFlow<List<MedWithStatus>> = combine(_meds, _filter) { list, f ->
-        if (f == "All") list else list.filter { it.med.prescriber == f }
+    // Filter by person name (displayName or username), not prescriber
+    val filteredMeds: StateFlow<List<MedWithStatus>> = combine(_meds, _filter, _users) { list, f, users ->
+        if (f == "All") list
+        else {
+            val matchedUser = users.firstOrNull { it.displayName?.trim() == f || it.username == f }
+            if (matchedUser != null) list.filter { it.med.userId == matchedUser.id }
+            else list
+        }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    val filterOptions: StateFlow<List<String>> = _meds.map { list ->
-        listOf("All") + list.mapNotNull { it.med.prescriber }.distinct().sorted()
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf("All"))
+    // Chips built from person names, not prescriber names
+    val filterOptions: StateFlow<List<String>> = _users.map { users ->
+        listOf("All") + users
+            .filter { u -> _meds.value.any { m -> m.med.userId == u.id } }
+            .map { u -> u.displayName?.trim()?.takeIf { it.isNotBlank() } ?: u.username }
+            .distinct()
+            .sorted()
+    }.distinctUntilChanged().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf("All"))
 
     private var currentUserId: Long = -1L
+    private var isAdmin: Boolean = false
 
-    fun loadForUser(userId: Long) {
+    fun loadForUser(userId: Long, admin: Boolean = false) {
         currentUserId = userId
+        isAdmin = admin
+
+        // Load all users for chip labels
         viewModelScope.launch {
-            repository.getMedicationsForUser(userId).collect { medList ->
+            repository.getAllUsers().collect { users ->
+                _users.value = users.filter { it.isActive }
+            }
+        }
+
+        viewModelScope.launch {
+            repository.getAllMedications().collect { medList ->
                 val today = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE)
                 val withStatus = medList.map { med ->
                     val logs = repository.getMedLogsForDateOnce(med.id, today)
@@ -54,7 +80,7 @@ class MedicationsViewModel(private val repository: CareTrackerRepository) : View
             val today = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE)
             repository.insertMedLog(MedLogEntity(medicationId = med.id, takenDate = today, status = "taken"))
             repository.updateMedication(med.copy(currentCount = (med.currentCount - 1).coerceAtLeast(0)))
-            loadForUser(currentUserId)
+            loadForUser(currentUserId, isAdmin)
         }
     }
 
@@ -64,7 +90,7 @@ class MedicationsViewModel(private val repository: CareTrackerRepository) : View
                 currentCount = med.currentCount + (med.pillsPerRefill ?: 30),
                 lastRefillDate = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE)
             ))
-            loadForUser(currentUserId)
+            loadForUser(currentUserId, isAdmin)
         }
     }
 
@@ -72,14 +98,14 @@ class MedicationsViewModel(private val repository: CareTrackerRepository) : View
         viewModelScope.launch {
             if (med.id == 0L) repository.insertMedication(med)
             else repository.updateMedication(med)
-            loadForUser(currentUserId)
+            loadForUser(currentUserId, isAdmin)
         }
     }
 
     fun deleteMed(med: MedicationEntity) {
         viewModelScope.launch {
             repository.deleteMedication(med)
-            loadForUser(currentUserId)
+            loadForUser(currentUserId, isAdmin)
         }
     }
 

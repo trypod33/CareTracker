@@ -41,6 +41,7 @@ suspend fun deleteHealthEntry(entry: HealthEntryEntity) = healthDao.deleteEntry(
     suspend fun insertVitalLog(log: VitalLogEntity) = healthDao.insertVitalLog(log)
 
     // Medications
+fun getAllMedications() = medicationDao.getAllMedications()
     fun getMedicationsForUser(userId: Long) = medicationDao.getMedicationsForUser(userId)
     suspend fun getMedicationById(id: Long) = medicationDao.getMedicationById(id)
     fun getMedLogsForDate(medId: Long, date: String) = medicationDao.getLogsForDate(medId, date)
