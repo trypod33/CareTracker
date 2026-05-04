@@ -24,6 +24,9 @@ class CareTrackerRepository(
     fun getHabitsForUser(userId: Long) = habitDao.getHabitsForUser(userId)
     fun getRecentHabitLogs(habitId: Long) = habitDao.getRecentLogs(habitId)
     suspend fun getHabitLogForDate(habitId: Long, date: String) = habitDao.getLogForDate(habitId, date)
+    suspend fun getAllLogsForHabit(habitId: Long) = habitDao.getAllLogsForHabit(habitId)
+    suspend fun getLogsForUserOnDate(userId: Long, date: String) = habitDao.getLogsForUserOnDate(userId, date)
+    suspend fun getLogsForUserInRange(userId: Long, startDate: String, endDate: String) = habitDao.getLogsForUserInRange(userId, startDate, endDate)
     suspend fun insertHabit(habit: HabitEntity) = habitDao.insertHabit(habit)
     suspend fun insertHabitLog(log: HabitLogEntity) = habitDao.insertLog(log)
     suspend fun updateHabit(habit: HabitEntity) = habitDao.updateHabit(habit)
@@ -35,13 +38,13 @@ class CareTrackerRepository(
     fun getRecentHealthEntries(userId: Long) = healthDao.getRecentEntries(userId)
     suspend fun getHealthEntryForDate(userId: Long, date: String) = healthDao.getEntryForDate(userId, date)
     suspend fun insertHealthEntry(entry: HealthEntryEntity) = healthDao.insertEntry(entry)
-suspend fun deleteHealthEntry(entry: HealthEntryEntity) = healthDao.deleteEntry(entry)
+    suspend fun deleteHealthEntry(entry: HealthEntryEntity) = healthDao.deleteEntry(entry)
     suspend fun updateHealthEntry(entry: HealthEntryEntity) = healthDao.updateEntry(entry)
     fun getVitalLogs(userId: Long) = healthDao.getVitalLogs(userId)
     suspend fun insertVitalLog(log: VitalLogEntity) = healthDao.insertVitalLog(log)
 
     // Medications
-fun getAllMedications() = medicationDao.getAllMedications()
+    fun getAllMedications() = medicationDao.getAllMedications()
     fun getMedicationsForUser(userId: Long) = medicationDao.getMedicationsForUser(userId)
     suspend fun getMedicationById(id: Long) = medicationDao.getMedicationById(id)
     fun getMedLogsForDate(medId: Long, date: String) = medicationDao.getLogsForDate(medId, date)
@@ -66,8 +69,9 @@ fun getAllMedications() = medicationDao.getAllMedications()
     suspend fun updateTask(task: TaskEntity) = taskDao.updateTask(task)
     suspend fun deleteTask(task: TaskEntity) = taskDao.deleteTask(task)
 
-    // Mood
+    // Mood / Journal
     fun getMoodEntries(userId: Long) = moodDao.getMoodEntriesForUser(userId)
+    suspend fun getMoodEntryForDate(userId: Long, date: String) = moodDao.getEntryForDate(userId, date)
     suspend fun insertMoodEntry(entry: MoodJournalEntity) = moodDao.insertEntry(entry)
     suspend fun updateMoodEntry(entry: MoodJournalEntity) = moodDao.updateEntry(entry)
     suspend fun deleteMoodEntry(entry: MoodJournalEntity) = moodDao.deleteEntry(entry)

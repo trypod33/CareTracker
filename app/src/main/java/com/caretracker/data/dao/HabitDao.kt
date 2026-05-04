@@ -16,6 +16,15 @@ interface HabitDao {
     @Query("SELECT * FROM habit_logs WHERE habitId = :habitId ORDER BY loggedDate DESC LIMIT 7")
     fun getRecentLogs(habitId: Long): Flow<List<HabitLogEntity>>
 
+    @Query("SELECT * FROM habit_logs WHERE habitId = :habitId ORDER BY loggedDate DESC")
+    suspend fun getAllLogsForHabit(habitId: Long): List<HabitLogEntity>
+
+    @Query("SELECT * FROM habit_logs WHERE habitId IN (SELECT id FROM habits WHERE userId = :userId) AND loggedDate = :date")
+    suspend fun getLogsForUserOnDate(userId: Long, date: String): List<HabitLogEntity>
+
+    @Query("SELECT * FROM habit_logs WHERE habitId IN (SELECT id FROM habits WHERE userId = :userId) AND loggedDate >= :startDate AND loggedDate <= :endDate")
+    suspend fun getLogsForUserInRange(userId: Long, startDate: String, endDate: String): List<HabitLogEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertHabit(habit: HabitEntity): Long
 

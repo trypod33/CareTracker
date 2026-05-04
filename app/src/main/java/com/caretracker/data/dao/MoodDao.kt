@@ -9,6 +9,9 @@ interface MoodDao {
     @Query("SELECT * FROM mood_journal WHERE userId = :userId ORDER BY entryDate DESC")
     fun getMoodEntriesForUser(userId: Long): Flow<List<MoodJournalEntity>>
 
+    @Query("SELECT * FROM mood_journal WHERE userId = :userId AND entryDate = :date LIMIT 1")
+    suspend fun getEntryForDate(userId: Long, date: String): MoodJournalEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertEntry(entry: MoodJournalEntity): Long
 
