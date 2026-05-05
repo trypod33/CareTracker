@@ -31,7 +31,8 @@ class HealthFragment : Fragment() {
     private lateinit var adapter: HealthHistoryAdapter
 
     override fun onCreateView(i: LayoutInflater, c: ViewGroup?, s: Bundle?): View {
-        _b = FragmentHealthBinding.inflate(i, c, false); return b.root
+        _b = FragmentHealthBinding.inflate(i, c, false)
+        return b.root
     }
 
     override fun onViewCreated(view: View, s: Bundle?) {
@@ -57,26 +58,72 @@ class HealthFragment : Fragment() {
         val app = requireActivity().application as CareTrackerApp
         vm.loadForUser(app.currentUserId)
 
-        lifecycleScope.launch { vm.todayEntry.collect { updateCards(it) } }
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
+            vm.todayEntry.collect { updateCards(it) }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
             vm.entries.collect {
                 adapter.submitList(it.toList())
                 b.layoutEmpty.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
                 b.rvHealthHistory.visibility = if (it.isEmpty()) View.GONE else View.VISIBLE
+                updateTrendCards(it)
             }
         }
     }
 
     private fun updateCards(e: HealthEntryEntity?) {
-        b.tvWeight.text     = e?.weight?.let { "%.1f".format(it) } ?: "--"
+        b.tvWeight.text = e?.weight?.let { "%.1f".format(it) } ?: "--"
         b.tvBloodPressure.text = if (e?.bloodPressureSystolic != null && e.bloodPressureDiastolic != null)
             "${e.bloodPressureSystolic}/${e.bloodPressureDiastolic}" else "--/--"
-        b.tvHeartRate.text  = e?.heartRate?.toString() ?: "--"
+        b.tvHeartRate.text = e?.heartRate?.toString() ?: "--"
         b.tvBloodSugar.text = e?.bloodSugar?.let { "%.0f".format(it) } ?: "--"
-        b.tvSleep.text      = e?.sleepHours?.let { "%.1f".format(it) } ?: "--"
-        b.tvSteps.text      = e?.steps?.let { "%,d".format(it) } ?: "--"
-        b.tvWater.text      = e?.waterOz?.let { "%.1f".format(it) } ?: "0.0"
-        b.tvCalories.text   = e?.calories?.let { "%,d".format(it) } ?: "--"
+        b.tvSleep.text = e?.sleepHours?.let { "%.1f".format(it) } ?: "--"
+        b.tvSteps.text = e?.steps?.let { "%,d".format(it) } ?: "--"
+        b.tvWater.text = e?.waterOz?.let { "%.1f".format(it) } ?: "0.0"
+        b.tvCalories.text = e?.calories?.let { "%,d".format(it) } ?: "--"
+    }
+
+    private fun updateTrendCards(entries: List<HealthEntryEntity>) {
+        val recent = entries.take(14)
+
+        val bp = recent.filter { it.bloodPressureSystolic != null && it.bloodPressureDiastolic != null }
+        if (bp.isEmpty()) {
+            b.tvBpTrend.text = "Blood pressure: no recent data"
+        } else {
+            val latest = bp.first()
+            val avgSys = bp.mapNotNull { it.bloodPressureSystolic }.average()
+            val avgDia = bp.mapNotNull { it.bloodPressureDiastolic }.average()
+            b.tvBpTrend.text =
+                "Blood pressure: latest ${latest.bloodPressureSystolic}/${latest.bloodPressureDiastolic}, avg ${avgSys.toInt()}/${avgDia.toInt()} over ${bp.size} entries"
+        }
+
+        val sugar = recent.filter { it.bloodSugar != null }
+        if (sugar.isEmpty()) {
+            b.tvSugarTrend.text = "Blood sugar: no recent data"
+        } else {
+            val values = sugar.mapNotNull { it.bloodSugar }
+            b.tvSugarTrend.text =
+                "Blood sugar: latest ${values.first().toInt()}, high ${values.maxOrNull()?.toInt()}, low ${values.minOrNull()?.toInt()}, avg ${values.average().toInt()}"
+        }
+
+        val hr = recent.filter { it.heartRate != null }
+        if (hr.isEmpty()) {
+            b.tvHeartTrend.text = "Heart rate: no recent data"
+        } else {
+            val values = hr.mapNotNull { it.heartRate }
+            b.tvHeartTrend.text =
+                "Heart rate: latest ${values.first()} bpm, high ${values.maxOrNull()}, low ${values.minOrNull()}, avg ${values.average().toInt()} bpm"
+        }
+
+        val sleep = recent.filter { it.sleepHours != null }
+        if (sleep.isEmpty()) {
+            b.tvSleepTrend.text = "Sleep: no recent data"
+        } else {
+            val values = sleep.mapNotNull { it.sleepHours }
+            b.tvSleepTrend.text =
+                "Sleep: latest ${"%.1f".format(values.first())} hrs, high ${"%.1f".format(values.maxOrNull() ?: 0f)}, low ${"%.1f".format(values.minOrNull() ?: 0f)}, avg ${"%.1f".format(values.average())} hrs"
+        }
     }
 
     private fun showDialog(existing: HealthEntryEntity?) {
@@ -112,13 +159,10 @@ class HealthFragment : Fragment() {
         d.seekMood.setOnSeekBarChangeListener(sl { d.tvMood.text = it.toString() })
         d.seekEnergy.setOnSeekBarChangeListener(sl { d.tvEnergy.text = it.toString() })
 
-        // Check if there's already a saved entry for today so we can show
-        // current totals as hints for additive fields
         val todaySaved = vm.todayEntry.value
         val isToday = date == LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE)
 
         if (existing != null) {
-            // Full edit of a specific past/present entry — pre-fill all fields
             existing.weight?.let { d.etWeight.setText("%.1f".format(it)) }
             existing.heartRate?.let { d.etHeartRate.setText(it.toString()) }
             existing.bloodPressureSystolic?.let { d.etSystolic.setText(it.toString()) }
@@ -143,7 +187,6 @@ class HealthFragment : Fragment() {
             existing.calories?.let { d.etCalories.setText(it.toString()) }
             existing.notes?.let { d.etNotes.setText(it) }
         } else if (isToday && todaySaved != null) {
-            // New log entry for today — pre-fill replace fields, show hints for additive
             todaySaved.weight?.let { d.etWeight.setText("%.1f".format(it)) }
             todaySaved.heartRate?.let { d.etHeartRate.setText(it.toString()) }
             todaySaved.bloodPressureSystolic?.let { d.etSystolic.setText(it.toString()) }
@@ -162,7 +205,6 @@ class HealthFragment : Fragment() {
                 d.seekEnergy.progress = (it - 1).coerceIn(0, 9)
                 d.tvEnergy.text = it.toString()
             }
-            // Additive fields: leave blank, show current total in hint
             d.etSteps.hint = "Add steps (have ${"%,d".format(todaySaved.steps ?: 0)})"
             d.etExercise.hint = "Add mins (have ${todaySaved.exerciseMinutes ?: 0})"
             d.etWater.hint = "Add oz (have ${"%.1f".format(todaySaved.waterOz ?: 0f)})"
@@ -177,24 +219,24 @@ class HealthFragment : Fragment() {
         d.btnSave.setOnClickListener {
             vm.saveEntry(
                 HealthEntryEntity(
-                    id            = existing?.id ?: 0L,
-                    userId        = app.currentUserId,
-                    entryDate     = date,
-                    weight        = d.etWeight.text?.toString()?.toFloatOrNull(),
-                    weightUnit    = units[d.spinnerWeightUnit.selectedItemPosition],
-                    heartRate     = d.etHeartRate.text?.toString()?.toIntOrNull(),
-                    bloodPressureSystolic  = d.etSystolic.text?.toString()?.toIntOrNull(),
+                    id = existing?.id ?: 0L,
+                    userId = app.currentUserId,
+                    entryDate = date,
+                    weight = d.etWeight.text?.toString()?.toFloatOrNull(),
+                    weightUnit = units[d.spinnerWeightUnit.selectedItemPosition],
+                    heartRate = d.etHeartRate.text?.toString()?.toIntOrNull(),
+                    bloodPressureSystolic = d.etSystolic.text?.toString()?.toIntOrNull(),
                     bloodPressureDiastolic = d.etDiastolic.text?.toString()?.toIntOrNull(),
-                    bloodSugar    = d.etBloodSugar.text?.toString()?.toFloatOrNull(),
-                    sleepHours    = d.etSleep.text?.toString()?.toFloatOrNull(),
-                    sleepQuality  = d.seekSleepQuality.progress + 1,
-                    mood          = d.seekMood.progress + 1,
-                    energy        = d.seekEnergy.progress + 1,
-                    steps         = d.etSteps.text?.toString()?.toIntOrNull(),
+                    bloodSugar = d.etBloodSugar.text?.toString()?.toFloatOrNull(),
+                    sleepHours = d.etSleep.text?.toString()?.toFloatOrNull(),
+                    sleepQuality = d.seekSleepQuality.progress + 1,
+                    mood = d.seekMood.progress + 1,
+                    energy = d.seekEnergy.progress + 1,
+                    steps = d.etSteps.text?.toString()?.toIntOrNull(),
                     exerciseMinutes = d.etExercise.text?.toString()?.toIntOrNull(),
-                    waterOz       = d.etWater.text?.toString()?.toFloatOrNull(),
-                    calories      = d.etCalories.text?.toString()?.toIntOrNull(),
-                    notes         = d.etNotes.text?.toString()?.ifBlank { null }
+                    waterOz = d.etWater.text?.toString()?.toFloatOrNull(),
+                    calories = d.etCalories.text?.toString()?.toIntOrNull(),
+                    notes = d.etNotes.text?.toString()?.ifBlank { null }
                 )
             )
             dlg.dismiss()
@@ -215,5 +257,8 @@ class HealthFragment : Fragment() {
         LocalDate.parse(iso).format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))
     }.getOrDefault(iso)
 
-    override fun onDestroyView() { super.onDestroyView(); _b = null }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _b = null
+    }
 }
