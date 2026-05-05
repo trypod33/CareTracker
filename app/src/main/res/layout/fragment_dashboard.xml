@@ -1,79 +1,375 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#121212">
+    android:background="#0b1220"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:paddingBottom="80dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="4dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvWelcome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Welcome back!"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:textColor="#ffffff"
+                    android:lineSpacingMultiplier="0.95" />
+
+                <TextView
+                    android:id="@+id/tvDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    android:textColor="#7d8ca8"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:background="@drawable/bg_streak_badge"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:text="◉"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="#7fb3ff" />
+
+                <TextView
+                    android:id="@+id/tvDashboardScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="#ffffff"
+                    android:text="0" />
+
+                <TextView
+                    android:text="SNAPSHOT"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="7sp"
+                    android:textColor="#7d8ca8"
+                    android:letterSpacing="0.04" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="12dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:background="@drawable/bg_card_dark"
+                android:padding="12dp"
+                android:layout_marginEnd="6dp">
+
+                <TextView android:text="HABITS" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="10sp" android:textColor="#7d8ca8" android:letterSpacing="0.05" />
+                <TextView android:id="@+id/tvStatHabits" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="22sp" android:textStyle="bold" android:textColor="#ffffff" android:text="0/0" />
+                <TextView android:text="done today" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="11sp" android:textColor="#5d6c84" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:background="@drawable/bg_card_dark"
+                android:padding="12dp"
+                android:layout_marginHorizontal="3dp">
+
+                <TextView android:text="MEDS" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="10sp" android:textColor="#7d8ca8" android:letterSpacing="0.05" />
+                <TextView android:id="@+id/tvStatMeds" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="22sp" android:textStyle="bold" android:textColor="#7fb3ff" android:text="0/0" />
+                <TextView android:text="taken today" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="11sp" android:textColor="#5d6c84" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:background="@drawable/bg_card_dark"
+                android:padding="12dp"
+                android:layout_marginStart="6dp">
+
+                <TextView android:text="TASKS" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="10sp" android:textColor="#7d8ca8" android:letterSpacing="0.05" />
+                <TextView android:id="@+id/tvStatTasks" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="22sp" android:textStyle="bold" android:textColor="#ffffff" android:text="0" />
+                <TextView android:text="open" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="11sp" android:textColor="#5d6c84" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_card_dark"
+            android:padding="16dp">
+
+            <FrameLayout
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_marginEnd="16dp">
+
+                <ProgressBar
+                    android:id="@+id/progressRing"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:progressDrawable="@drawable/progress_ring"
+                    android:max="100"
+                    android:progress="0"
+                    android:rotation="-90" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tvProgressPct"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="#ffffff"
+                        android:text="0%" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="8sp"
+                        android:textColor="#7d8ca8"
+                        android:text="TODAY" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tvMomentumTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#ffffff"
+                    android:text="Let’s get started!" />
+
+                <TextView
+                    android:id="@+id/tvMomentumSub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    android:textColor="#7d8ca8"
+                    android:layout_marginTop="4dp"
+                    android:text="No snapshot data yet." />
+            </LinearLayout>
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/tvWelcome"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Welcome back!"
-            android:textSize="24sp"
-            android:textColor="#ffffff"
-            android:textStyle="bold"
-            android:layout_marginBottom="4dp"/>
+            android:paddingHorizontal="16dp"
+            android:paddingTop="22dp"
+            android:paddingBottom="8dp"
+            android:text="WEEKLY SNAPSHOT"
+            android:textSize="11sp"
+            android:textColor="#7d8ca8"
+            android:letterSpacing="0.08" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/bg_card_dark"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tvWeekSummary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Habits 0% · Meds 0% · Tasks 0 open"
+                android:textSize="14sp"
+                android:textColor="#ffffff"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#1e293a"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp" />
+
+            <TextView android:text="Habits" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="11sp" android:textColor="#7d8ca8" />
+            <ProgressBar
+                android:id="@+id/progressHabits"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:max="100"
+                android:progress="0"
+                android:progressTint="#3f6fb8"
+                android:backgroundTint="#172133"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="10dp" />
+
+            <TextView android:text="Medications" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="11sp" android:textColor="#7d8ca8" />
+            <ProgressBar
+                android:id="@+id/progressMeds"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:max="100"
+                android:progress="0"
+                android:progressTint="#7fb3ff"
+                android:backgroundTint="#172133"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="10dp" />
+
+            <TextView android:text="Tasks" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="11sp" android:textColor="#7d8ca8" />
+            <ProgressBar
+                android:id="@+id/progressTasks"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:max="100"
+                android:progress="0"
+                android:progressTint="#89a8ff"
+                android:backgroundTint="#172133"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/tvDate"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textColor="#888888"
-            android:layout_marginBottom="24dp"/>
+            android:paddingHorizontal="16dp"
+            android:paddingTop="22dp"
+            android:paddingBottom="8dp"
+            android:text="ATTENTION"
+            android:textSize="11sp"
+            android:textColor="#7d8ca8"
+            android:letterSpacing="0.08" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/bg_card_dark"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tvAttention"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No urgent items."
+                android:textSize="14sp"
+                android:textColor="#ffffff"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvAttentionSub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Everything looks stable right now."
+                android:textSize="13sp"
+                android:textColor="#7d8ca8"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TODAY'S HABITS"
-            android:textSize="12sp"
-            android:textColor="#4f9cf9"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp"/>
+            android:paddingHorizontal="16dp"
+            android:paddingTop="22dp"
+            android:paddingBottom="8dp"
+            android:text="TODAY"
+            android:textSize="11sp"
+            android:textColor="#7d8ca8"
+            android:letterSpacing="0.08" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvHabits"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
             android:nestedScrollingEnabled="false"
-            android:layout_marginBottom="24dp"/>
+            android:clipToPadding="false" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="22dp"
+            android:paddingBottom="8dp"
             android:text="MEDICATIONS DUE"
-            android:textSize="12sp"
-            android:textColor="#4f9cf9"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp"/>
+            android:textSize="11sp"
+            android:textColor="#7d8ca8"
+            android:letterSpacing="0.08" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvMeds"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
             android:nestedScrollingEnabled="false"
-            android:layout_marginBottom="24dp"/>
+            android:clipToPadding="false" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="22dp"
+            android:paddingBottom="8dp"
             android:text="UPCOMING TASKS"
-            android:textSize="12sp"
-            android:textColor="#4f9cf9"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp"/>
+            android:textSize="11sp"
+            android:textColor="#7d8ca8"
+            android:letterSpacing="0.08" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvTasks"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"/>
-
+            android:paddingHorizontal="16dp"
+            android:nestedScrollingEnabled="false"
+            android:clipToPadding="false" />
     </LinearLayout>
-</ScrollView>
+</androidx.core.widget.NestedScrollView>

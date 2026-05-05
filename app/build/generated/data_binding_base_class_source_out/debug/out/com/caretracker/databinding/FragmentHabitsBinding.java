@@ -4,38 +4,127 @@ package com.caretracker.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.caretracker.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
 
 public final class FragmentHabitsBinding implements ViewBinding {
   @NonNull
-  private final CoordinatorLayout rootView;
+  private final NestedScrollView rootView;
 
   @NonNull
-  public final FloatingActionButton fabAddHabit;
+  public final Button btnSaveJournal;
+
+  @NonNull
+  public final EditText etJournalContent;
+
+  @NonNull
+  public final EditText etJournalTags;
+
+  @NonNull
+  public final LinearLayout layoutMoodPicker;
+
+  @NonNull
+  public final LinearLayout layoutStreak;
+
+  @NonNull
+  public final LinearLayout layoutWeekStrip;
+
+  @NonNull
+  public final ProgressBar progressRing;
 
   @NonNull
   public final RecyclerView rvHabits;
 
-  private FragmentHabitsBinding(@NonNull CoordinatorLayout rootView,
-      @NonNull FloatingActionButton fabAddHabit, @NonNull RecyclerView rvHabits) {
+  @NonNull
+  public final RecyclerView rvJournalEntries;
+
+  @NonNull
+  public final TextView tvDayOfWeekDate;
+
+  @NonNull
+  public final TextView tvHabitInstructions;
+
+  @NonNull
+  public final TextView tvManage;
+
+  @NonNull
+  public final TextView tvMomentumSub;
+
+  @NonNull
+  public final TextView tvMomentumTitle;
+
+  @NonNull
+  public final TextView tvPastEntriesHeader;
+
+  @NonNull
+  public final TextView tvProgressPct;
+
+  @NonNull
+  public final TextView tvStatBestStreak;
+
+  @NonNull
+  public final TextView tvStatToday;
+
+  @NonNull
+  public final TextView tvStatWeek;
+
+  @NonNull
+  public final TextView tvStreakCount;
+
+  @NonNull
+  public final TextView tvWeekYear;
+
+  private FragmentHabitsBinding(@NonNull NestedScrollView rootView, @NonNull Button btnSaveJournal,
+      @NonNull EditText etJournalContent, @NonNull EditText etJournalTags,
+      @NonNull LinearLayout layoutMoodPicker, @NonNull LinearLayout layoutStreak,
+      @NonNull LinearLayout layoutWeekStrip, @NonNull ProgressBar progressRing,
+      @NonNull RecyclerView rvHabits, @NonNull RecyclerView rvJournalEntries,
+      @NonNull TextView tvDayOfWeekDate, @NonNull TextView tvHabitInstructions,
+      @NonNull TextView tvManage, @NonNull TextView tvMomentumSub,
+      @NonNull TextView tvMomentumTitle, @NonNull TextView tvPastEntriesHeader,
+      @NonNull TextView tvProgressPct, @NonNull TextView tvStatBestStreak,
+      @NonNull TextView tvStatToday, @NonNull TextView tvStatWeek, @NonNull TextView tvStreakCount,
+      @NonNull TextView tvWeekYear) {
     this.rootView = rootView;
-    this.fabAddHabit = fabAddHabit;
+    this.btnSaveJournal = btnSaveJournal;
+    this.etJournalContent = etJournalContent;
+    this.etJournalTags = etJournalTags;
+    this.layoutMoodPicker = layoutMoodPicker;
+    this.layoutStreak = layoutStreak;
+    this.layoutWeekStrip = layoutWeekStrip;
+    this.progressRing = progressRing;
     this.rvHabits = rvHabits;
+    this.rvJournalEntries = rvJournalEntries;
+    this.tvDayOfWeekDate = tvDayOfWeekDate;
+    this.tvHabitInstructions = tvHabitInstructions;
+    this.tvManage = tvManage;
+    this.tvMomentumSub = tvMomentumSub;
+    this.tvMomentumTitle = tvMomentumTitle;
+    this.tvPastEntriesHeader = tvPastEntriesHeader;
+    this.tvProgressPct = tvProgressPct;
+    this.tvStatBestStreak = tvStatBestStreak;
+    this.tvStatToday = tvStatToday;
+    this.tvStatWeek = tvStatWeek;
+    this.tvStreakCount = tvStreakCount;
+    this.tvWeekYear = tvWeekYear;
   }
 
   @Override
   @NonNull
-  public CoordinatorLayout getRoot() {
+  public NestedScrollView getRoot() {
     return rootView;
   }
 
@@ -60,9 +149,45 @@ public final class FragmentHabitsBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
-      id = R.id.fabAddHabit;
-      FloatingActionButton fabAddHabit = ViewBindings.findChildViewById(rootView, id);
-      if (fabAddHabit == null) {
+      id = R.id.btnSaveJournal;
+      Button btnSaveJournal = ViewBindings.findChildViewById(rootView, id);
+      if (btnSaveJournal == null) {
+        break missingId;
+      }
+
+      id = R.id.etJournalContent;
+      EditText etJournalContent = ViewBindings.findChildViewById(rootView, id);
+      if (etJournalContent == null) {
+        break missingId;
+      }
+
+      id = R.id.etJournalTags;
+      EditText etJournalTags = ViewBindings.findChildViewById(rootView, id);
+      if (etJournalTags == null) {
+        break missingId;
+      }
+
+      id = R.id.layoutMoodPicker;
+      LinearLayout layoutMoodPicker = ViewBindings.findChildViewById(rootView, id);
+      if (layoutMoodPicker == null) {
+        break missingId;
+      }
+
+      id = R.id.layoutStreak;
+      LinearLayout layoutStreak = ViewBindings.findChildViewById(rootView, id);
+      if (layoutStreak == null) {
+        break missingId;
+      }
+
+      id = R.id.layoutWeekStrip;
+      LinearLayout layoutWeekStrip = ViewBindings.findChildViewById(rootView, id);
+      if (layoutWeekStrip == null) {
+        break missingId;
+      }
+
+      id = R.id.progressRing;
+      ProgressBar progressRing = ViewBindings.findChildViewById(rootView, id);
+      if (progressRing == null) {
         break missingId;
       }
 
@@ -72,7 +197,89 @@ public final class FragmentHabitsBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentHabitsBinding((CoordinatorLayout) rootView, fabAddHabit, rvHabits);
+      id = R.id.rvJournalEntries;
+      RecyclerView rvJournalEntries = ViewBindings.findChildViewById(rootView, id);
+      if (rvJournalEntries == null) {
+        break missingId;
+      }
+
+      id = R.id.tvDayOfWeekDate;
+      TextView tvDayOfWeekDate = ViewBindings.findChildViewById(rootView, id);
+      if (tvDayOfWeekDate == null) {
+        break missingId;
+      }
+
+      id = R.id.tvHabitInstructions;
+      TextView tvHabitInstructions = ViewBindings.findChildViewById(rootView, id);
+      if (tvHabitInstructions == null) {
+        break missingId;
+      }
+
+      id = R.id.tvManage;
+      TextView tvManage = ViewBindings.findChildViewById(rootView, id);
+      if (tvManage == null) {
+        break missingId;
+      }
+
+      id = R.id.tvMomentumSub;
+      TextView tvMomentumSub = ViewBindings.findChildViewById(rootView, id);
+      if (tvMomentumSub == null) {
+        break missingId;
+      }
+
+      id = R.id.tvMomentumTitle;
+      TextView tvMomentumTitle = ViewBindings.findChildViewById(rootView, id);
+      if (tvMomentumTitle == null) {
+        break missingId;
+      }
+
+      id = R.id.tvPastEntriesHeader;
+      TextView tvPastEntriesHeader = ViewBindings.findChildViewById(rootView, id);
+      if (tvPastEntriesHeader == null) {
+        break missingId;
+      }
+
+      id = R.id.tvProgressPct;
+      TextView tvProgressPct = ViewBindings.findChildViewById(rootView, id);
+      if (tvProgressPct == null) {
+        break missingId;
+      }
+
+      id = R.id.tvStatBestStreak;
+      TextView tvStatBestStreak = ViewBindings.findChildViewById(rootView, id);
+      if (tvStatBestStreak == null) {
+        break missingId;
+      }
+
+      id = R.id.tvStatToday;
+      TextView tvStatToday = ViewBindings.findChildViewById(rootView, id);
+      if (tvStatToday == null) {
+        break missingId;
+      }
+
+      id = R.id.tvStatWeek;
+      TextView tvStatWeek = ViewBindings.findChildViewById(rootView, id);
+      if (tvStatWeek == null) {
+        break missingId;
+      }
+
+      id = R.id.tvStreakCount;
+      TextView tvStreakCount = ViewBindings.findChildViewById(rootView, id);
+      if (tvStreakCount == null) {
+        break missingId;
+      }
+
+      id = R.id.tvWeekYear;
+      TextView tvWeekYear = ViewBindings.findChildViewById(rootView, id);
+      if (tvWeekYear == null) {
+        break missingId;
+      }
+
+      return new FragmentHabitsBinding((NestedScrollView) rootView, btnSaveJournal,
+          etJournalContent, etJournalTags, layoutMoodPicker, layoutStreak, layoutWeekStrip,
+          progressRing, rvHabits, rvJournalEntries, tvDayOfWeekDate, tvHabitInstructions, tvManage,
+          tvMomentumSub, tvMomentumTitle, tvPastEntriesHeader, tvProgressPct, tvStatBestStreak,
+          tvStatToday, tvStatWeek, tvStreakCount, tvWeekYear);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

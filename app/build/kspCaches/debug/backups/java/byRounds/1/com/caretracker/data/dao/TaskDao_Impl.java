@@ -45,7 +45,7 @@ public final class TaskDao_Impl implements TaskDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "INSERT OR REPLACE INTO `tasks` (`id`,`userId`,`title`,`description`,`priority`,`status`,`category`,`dueDate`,`dueTime`,`estimatedMinutes`,`tags`,`completedAt`,`createdAt`) VALUES (nullif(?, 0),?,?,?,?,?,?,?,?,?,?,?,?)";
+        return "INSERT OR REPLACE INTO `tasks` (`id`,`userId`,`title`,`description`,`priority`,`status`,`category`,`dueDate`,`dueTime`,`estimatedMinutes`,`tags`,`sortOrder`,`completedAt`,`createdAt`) VALUES (nullif(?, 0),?,?,?,?,?,?,?,?,?,?,?,?,?)";
       }
 
       @Override
@@ -82,12 +82,13 @@ public final class TaskDao_Impl implements TaskDao {
         } else {
           statement.bindString(11, entity.getTags());
         }
+        statement.bindLong(12, entity.getSortOrder());
         if (entity.getCompletedAt() == null) {
-          statement.bindNull(12);
+          statement.bindNull(13);
         } else {
-          statement.bindLong(12, entity.getCompletedAt());
+          statement.bindLong(13, entity.getCompletedAt());
         }
-        statement.bindLong(13, entity.getCreatedAt());
+        statement.bindLong(14, entity.getCreatedAt());
       }
     };
     this.__deletionAdapterOfTaskEntity = new EntityDeletionOrUpdateAdapter<TaskEntity>(__db) {
@@ -107,7 +108,7 @@ public final class TaskDao_Impl implements TaskDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "UPDATE OR ABORT `tasks` SET `id` = ?,`userId` = ?,`title` = ?,`description` = ?,`priority` = ?,`status` = ?,`category` = ?,`dueDate` = ?,`dueTime` = ?,`estimatedMinutes` = ?,`tags` = ?,`completedAt` = ?,`createdAt` = ? WHERE `id` = ?";
+        return "UPDATE OR ABORT `tasks` SET `id` = ?,`userId` = ?,`title` = ?,`description` = ?,`priority` = ?,`status` = ?,`category` = ?,`dueDate` = ?,`dueTime` = ?,`estimatedMinutes` = ?,`tags` = ?,`sortOrder` = ?,`completedAt` = ?,`createdAt` = ? WHERE `id` = ?";
       }
 
       @Override
@@ -144,13 +145,14 @@ public final class TaskDao_Impl implements TaskDao {
         } else {
           statement.bindString(11, entity.getTags());
         }
+        statement.bindLong(12, entity.getSortOrder());
         if (entity.getCompletedAt() == null) {
-          statement.bindNull(12);
+          statement.bindNull(13);
         } else {
-          statement.bindLong(12, entity.getCompletedAt());
+          statement.bindLong(13, entity.getCompletedAt());
         }
-        statement.bindLong(13, entity.getCreatedAt());
-        statement.bindLong(14, entity.getId());
+        statement.bindLong(14, entity.getCreatedAt());
+        statement.bindLong(15, entity.getId());
       }
     };
   }
@@ -211,7 +213,7 @@ public final class TaskDao_Impl implements TaskDao {
 
   @Override
   public Flow<List<TaskEntity>> getTasksForUser(final long userId) {
-    final String _sql = "SELECT * FROM tasks WHERE userId = ? ORDER BY createdAt DESC";
+    final String _sql = "SELECT * FROM tasks WHERE userId = ? ORDER BY sortOrder ASC, createdAt ASC";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
     _statement.bindLong(_argIndex, userId);
@@ -232,6 +234,7 @@ public final class TaskDao_Impl implements TaskDao {
           final int _cursorIndexOfDueTime = CursorUtil.getColumnIndexOrThrow(_cursor, "dueTime");
           final int _cursorIndexOfEstimatedMinutes = CursorUtil.getColumnIndexOrThrow(_cursor, "estimatedMinutes");
           final int _cursorIndexOfTags = CursorUtil.getColumnIndexOrThrow(_cursor, "tags");
+          final int _cursorIndexOfSortOrder = CursorUtil.getColumnIndexOrThrow(_cursor, "sortOrder");
           final int _cursorIndexOfCompletedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "completedAt");
           final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
           final List<TaskEntity> _result = new ArrayList<TaskEntity>(_cursor.getCount());
@@ -279,6 +282,8 @@ public final class TaskDao_Impl implements TaskDao {
             } else {
               _tmpTags = _cursor.getString(_cursorIndexOfTags);
             }
+            final int _tmpSortOrder;
+            _tmpSortOrder = _cursor.getInt(_cursorIndexOfSortOrder);
             final Long _tmpCompletedAt;
             if (_cursor.isNull(_cursorIndexOfCompletedAt)) {
               _tmpCompletedAt = null;
@@ -287,7 +292,7 @@ public final class TaskDao_Impl implements TaskDao {
             }
             final long _tmpCreatedAt;
             _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
-            _item = new TaskEntity(_tmpId,_tmpUserId,_tmpTitle,_tmpDescription,_tmpPriority,_tmpStatus,_tmpCategory,_tmpDueDate,_tmpDueTime,_tmpEstimatedMinutes,_tmpTags,_tmpCompletedAt,_tmpCreatedAt);
+            _item = new TaskEntity(_tmpId,_tmpUserId,_tmpTitle,_tmpDescription,_tmpPriority,_tmpStatus,_tmpCategory,_tmpDueDate,_tmpDueTime,_tmpEstimatedMinutes,_tmpTags,_tmpSortOrder,_tmpCompletedAt,_tmpCreatedAt);
             _result.add(_item);
           }
           return _result;
@@ -305,7 +310,7 @@ public final class TaskDao_Impl implements TaskDao {
 
   @Override
   public Flow<List<TaskEntity>> getActiveTasks(final long userId) {
-    final String _sql = "SELECT * FROM tasks WHERE userId = ? AND status != 'done' ORDER BY dueDate ASC";
+    final String _sql = "SELECT * FROM tasks WHERE userId = ? AND status != 'done' ORDER BY sortOrder ASC, createdAt ASC";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
     _statement.bindLong(_argIndex, userId);
@@ -326,6 +331,7 @@ public final class TaskDao_Impl implements TaskDao {
           final int _cursorIndexOfDueTime = CursorUtil.getColumnIndexOrThrow(_cursor, "dueTime");
           final int _cursorIndexOfEstimatedMinutes = CursorUtil.getColumnIndexOrThrow(_cursor, "estimatedMinutes");
           final int _cursorIndexOfTags = CursorUtil.getColumnIndexOrThrow(_cursor, "tags");
+          final int _cursorIndexOfSortOrder = CursorUtil.getColumnIndexOrThrow(_cursor, "sortOrder");
           final int _cursorIndexOfCompletedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "completedAt");
           final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
           final List<TaskEntity> _result = new ArrayList<TaskEntity>(_cursor.getCount());
@@ -373,6 +379,8 @@ public final class TaskDao_Impl implements TaskDao {
             } else {
               _tmpTags = _cursor.getString(_cursorIndexOfTags);
             }
+            final int _tmpSortOrder;
+            _tmpSortOrder = _cursor.getInt(_cursorIndexOfSortOrder);
             final Long _tmpCompletedAt;
             if (_cursor.isNull(_cursorIndexOfCompletedAt)) {
               _tmpCompletedAt = null;
@@ -381,7 +389,7 @@ public final class TaskDao_Impl implements TaskDao {
             }
             final long _tmpCreatedAt;
             _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
-            _item = new TaskEntity(_tmpId,_tmpUserId,_tmpTitle,_tmpDescription,_tmpPriority,_tmpStatus,_tmpCategory,_tmpDueDate,_tmpDueTime,_tmpEstimatedMinutes,_tmpTags,_tmpCompletedAt,_tmpCreatedAt);
+            _item = new TaskEntity(_tmpId,_tmpUserId,_tmpTitle,_tmpDescription,_tmpPriority,_tmpStatus,_tmpCategory,_tmpDueDate,_tmpDueTime,_tmpEstimatedMinutes,_tmpTags,_tmpSortOrder,_tmpCompletedAt,_tmpCreatedAt);
             _result.add(_item);
           }
           return _result;

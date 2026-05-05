@@ -4,10 +4,11 @@ package com.caretracker.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ScrollView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
@@ -18,7 +19,19 @@ import java.lang.String;
 
 public final class FragmentDashboardBinding implements ViewBinding {
   @NonNull
-  private final ScrollView rootView;
+  private final NestedScrollView rootView;
+
+  @NonNull
+  public final ProgressBar progressHabits;
+
+  @NonNull
+  public final ProgressBar progressMeds;
+
+  @NonNull
+  public final ProgressBar progressRing;
+
+  @NonNull
+  public final ProgressBar progressTasks;
 
   @NonNull
   public final RecyclerView rvHabits;
@@ -30,25 +43,75 @@ public final class FragmentDashboardBinding implements ViewBinding {
   public final RecyclerView rvTasks;
 
   @NonNull
+  public final TextView tvAttention;
+
+  @NonNull
+  public final TextView tvAttentionSub;
+
+  @NonNull
+  public final TextView tvDashboardScore;
+
+  @NonNull
   public final TextView tvDate;
+
+  @NonNull
+  public final TextView tvMomentumSub;
+
+  @NonNull
+  public final TextView tvMomentumTitle;
+
+  @NonNull
+  public final TextView tvProgressPct;
+
+  @NonNull
+  public final TextView tvStatHabits;
+
+  @NonNull
+  public final TextView tvStatMeds;
+
+  @NonNull
+  public final TextView tvStatTasks;
+
+  @NonNull
+  public final TextView tvWeekSummary;
 
   @NonNull
   public final TextView tvWelcome;
 
-  private FragmentDashboardBinding(@NonNull ScrollView rootView, @NonNull RecyclerView rvHabits,
-      @NonNull RecyclerView rvMeds, @NonNull RecyclerView rvTasks, @NonNull TextView tvDate,
-      @NonNull TextView tvWelcome) {
+  private FragmentDashboardBinding(@NonNull NestedScrollView rootView,
+      @NonNull ProgressBar progressHabits, @NonNull ProgressBar progressMeds,
+      @NonNull ProgressBar progressRing, @NonNull ProgressBar progressTasks,
+      @NonNull RecyclerView rvHabits, @NonNull RecyclerView rvMeds, @NonNull RecyclerView rvTasks,
+      @NonNull TextView tvAttention, @NonNull TextView tvAttentionSub,
+      @NonNull TextView tvDashboardScore, @NonNull TextView tvDate, @NonNull TextView tvMomentumSub,
+      @NonNull TextView tvMomentumTitle, @NonNull TextView tvProgressPct,
+      @NonNull TextView tvStatHabits, @NonNull TextView tvStatMeds, @NonNull TextView tvStatTasks,
+      @NonNull TextView tvWeekSummary, @NonNull TextView tvWelcome) {
     this.rootView = rootView;
+    this.progressHabits = progressHabits;
+    this.progressMeds = progressMeds;
+    this.progressRing = progressRing;
+    this.progressTasks = progressTasks;
     this.rvHabits = rvHabits;
     this.rvMeds = rvMeds;
     this.rvTasks = rvTasks;
+    this.tvAttention = tvAttention;
+    this.tvAttentionSub = tvAttentionSub;
+    this.tvDashboardScore = tvDashboardScore;
     this.tvDate = tvDate;
+    this.tvMomentumSub = tvMomentumSub;
+    this.tvMomentumTitle = tvMomentumTitle;
+    this.tvProgressPct = tvProgressPct;
+    this.tvStatHabits = tvStatHabits;
+    this.tvStatMeds = tvStatMeds;
+    this.tvStatTasks = tvStatTasks;
+    this.tvWeekSummary = tvWeekSummary;
     this.tvWelcome = tvWelcome;
   }
 
   @Override
   @NonNull
-  public ScrollView getRoot() {
+  public NestedScrollView getRoot() {
     return rootView;
   }
 
@@ -73,6 +136,30 @@ public final class FragmentDashboardBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.progressHabits;
+      ProgressBar progressHabits = ViewBindings.findChildViewById(rootView, id);
+      if (progressHabits == null) {
+        break missingId;
+      }
+
+      id = R.id.progressMeds;
+      ProgressBar progressMeds = ViewBindings.findChildViewById(rootView, id);
+      if (progressMeds == null) {
+        break missingId;
+      }
+
+      id = R.id.progressRing;
+      ProgressBar progressRing = ViewBindings.findChildViewById(rootView, id);
+      if (progressRing == null) {
+        break missingId;
+      }
+
+      id = R.id.progressTasks;
+      ProgressBar progressTasks = ViewBindings.findChildViewById(rootView, id);
+      if (progressTasks == null) {
+        break missingId;
+      }
+
       id = R.id.rvHabits;
       RecyclerView rvHabits = ViewBindings.findChildViewById(rootView, id);
       if (rvHabits == null) {
@@ -91,9 +178,69 @@ public final class FragmentDashboardBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tvAttention;
+      TextView tvAttention = ViewBindings.findChildViewById(rootView, id);
+      if (tvAttention == null) {
+        break missingId;
+      }
+
+      id = R.id.tvAttentionSub;
+      TextView tvAttentionSub = ViewBindings.findChildViewById(rootView, id);
+      if (tvAttentionSub == null) {
+        break missingId;
+      }
+
+      id = R.id.tvDashboardScore;
+      TextView tvDashboardScore = ViewBindings.findChildViewById(rootView, id);
+      if (tvDashboardScore == null) {
+        break missingId;
+      }
+
       id = R.id.tvDate;
       TextView tvDate = ViewBindings.findChildViewById(rootView, id);
       if (tvDate == null) {
+        break missingId;
+      }
+
+      id = R.id.tvMomentumSub;
+      TextView tvMomentumSub = ViewBindings.findChildViewById(rootView, id);
+      if (tvMomentumSub == null) {
+        break missingId;
+      }
+
+      id = R.id.tvMomentumTitle;
+      TextView tvMomentumTitle = ViewBindings.findChildViewById(rootView, id);
+      if (tvMomentumTitle == null) {
+        break missingId;
+      }
+
+      id = R.id.tvProgressPct;
+      TextView tvProgressPct = ViewBindings.findChildViewById(rootView, id);
+      if (tvProgressPct == null) {
+        break missingId;
+      }
+
+      id = R.id.tvStatHabits;
+      TextView tvStatHabits = ViewBindings.findChildViewById(rootView, id);
+      if (tvStatHabits == null) {
+        break missingId;
+      }
+
+      id = R.id.tvStatMeds;
+      TextView tvStatMeds = ViewBindings.findChildViewById(rootView, id);
+      if (tvStatMeds == null) {
+        break missingId;
+      }
+
+      id = R.id.tvStatTasks;
+      TextView tvStatTasks = ViewBindings.findChildViewById(rootView, id);
+      if (tvStatTasks == null) {
+        break missingId;
+      }
+
+      id = R.id.tvWeekSummary;
+      TextView tvWeekSummary = ViewBindings.findChildViewById(rootView, id);
+      if (tvWeekSummary == null) {
         break missingId;
       }
 
@@ -103,8 +250,10 @@ public final class FragmentDashboardBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentDashboardBinding((ScrollView) rootView, rvHabits, rvMeds, rvTasks, tvDate,
-          tvWelcome);
+      return new FragmentDashboardBinding((NestedScrollView) rootView, progressHabits, progressMeds,
+          progressRing, progressTasks, rvHabits, rvMeds, rvTasks, tvAttention, tvAttentionSub,
+          tvDashboardScore, tvDate, tvMomentumSub, tvMomentumTitle, tvProgressPct, tvStatHabits,
+          tvStatMeds, tvStatTasks, tvWeekSummary, tvWelcome);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

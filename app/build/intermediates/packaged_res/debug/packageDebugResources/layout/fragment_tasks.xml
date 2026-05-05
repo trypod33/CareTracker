@@ -1,14 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#121212"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:background="#121212">
+
     <TextView
+        android:id="@+id/tvTaskInstructions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="12dp"
+        android:text="Tip: press and hold the ≡ grip to reorder tasks."
+        android:textColor="#888888"
+        android:textSize="12sp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvTasks"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="36dp"
+        android:paddingBottom="80dp"
+        android:clipToPadding="false"/>
+
+    <TextView
+        android:id="@+id/tvTasksEmpty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tasks"
-        android:textSize="24sp"
-        android:textColor="#ffffff"/>
-</LinearLayout>
+        android:layout_gravity="center"
+        android:text="All clear! No tasks."
+        android:textColor="#aaaaaa"
+        android:textSize="16sp"
+        android:visibility="gone"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:src="@android:drawable/ic_input_add"
+        android:contentDescription="Add task"
+        app:backgroundTint="#4f9cf9"/>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

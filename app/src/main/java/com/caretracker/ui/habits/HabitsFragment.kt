@@ -7,13 +7,16 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.caretracker.CareTrackerApp
 import com.caretracker.R
 import com.caretracker.data.entities.HabitEntity
@@ -35,12 +38,14 @@ class HabitsFragment : Fragment() {
 
     private lateinit var habitAdapter: HabitAdapter
     private lateinit var journalAdapter: JournalAdapter
+    private lateinit var habitTouchHelper: ItemTouchHelper
     private var habitsJob: Job? = null
     private var journalJob: Job? = null
 
     private var currentUserId: Long = 0L
     private var currentHabits: List<HabitEntity> = emptyList()
     private var selectedMoodScore: Int? = null
+    private var orderedHabitIds: MutableList<Long> = mutableListOf()
 
     private val today: String
         get() = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
@@ -78,7 +83,7 @@ class HabitsFragment : Fragment() {
         val cal = Calendar.getInstance()
         val dayName = SimpleDateFormat("EEEE,", Locale.getDefault()).format(cal.time)
         val monthDay = SimpleDateFormat("MMM d", Locale.getDefault()).format(cal.time)
-        binding.tvDayOfWeekDate.text = dayName + " / " + monthDay
+        binding.tvDayOfWeekDate.text = dayName + " " + monthDay
         val week = cal.get(Calendar.WEEK_OF_YEAR)
         val year = cal.get(Calendar.YEAR)
         binding.tvWeekYear.text = "Week $week · $year"
@@ -96,7 +101,7 @@ class HabitsFragment : Fragment() {
 
         for (i in 0..6) {
             val dayNum = weekCal.get(Calendar.DAY_OF_MONTH)
-            val isToday = (i == todayIdx)
+            val isToday = i == todayIdx
             val cell = LinearLayout(requireContext()).apply {
                 orientation = LinearLayout.VERTICAL
                 gravity = Gravity.CENTER
@@ -127,11 +132,34 @@ class HabitsFragment : Fragment() {
 
     private fun setupAdapters() {
         habitAdapter = HabitAdapter(
-            onTap = { habit -> handleHabitTap(habit) },
-            onLongPress = { habit -> handleHabitLongPress(habit) }
+            onPrimaryTap = { habit -> primaryTapHabit(habit) },
+            onEditCount = { habit -> showEditCountDialog(habit) },
+            onManageHabit = { habit -> showManageHabitDialog(habit) },
+            onStartDrag = { holder -> habitTouchHelper.startDrag(holder) }
         )
         binding.rvHabits.layoutManager = LinearLayoutManager(requireContext())
         binding.rvHabits.adapter = habitAdapter
+
+        habitTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+            ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+            0
+        ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                habitAdapter.moveItem(viewHolder.adapterPosition, target.adapterPosition)
+                val moved = orderedHabitIds.removeAt(viewHolder.adapterPosition)
+                orderedHabitIds.add(target.adapterPosition, moved)
+                return true
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) = Unit
+
+            override fun isLongPressDragEnabled(): Boolean = false
+        })
+        habitTouchHelper.attachToRecyclerView(binding.rvHabits)
 
         journalAdapter = JournalAdapter()
         binding.rvJournalEntries.layoutManager = LinearLayoutManager(requireContext())
@@ -199,27 +227,35 @@ class HabitsFragment : Fragment() {
 
     private suspend fun observeHabits(userId: Long, app: CareTrackerApp) {
         app.repository.getHabitsForUser(userId).collect { habits ->
-            currentHabits = habits
-            refreshHabitList(habits, app)
-            updateStats(habits, app)
+            val base = habits.sortedBy { habit ->
+                val idx = orderedHabitIds.indexOf(habit.id)
+                if (idx >= 0) idx else Int.MAX_VALUE
+            }
+            currentHabits = if (orderedHabitIds.isEmpty()) habits else base
+            if (orderedHabitIds.isEmpty()) {
+                orderedHabitIds = currentHabits.map { it.id }.toMutableList()
+            }
+            refreshHabitList(currentHabits, app)
+            updateStats(currentHabits, app)
         }
     }
 
     private suspend fun refreshHabitList(habits: List<HabitEntity>, app: CareTrackerApp) {
         val items = habits.map { habit ->
-            val existing = app.repository.getHabitLogForDate(habit.id, today)
-            val currentCount = existing?.count ?: 0
-            val isDone = currentCount >= habit.targetCount && habit.targetCount > 0
-            val streak = computeStreak(habit.id, app)
-            HabitWithStatus(habit, isDone, streak, currentCount)
+            val log = app.repository.getHabitLogForDate(habit.id, today)
+            val todayCount = log?.count ?: 0
+            val isDone = if (habit.targetCount > 1) todayCount >= habit.targetCount else log != null
+            val streak = computeStreak(habit.id, app, habit.targetCount > 1)
+            HabitWithStatus(habit, isDone, streak, todayCount)
         }
-        habitAdapter.submitList(items)
+        habitAdapter.submitItems(items)
 
         val doneCount = items.count { it.isDoneToday }
         val total = items.size
         val pct = if (total > 0) (doneCount * 100) / total else 0
         binding.progressRing.progress = pct
         binding.tvProgressPct.text = "$pct%"
+
         val remaining = total - doneCount
         binding.tvMomentumTitle.text = when {
             total == 0 -> "Add your first habit!"
@@ -228,20 +264,22 @@ class HabitsFragment : Fragment() {
             pct >= 30 -> "Keep going!"
             else -> "Let's get started!"
         }
+
         binding.tvMomentumSub.text = when {
-            total == 0 -> "Tap '+ Add' above to begin."
+            total == 0 -> "Tap Manage to add a habit."
             doneCount == total -> "All $total habits completed today."
-            else -> "$doneCount of $total habits completed today. $remaining remaining before midnight."
+            else -> "$doneCount of $total habits completed. $remaining remaining."
         }
+
         val dayStreak = computeDayStreak(habits, app)
         binding.tvStreakCount.text = "$dayStreak"
     }
 
     private suspend fun updateStats(habits: List<HabitEntity>, app: CareTrackerApp) {
         val total = habits.size
-        val todayDone = habits.count {
-            val log = app.repository.getHabitLogForDate(it.id, today)
-            (log?.count ?: 0) >= it.targetCount
+        val todayDone = habits.count { habit ->
+            val log = app.repository.getHabitLogForDate(habit.id, today)
+            if (habit.targetCount > 1) (log?.count ?: 0) >= habit.targetCount else log != null
         }
         binding.tvStatToday.text = "$todayDone/$total"
 
@@ -250,49 +288,45 @@ class HabitsFragment : Fragment() {
         cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
         var weekDone = 0
         var weekTotal = 0
+
         repeat(7) {
             val dateStr = sdf.format(cal.time)
             if (dateStr <= today) {
                 weekTotal += total
-                habits.forEach {
-                    val log = app.repository.getHabitLogForDate(it.id, dateStr)
-                    if ((log?.count ?: 0) >= it.targetCount) weekDone++
+                habits.forEach { habit ->
+                    val log = app.repository.getHabitLogForDate(habit.id, dateStr)
+                    val done = if (habit.targetCount > 1) (log?.count ?: 0) >= habit.targetCount else log != null
+                    if (done) weekDone++
                 }
             }
             cal.add(Calendar.DAY_OF_MONTH, 1)
         }
-        val weekPct = if (weekTotal > 0) (weekDone * 100) / weekTotal else 0
-        binding.tvStatWeek.text = "$weekPct%"
 
-        val bestStreak = habits.maxOfOrNull { h ->
-            var s = 0
-            val c = Calendar.getInstance()
-            val sdf2 = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            var d = sdf2.format(c.time)
-            var running = true
-            while (running) {
-                val log = app.repository.getHabitLogForDate(h.id, d)
-                if ((log?.count ?: 0) >= h.targetCount) {
-                    s++
-                    c.add(Calendar.DAY_OF_MONTH, -1)
-                    d = sdf2.format(c.time)
-                } else {
-                    running = false
-                }
-            }
-            s
-        } ?: 0
-        binding.tvStatBestStreak.text = "$bestStreak"
+        binding.tvStatWeek.text = if (weekTotal > 0) "${(weekDone * 100) / weekTotal}%" else "0%"
+        binding.tvStatBestStreak.text = habits.maxOfOrNull { computeStreak(it.id, app, it.targetCount > 1) }?.toString() ?: "0"
     }
 
-    private suspend fun computeStreak(habitId: Long, app: CareTrackerApp): Int {
+    private suspend fun observeJournal(userId: Long, app: CareTrackerApp) {
+        app.repository.getMoodEntries(userId).collect { entries ->
+            binding.tvPastEntriesHeader.isVisible = entries.isNotEmpty()
+            binding.rvJournalEntries.isVisible = entries.isNotEmpty()
+            journalAdapter.submitList(entries)
+        }
+    }
+
+    private suspend fun computeStreak(habitId: Long, app: CareTrackerApp, isCounterHabit: Boolean): Int {
         val logs = app.repository.getAllLogsForHabit(habitId)
-        val dates = logs.map { it.loggedDate }.toSortedSet(reverseOrder())
+        if (logs.isEmpty()) return 0
+
+        val qualifyingDates = if (isCounterHabit) logs.filter { it.count > 0 }.map { it.loggedDate }.toSet()
+        else logs.map { it.loggedDate }.toSet()
+
         val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val cal = Calendar.getInstance()
         var streak = 0
         var checkDate = sdf.format(cal.time)
-        while (dates.contains(checkDate)) {
+
+        while (qualifyingDates.contains(checkDate)) {
             streak++
             cal.add(Calendar.DAY_OF_MONTH, -1)
             checkDate = sdf.format(cal.time)
@@ -302,16 +336,18 @@ class HabitsFragment : Fragment() {
 
     private suspend fun computeDayStreak(habits: List<HabitEntity>, app: CareTrackerApp): Int {
         if (habits.isEmpty()) return 0
+
         val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val cal = Calendar.getInstance()
         var streak = 0
+
         repeat(365) {
             val dateStr = sdf.format(cal.time)
-            val anyLogged = habits.any {
-                val log = app.repository.getHabitLogForDate(it.id, dateStr)
-                (log?.count ?: 0) >= it.targetCount
+            val allDone = habits.all { habit ->
+                val log = app.repository.getHabitLogForDate(habit.id, dateStr)
+                if (habit.targetCount > 1) (log?.count ?: 0) >= habit.targetCount else log != null
             }
-            if (anyLogged) {
+            if (allDone) {
                 streak++
                 cal.add(Calendar.DAY_OF_MONTH, -1)
             } else if (streak == 0 && dateStr == today) {
@@ -323,78 +359,65 @@ class HabitsFragment : Fragment() {
         return streak
     }
 
-    private fun handleHabitTap(habit: HabitEntity) {
+    private fun primaryTapHabit(habit: HabitEntity) {
+        if (habit.targetCount > 1) incrementHabit(habit) else toggleHabit(habit)
+    }
+
+    private fun toggleHabit(habit: HabitEntity) {
         val app = requireActivity().application as CareTrackerApp
         lifecycleScope.launch {
             val existing = app.repository.getHabitLogForDate(habit.id, today)
-
-            if (habit.targetCount <= 1) {
-                if (existing == null) {
-                    app.repository.insertHabitLog(HabitLogEntity(habitId = habit.id, loggedDate = today, count = 1))
-                } else {
-                    app.repository.deleteHabitLog(existing)
-                }
+            if (existing == null) {
+                app.repository.insertHabitLog(HabitLogEntity(habitId = habit.id, loggedDate = today))
             } else {
-                val newCount = (existing?.count ?: 0) + 1
-                if (existing == null) {
-                    app.repository.insertHabitLog(
-                        HabitLogEntity(habitId = habit.id, loggedDate = today, count = newCount)
-                    )
-                } else {
-                    app.repository.insertHabitLog(existing.copy(count = newCount))
-                }
+                app.repository.deleteHabitLog(existing)
             }
-
             refreshHabitList(currentHabits, app)
             updateStats(currentHabits, app)
         }
     }
 
-    private fun handleHabitLongPress(habit: HabitEntity) {
+    private fun incrementHabit(habit: HabitEntity) {
         val app = requireActivity().application as CareTrackerApp
-        if (habit.targetCount > 1) {
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle(habit.name)
-                .setItems(arrayOf("Enter count", "Edit habit")) { _, which ->
-                    when (which) {
-                        0 -> showManualCountDialog(habit, app)
-                        1 -> showEditHabitDialog(habit, app)
-                    }
-                }
-                .show()
-        } else {
-            showEditHabitDialog(habit, app)
+        lifecycleScope.launch {
+            val existing = app.repository.getHabitLogForDate(habit.id, today)
+            if (existing == null) {
+                app.repository.insertHabitLog(HabitLogEntity(habitId = habit.id, loggedDate = today, count = 1))
+            } else {
+                app.repository.insertHabitLog(existing.copy(count = existing.count + 1))
+            }
+            refreshHabitList(currentHabits, app)
+            updateStats(currentHabits, app)
         }
     }
 
-    private fun showManualCountDialog(habit: HabitEntity, app: CareTrackerApp) {
-        val input = TextInputEditText(requireContext()).apply {
-            hint = "Enter count"
+    private fun showEditCountDialog(habit: HabitEntity) {
+        val app = requireActivity().application as CareTrackerApp
+        val input = EditText(requireContext()).apply {
             inputType = InputType.TYPE_CLASS_NUMBER
-            setPadding(48, 32, 48, 16)
+            hint = "Today's count"
         }
 
         lifecycleScope.launch {
             val existing = app.repository.getHabitLogForDate(habit.id, today)
             input.setText((existing?.count ?: 0).toString())
-            input.setSelection(input.text?.length ?: 0)
 
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Set count for ${habit.name}")
-                .setMessage("Target: ${habit.targetCount}")
+                .setTitle("Edit count for " + habit.name)
                 .setView(input)
                 .setPositiveButton("Save") { _, _ ->
-                    val value = input.text?.toString()?.toIntOrNull() ?: 0
+                    val newCount = input.text?.toString()?.trim()?.toIntOrNull()?.coerceAtLeast(0) ?: 0
                     lifecycleScope.launch {
                         val current = app.repository.getHabitLogForDate(habit.id, today)
-                        when {
-                            value <= 0 && current != null -> app.repository.deleteHabitLog(current)
-                            value > 0 && current == null -> app.repository.insertHabitLog(
-                                HabitLogEntity(habitId = habit.id, loggedDate = today, count = value)
-                            )
-                            value > 0 && current != null -> app.repository.insertHabitLog(
-                                current.copy(count = value)
-                            )
+                        if (newCount <= 0) {
+                            if (current != null) app.repository.deleteHabitLog(current)
+                        } else {
+                            val newLog = if (current == null) {
+                                HabitLogEntity(habitId = habit.id, loggedDate = today, count = newCount)
+                            } else {
+                                current.copy(count = newCount)
+                            }
+                            app.repository.insertHabitLog(newLog)
                         }
                         refreshHabitList(currentHabits, app)
                         updateStats(currentHabits, app)
@@ -405,81 +428,84 @@ class HabitsFragment : Fragment() {
         }
     }
 
-    private suspend fun observeJournal(userId: Long, app: CareTrackerApp) {
-        val todayEntry = app.repository.getMoodEntryForDate(userId, today)
-        todayEntry?.let {
-            binding.etJournalContent.setText(it.content ?: "")
-            binding.etJournalTags.setText(it.tags ?: "")
-            selectedMoodScore = it.moodScore
-            it.moodScore?.let { score ->
-                val idx = score - 1
-                if (idx in 0 until binding.layoutMoodPicker.childCount) {
-                    for (i in 0 until binding.layoutMoodPicker.childCount) {
-                        binding.layoutMoodPicker.getChildAt(i).alpha = 0.3f
-                    }
-                    binding.layoutMoodPicker.getChildAt(idx).alpha = 1f
+    private fun showManageHabitDialog(habit: HabitEntity) {
+        val options = arrayOf("Edit habit", "Delete habit")
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(habit.name)
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> showEditHabitDialog(habit)
+                    1 -> confirmDeleteHabit(habit)
                 }
             }
-        }
-        app.repository.getMoodEntries(userId).collect { entries ->
-            val past = entries.filter { it.entryDate != today }
-            journalAdapter.submitList(past)
-            binding.tvPastEntriesHeader.isVisible = past.isNotEmpty()
-            binding.rvJournalEntries.isVisible = past.isNotEmpty()
-        }
+            .show()
     }
 
-    private fun showEditHabitDialog(habit: HabitEntity, app: CareTrackerApp) {
+    private fun showEditHabitDialog(habit: HabitEntity) {
+        val app = requireActivity().application as CareTrackerApp
+
         val layout = LinearLayout(requireContext()).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(48, 24, 48, 8)
+            setPadding(40, 24, 40, 8)
         }
 
         val nameInput = TextInputEditText(requireContext()).apply {
             hint = "Habit name"
             setText(habit.name)
-            setSelection(habit.name.length)
         }
 
-        val targetInput = TextInputEditText(requireContext()).apply {
-            hint = "Target count (1 = simple check-off)"
+        val categoryInput = TextInputEditText(requireContext()).apply {
+            hint = "Category"
+            setText(habit.category)
+        }
+
+        val iconInput = TextInputEditText(requireContext()).apply {
+            hint = "Icon emoji"
+            setText(habit.icon)
+        }
+
+        val targetInput = EditText(requireContext()).apply {
+            hint = "Target count"
             inputType = InputType.TYPE_CLASS_NUMBER
             setText(habit.targetCount.toString())
         }
 
         layout.addView(nameInput)
+        layout.addView(categoryInput)
+        layout.addView(iconInput)
         layout.addView(targetInput)
 
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Edit Habit")
             .setView(layout)
             .setPositiveButton("Save") { _, _ ->
-                val updatedName = nameInput.text?.toString()?.trim().orEmpty()
-                val targetCount = targetInput.text?.toString()?.toIntOrNull()?.coerceAtLeast(1) ?: 1
-                if (updatedName.isNotEmpty()) {
-                    lifecycleScope.launch {
-                        app.repository.updateHabit(
-                            habit.copy(name = updatedName, targetCount = targetCount)
-                        )
-                        Toast.makeText(requireContext(), "Habit updated", Toast.LENGTH_SHORT).show()
-                    }
+                val updated = habit.copy(
+                    name = nameInput.text?.toString()?.trim().orEmpty().ifEmpty { habit.name },
+                    category = categoryInput.text?.toString()?.trim().orEmpty().ifEmpty { "health" },
+                    icon = iconInput.text?.toString()?.trim().orEmpty().ifEmpty { "✨" },
+                    targetCount = targetInput.text?.toString()?.trim()?.toIntOrNull()?.coerceAtLeast(1) ?: 1
+                )
+                lifecycleScope.launch {
+                    app.repository.updateHabit(updated)
+                    currentHabits = currentHabits.map { if (it.id == habit.id) updated else it }
+                    refreshHabitList(currentHabits, app)
+                    updateStats(currentHabits, app)
                 }
-            }
-            .setNeutralButton("Delete") { _, _ ->
-                confirmDeleteHabit(habit, app)
             }
             .setNegativeButton("Cancel", null)
             .show()
     }
 
-    private fun confirmDeleteHabit(habit: HabitEntity, app: CareTrackerApp) {
+    private fun confirmDeleteHabit(habit: HabitEntity) {
+        val app = requireActivity().application as CareTrackerApp
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Delete Habit")
-            .setMessage("Delete '${habit.name}'? This cannot be undone.")
+            .setTitle("Delete habit?")
+            .setMessage("This removes " + habit.name + ".")
             .setPositiveButton("Delete") { _, _ ->
                 lifecycleScope.launch {
                     app.repository.deleteHabit(habit)
-                    Toast.makeText(requireContext(), "Habit deleted", Toast.LENGTH_SHORT).show()
+                    orderedHabitIds.remove(habit.id)
                 }
             }
             .setNegativeButton("Cancel", null)
@@ -489,32 +515,53 @@ class HabitsFragment : Fragment() {
     private fun showAddHabitDialog(userId: Long, app: CareTrackerApp) {
         val layout = LinearLayout(requireContext()).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(48, 24, 48, 8)
+            setPadding(40, 24, 40, 8)
         }
 
         val nameInput = TextInputEditText(requireContext()).apply {
-            hint = "Habit name (e.g. Drink 8 Glasses)"
+            hint = "Habit name"
         }
 
-        val targetInput = TextInputEditText(requireContext()).apply {
-            hint = "Target count (1 = simple check-off)"
+        val categoryInput = TextInputEditText(requireContext()).apply {
+            hint = "Category (health, mind, fitness...)"
+            setText("health")
+        }
+
+        val iconInput = TextInputEditText(requireContext()).apply {
+            hint = "Icon emoji"
+            setText("✨")
+        }
+
+        val targetInput = EditText(requireContext()).apply {
+            hint = "Target count (1 = simple check habit)"
             inputType = InputType.TYPE_CLASS_NUMBER
             setText("1")
         }
 
         layout.addView(nameInput)
+        layout.addView(categoryInput)
+        layout.addView(iconInput)
         layout.addView(targetInput)
 
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("New Habit")
+            .setTitle("Add Habit")
             .setView(layout)
-            .setPositiveButton("Add") { _, _ ->
-                val name = nameInput.text?.toString()?.trim().orEmpty()
-                val targetCount = targetInput.text?.toString()?.toIntOrNull()?.coerceAtLeast(1) ?: 1
-                if (name.isNotEmpty()) {
+            .setPositiveButton("Save") { _, _ ->
+                val title = nameInput.text?.toString()?.trim().orEmpty()
+                val category = categoryInput.text?.toString()?.trim().orEmpty().ifEmpty { "health" }
+                val icon = iconInput.text?.toString()?.trim().orEmpty().ifEmpty { "✨" }
+                val target = targetInput.text?.toString()?.trim()?.toIntOrNull()?.coerceAtLeast(1) ?: 1
+
+                if (title.isNotEmpty()) {
                     lifecycleScope.launch {
                         app.repository.insertHabit(
-                            HabitEntity(userId = userId, name = name, targetCount = targetCount)
+                            HabitEntity(
+                                userId = userId,
+                                name = title,
+                                category = category,
+                                icon = icon,
+                                targetCount = target
+                            )
                         )
                     }
                 }

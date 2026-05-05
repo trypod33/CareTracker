@@ -1,11 +1,11 @@
 package com.caretracker.ui.habits
 
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.caretracker.R
 import com.caretracker.data.entities.HabitEntity
@@ -14,13 +14,17 @@ data class HabitWithStatus(
     val habit: HabitEntity,
     val isDoneToday: Boolean,
     val streak: Int,
-    val currentCount: Int = 0
+    val todayCount: Int = 0
 )
 
 class HabitAdapter(
-    private val onTap: (HabitEntity) -> Unit,
-    private val onLongPress: (HabitEntity) -> Unit
-) : ListAdapter<HabitWithStatus, HabitAdapter.VH>(DIFF) {
+    private val onPrimaryTap: (HabitEntity) -> Unit,
+    private val onEditCount: (HabitEntity) -> Unit,
+    private val onManageHabit: (HabitEntity) -> Unit,
+    private val onStartDrag: (VH) -> Unit
+) : RecyclerView.Adapter<HabitAdapter.VH>() {
+
+    private val items = mutableListOf<HabitWithStatus>()
 
     companion object {
         val DIFF = object : DiffUtil.ItemCallback<HabitWithStatus>() {
@@ -34,42 +38,99 @@ class HabitAdapter(
         val tvName: TextView = view.findViewById(R.id.tvHabitName)
         val tvStreak: TextView = view.findViewById(R.id.tvHabitStreak)
         val tvCategory: TextView = view.findViewById(R.id.tvHabitCategory)
-        val tvCount: TextView = view.findViewById(R.id.tvHabitCount)
         val tvToggle: TextView = view.findViewById(R.id.tvToggle)
+        val btnHabitEdit: TextView = view.findViewById(R.id.btnHabitEdit)
+        val btnDrag: TextView = view.findViewById(R.id.btnDrag)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+    fun submitItems(newItems: List<HabitWithStatus>) {
+        items.clear()
+        items.addAll(newItems)
+        notifyDataSetChanged()
+    }
+
+    fun currentItems(): List<HabitWithStatus> = items.toList()
+
+    fun moveItem(from: Int, to: Int) {
+        if (from !in items.indices || to !in items.indices) return
+        val moved = items.removeAt(from)
+        items.add(to, moved)
+        notifyItemMoved(from, to)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH =
         VH(LayoutInflater.from(parent.context).inflate(R.layout.item_habit, parent, false))
 
+    override fun getItemCount(): Int = items.size
+
     override fun onBindViewHolder(holder: VH, position: Int) {
-        val item = getItem(position)
-        holder.tvIcon.text = item.habit.icon
-        holder.tvName.text = item.habit.name
-        holder.tvStreak.text = if (item.streak > 0) "🔥${item.streak}d streak  " else "Start today!  "
-        holder.tvCategory.text = item.habit.category.replaceFirstChar { it.uppercase() }
+        val item = items[position]
+        val habit = item.habit
+        val isCounterHabit = habit.targetCount > 1
 
-        if (item.habit.targetCount > 1) {
-            holder.tvCount.visibility = View.VISIBLE
-            holder.tvCount.text = "${item.currentCount}/${item.habit.targetCount}"
+        holder.tvIcon.text = habit.icon
+        holder.tvName.text = habit.name
+
+        holder.tvCategory.text = if (isCounterHabit) {
+            habit.category.replaceFirstChar { it.uppercase() } + " • " +
+                item.todayCount + "/" + habit.targetCount
         } else {
-            holder.tvCount.visibility = View.GONE
+            habit.category.replaceFirstChar { it.uppercase() }
         }
 
-        if (item.isDoneToday) {
-            holder.tvToggle.text = "✓"
-            holder.tvToggle.setBackgroundResource(R.drawable.bg_toggle_checked)
-        } else if (item.habit.targetCount > 1) {
-            holder.tvToggle.text = "+1"
-            holder.tvToggle.setBackgroundResource(R.drawable.bg_toggle_unchecked)
-        } else {
-            holder.tvToggle.text = "+"
-            holder.tvToggle.setBackgroundResource(R.drawable.bg_toggle_unchecked)
+        holder.tvStreak.text = when {
+            isCounterHabit && item.todayCount > 0 ->
+                "Today: " + item.todayCount + "/" + habit.targetCount
+            item.streak > 0 ->
+                "🔥${item.streak}d streak"
+            isCounterHabit ->
+                "Tap to add • Hold to edit count"
+            else ->
+                "Tap to mark done"
         }
 
-        holder.itemView.setOnClickListener { onTap(item.habit) }
+        if (isCounterHabit) {
+            val done = item.todayCount >= habit.targetCount
+            holder.tvToggle.text = if (done) item.todayCount.toString() else "+" + item.todayCount
+            holder.tvToggle.setBackgroundResource(
+                if (done) R.drawable.bg_toggle_checked else R.drawable.bg_toggle_unchecked
+            )
+            holder.tvToggle.setTextColor(if (done) 0xFF111811.toInt() else 0xFF8db87a.toInt())
+        } else {
+            holder.tvToggle.text = if (item.isDoneToday) "✓" else "+"
+            holder.tvToggle.setBackgroundResource(
+                if (item.isDoneToday) R.drawable.bg_toggle_checked else R.drawable.bg_toggle_unchecked
+            )
+            holder.tvToggle.setTextColor(if (item.isDoneToday) 0xFF111811.toInt() else 0xFF8db87a.toInt())
+        }
+
+        holder.tvToggle.setOnClickListener { onPrimaryTap(habit) }
+        holder.itemView.setOnClickListener { onPrimaryTap(habit) }
+
+        holder.tvToggle.setOnLongClickListener {
+            if (isCounterHabit) {
+                onEditCount(habit)
+                true
+            } else {
+                false
+            }
+        }
         holder.itemView.setOnLongClickListener {
-            onLongPress(item.habit)
-            true
+            if (isCounterHabit) {
+                onEditCount(habit)
+                true
+            } else {
+                false
+            }
+        }
+
+        holder.btnHabitEdit.setOnClickListener { onManageHabit(habit) }
+
+        holder.btnDrag.setOnTouchListener { _, event ->
+            if (event.actionMasked == MotionEvent.ACTION_DOWN) {
+                onStartDrag(holder)
+            }
+            false
         }
     }
 }

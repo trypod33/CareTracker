@@ -34,14 +34,19 @@ public final class FragmentMedicationsBinding implements ViewBinding {
   @NonNull
   public final TextView tvEmpty;
 
+  @NonNull
+  public final TextView tvMedicationInstructions;
+
   private FragmentMedicationsBinding(@NonNull LinearLayout rootView,
       @NonNull Button btnAddMedication, @NonNull ChipGroup chipGroupFilter,
-      @NonNull RecyclerView rvMedications, @NonNull TextView tvEmpty) {
+      @NonNull RecyclerView rvMedications, @NonNull TextView tvEmpty,
+      @NonNull TextView tvMedicationInstructions) {
     this.rootView = rootView;
     this.btnAddMedication = btnAddMedication;
     this.chipGroupFilter = chipGroupFilter;
     this.rvMedications = rvMedications;
     this.tvEmpty = tvEmpty;
+    this.tvMedicationInstructions = tvMedicationInstructions;
   }
 
   @Override
@@ -95,8 +100,14 @@ public final class FragmentMedicationsBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tvMedicationInstructions;
+      TextView tvMedicationInstructions = ViewBindings.findChildViewById(rootView, id);
+      if (tvMedicationInstructions == null) {
+        break missingId;
+      }
+
       return new FragmentMedicationsBinding((LinearLayout) rootView, btnAddMedication,
-          chipGroupFilter, rvMedications, tvEmpty);
+          chipGroupFilter, rvMedications, tvEmpty, tvMedicationInstructions);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

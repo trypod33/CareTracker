@@ -28,6 +28,7 @@ data class MedicationEntity(
     val nextRefillDate: String? = null,
     val startDate: String? = null,
     val endDate: String? = null,
+    val sortOrder: Int = 0,
     val isActive: Boolean = true,
     val createdAt: Long = System.currentTimeMillis()
 )

@@ -17,25 +17,30 @@ class TasksViewModel(private val repository: CareTrackerRepository) : ViewModel(
         currentUserId = userId
         viewModelScope.launch {
             repository.getActiveTasks(userId).collect { list ->
-                _tasks.value = list.sortedWith(compareBy(
-                    { it.dueDate ?: "9999-12-31" },
-                    { when (it.priority.lowercase()) { "high" -> 0; "medium" -> 1; else -> 2 } }
-                ))
+                _tasks.value = list
             }
         }
     }
 
     fun addTask(title: String, dueDate: String?, priority: String?) {
         viewModelScope.launch {
+            val nextOrder = (_tasks.value.maxOfOrNull { it.sortOrder } ?: -1) + 1
             repository.insertTask(
                 TaskEntity(
                     userId = currentUserId,
                     title = title,
                     dueDate = dueDate,
                     priority = priority ?: "medium",
-                    status = "todo"
+                    status = "todo",
+                    sortOrder = nextOrder
                 )
             )
+        }
+    }
+
+    fun updateTask(task: TaskEntity) {
+        viewModelScope.launch {
+            repository.updateTask(task)
         }
     }
 

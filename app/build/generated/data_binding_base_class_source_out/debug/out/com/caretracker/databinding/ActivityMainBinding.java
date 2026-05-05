@@ -5,8 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
@@ -26,11 +29,29 @@ public final class ActivityMainBinding implements ViewBinding {
   @NonNull
   public final FragmentContainerView navHostFragment;
 
+  @NonNull
+  public final Spinner spinnerUser;
+
+  @NonNull
+  public final Toolbar toolbar;
+
+  @NonNull
+  public final TextView tvAppTitle;
+
+  @NonNull
+  public final TextView tvViewingLabel;
+
   private ActivityMainBinding(@NonNull LinearLayout rootView,
-      @NonNull BottomNavigationView bottomNav, @NonNull FragmentContainerView navHostFragment) {
+      @NonNull BottomNavigationView bottomNav, @NonNull FragmentContainerView navHostFragment,
+      @NonNull Spinner spinnerUser, @NonNull Toolbar toolbar, @NonNull TextView tvAppTitle,
+      @NonNull TextView tvViewingLabel) {
     this.rootView = rootView;
     this.bottomNav = bottomNav;
     this.navHostFragment = navHostFragment;
+    this.spinnerUser = spinnerUser;
+    this.toolbar = toolbar;
+    this.tvAppTitle = tvAppTitle;
+    this.tvViewingLabel = tvViewingLabel;
   }
 
   @Override
@@ -72,7 +93,32 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ActivityMainBinding((LinearLayout) rootView, bottomNav, navHostFragment);
+      id = R.id.spinner_user;
+      Spinner spinnerUser = ViewBindings.findChildViewById(rootView, id);
+      if (spinnerUser == null) {
+        break missingId;
+      }
+
+      id = R.id.toolbar;
+      Toolbar toolbar = ViewBindings.findChildViewById(rootView, id);
+      if (toolbar == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_app_title;
+      TextView tvAppTitle = ViewBindings.findChildViewById(rootView, id);
+      if (tvAppTitle == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_viewing_label;
+      TextView tvViewingLabel = ViewBindings.findChildViewById(rootView, id);
+      if (tvViewingLabel == null) {
+        break missingId;
+      }
+
+      return new ActivityMainBinding((LinearLayout) rootView, bottomNav, navHostFragment,
+          spinnerUser, toolbar, tvAppTitle, tvViewingLabel);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

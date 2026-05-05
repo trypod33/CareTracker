@@ -4,25 +4,48 @@ package com.caretracker.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
+import androidx.viewbinding.ViewBindings;
 import com.caretracker.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.lang.NullPointerException;
 import java.lang.Override;
+import java.lang.String;
 
 public final class FragmentTasksBinding implements ViewBinding {
   @NonNull
-  private final LinearLayout rootView;
+  private final CoordinatorLayout rootView;
 
-  private FragmentTasksBinding(@NonNull LinearLayout rootView) {
+  @NonNull
+  public final FloatingActionButton fabAddTask;
+
+  @NonNull
+  public final RecyclerView rvTasks;
+
+  @NonNull
+  public final TextView tvTaskInstructions;
+
+  @NonNull
+  public final TextView tvTasksEmpty;
+
+  private FragmentTasksBinding(@NonNull CoordinatorLayout rootView,
+      @NonNull FloatingActionButton fabAddTask, @NonNull RecyclerView rvTasks,
+      @NonNull TextView tvTaskInstructions, @NonNull TextView tvTasksEmpty) {
     this.rootView = rootView;
+    this.fabAddTask = fabAddTask;
+    this.rvTasks = rvTasks;
+    this.tvTaskInstructions = tvTaskInstructions;
+    this.tvTasksEmpty = tvTasksEmpty;
   }
 
   @Override
   @NonNull
-  public LinearLayout getRoot() {
+  public CoordinatorLayout getRoot() {
     return rootView;
   }
 
@@ -43,10 +66,38 @@ public final class FragmentTasksBinding implements ViewBinding {
 
   @NonNull
   public static FragmentTasksBinding bind(@NonNull View rootView) {
-    if (rootView == null) {
-      throw new NullPointerException("rootView");
-    }
+    // The body of this method is generated in a way you would not otherwise write.
+    // This is done to optimize the compiled bytecode for size and performance.
+    int id;
+    missingId: {
+      id = R.id.fabAddTask;
+      FloatingActionButton fabAddTask = ViewBindings.findChildViewById(rootView, id);
+      if (fabAddTask == null) {
+        break missingId;
+      }
 
-    return new FragmentTasksBinding((LinearLayout) rootView);
+      id = R.id.rvTasks;
+      RecyclerView rvTasks = ViewBindings.findChildViewById(rootView, id);
+      if (rvTasks == null) {
+        break missingId;
+      }
+
+      id = R.id.tvTaskInstructions;
+      TextView tvTaskInstructions = ViewBindings.findChildViewById(rootView, id);
+      if (tvTaskInstructions == null) {
+        break missingId;
+      }
+
+      id = R.id.tvTasksEmpty;
+      TextView tvTasksEmpty = ViewBindings.findChildViewById(rootView, id);
+      if (tvTasksEmpty == null) {
+        break missingId;
+      }
+
+      return new FragmentTasksBinding((CoordinatorLayout) rootView, fabAddTask, rvTasks,
+          tvTaskInstructions, tvTasksEmpty);
+    }
+    String missingId = rootView.getResources().getResourceName(id);
+    throw new NullPointerException("Missing required view with ID: ".concat(missingId));
   }
 }

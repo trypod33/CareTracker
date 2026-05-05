@@ -50,7 +50,7 @@ public final class MedicationDao_Impl implements MedicationDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "INSERT OR REPLACE INTO `medications` (`id`,`userId`,`name`,`genericName`,`dosage`,`dosageUnit`,`form`,`frequency`,`timesPerDay`,`scheduledTimes`,`withFood`,`instructions`,`prescriber`,`pharmacy`,`rxNumber`,`color`,`currentCount`,`pillsPerRefill`,`refillReminderAt`,`lastRefillDate`,`nextRefillDate`,`startDate`,`endDate`,`isActive`,`createdAt`) VALUES (nullif(?, 0),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        return "INSERT OR REPLACE INTO `medications` (`id`,`userId`,`name`,`genericName`,`dosage`,`dosageUnit`,`form`,`frequency`,`timesPerDay`,`scheduledTimes`,`withFood`,`instructions`,`prescriber`,`pharmacy`,`rxNumber`,`color`,`currentCount`,`pillsPerRefill`,`refillReminderAt`,`lastRefillDate`,`nextRefillDate`,`startDate`,`endDate`,`sortOrder`,`isActive`,`createdAt`) VALUES (nullif(?, 0),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
       }
 
       @Override
@@ -132,9 +132,10 @@ public final class MedicationDao_Impl implements MedicationDao {
         } else {
           statement.bindString(23, entity.getEndDate());
         }
+        statement.bindLong(24, entity.getSortOrder());
         final int _tmp_1 = entity.isActive() ? 1 : 0;
-        statement.bindLong(24, _tmp_1);
-        statement.bindLong(25, entity.getCreatedAt());
+        statement.bindLong(25, _tmp_1);
+        statement.bindLong(26, entity.getCreatedAt());
       }
     };
     this.__insertionAdapterOfMedLogEntity = new EntityInsertionAdapter<MedLogEntity>(__db) {
@@ -186,7 +187,7 @@ public final class MedicationDao_Impl implements MedicationDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "UPDATE OR ABORT `medications` SET `id` = ?,`userId` = ?,`name` = ?,`genericName` = ?,`dosage` = ?,`dosageUnit` = ?,`form` = ?,`frequency` = ?,`timesPerDay` = ?,`scheduledTimes` = ?,`withFood` = ?,`instructions` = ?,`prescriber` = ?,`pharmacy` = ?,`rxNumber` = ?,`color` = ?,`currentCount` = ?,`pillsPerRefill` = ?,`refillReminderAt` = ?,`lastRefillDate` = ?,`nextRefillDate` = ?,`startDate` = ?,`endDate` = ?,`isActive` = ?,`createdAt` = ? WHERE `id` = ?";
+        return "UPDATE OR ABORT `medications` SET `id` = ?,`userId` = ?,`name` = ?,`genericName` = ?,`dosage` = ?,`dosageUnit` = ?,`form` = ?,`frequency` = ?,`timesPerDay` = ?,`scheduledTimes` = ?,`withFood` = ?,`instructions` = ?,`prescriber` = ?,`pharmacy` = ?,`rxNumber` = ?,`color` = ?,`currentCount` = ?,`pillsPerRefill` = ?,`refillReminderAt` = ?,`lastRefillDate` = ?,`nextRefillDate` = ?,`startDate` = ?,`endDate` = ?,`sortOrder` = ?,`isActive` = ?,`createdAt` = ? WHERE `id` = ?";
       }
 
       @Override
@@ -268,10 +269,11 @@ public final class MedicationDao_Impl implements MedicationDao {
         } else {
           statement.bindString(23, entity.getEndDate());
         }
+        statement.bindLong(24, entity.getSortOrder());
         final int _tmp_1 = entity.isActive() ? 1 : 0;
-        statement.bindLong(24, _tmp_1);
-        statement.bindLong(25, entity.getCreatedAt());
-        statement.bindLong(26, entity.getId());
+        statement.bindLong(25, _tmp_1);
+        statement.bindLong(26, entity.getCreatedAt());
+        statement.bindLong(27, entity.getId());
       }
     };
   }
@@ -352,11 +354,9 @@ public final class MedicationDao_Impl implements MedicationDao {
   }
 
   @Override
-  public Flow<List<MedicationEntity>> getMedicationsForUser(final long userId) {
-    final String _sql = "SELECT * FROM medications WHERE userId = ? AND isActive = 1";
-    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
-    int _argIndex = 1;
-    _statement.bindLong(_argIndex, userId);
+  public Flow<List<MedicationEntity>> getAllMedications() {
+    final String _sql = "SELECT * FROM medications WHERE isActive = 1 ORDER BY userId ASC, sortOrder ASC, createdAt ASC";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
     return CoroutinesRoom.createFlow(__db, false, new String[] {"medications"}, new Callable<List<MedicationEntity>>() {
       @Override
       @NonNull
@@ -386,6 +386,7 @@ public final class MedicationDao_Impl implements MedicationDao {
           final int _cursorIndexOfNextRefillDate = CursorUtil.getColumnIndexOrThrow(_cursor, "nextRefillDate");
           final int _cursorIndexOfStartDate = CursorUtil.getColumnIndexOrThrow(_cursor, "startDate");
           final int _cursorIndexOfEndDate = CursorUtil.getColumnIndexOrThrow(_cursor, "endDate");
+          final int _cursorIndexOfSortOrder = CursorUtil.getColumnIndexOrThrow(_cursor, "sortOrder");
           final int _cursorIndexOfIsActive = CursorUtil.getColumnIndexOrThrow(_cursor, "isActive");
           final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
           final List<MedicationEntity> _result = new ArrayList<MedicationEntity>(_cursor.getCount());
@@ -491,13 +492,180 @@ public final class MedicationDao_Impl implements MedicationDao {
             } else {
               _tmpEndDate = _cursor.getString(_cursorIndexOfEndDate);
             }
+            final int _tmpSortOrder;
+            _tmpSortOrder = _cursor.getInt(_cursorIndexOfSortOrder);
             final boolean _tmpIsActive;
             final int _tmp_1;
             _tmp_1 = _cursor.getInt(_cursorIndexOfIsActive);
             _tmpIsActive = _tmp_1 != 0;
             final long _tmpCreatedAt;
             _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
-            _item = new MedicationEntity(_tmpId,_tmpUserId,_tmpName,_tmpGenericName,_tmpDosage,_tmpDosageUnit,_tmpForm,_tmpFrequency,_tmpTimesPerDay,_tmpScheduledTimes,_tmpWithFood,_tmpInstructions,_tmpPrescriber,_tmpPharmacy,_tmpRxNumber,_tmpColor,_tmpCurrentCount,_tmpPillsPerRefill,_tmpRefillReminderAt,_tmpLastRefillDate,_tmpNextRefillDate,_tmpStartDate,_tmpEndDate,_tmpIsActive,_tmpCreatedAt);
+            _item = new MedicationEntity(_tmpId,_tmpUserId,_tmpName,_tmpGenericName,_tmpDosage,_tmpDosageUnit,_tmpForm,_tmpFrequency,_tmpTimesPerDay,_tmpScheduledTimes,_tmpWithFood,_tmpInstructions,_tmpPrescriber,_tmpPharmacy,_tmpRxNumber,_tmpColor,_tmpCurrentCount,_tmpPillsPerRefill,_tmpRefillReminderAt,_tmpLastRefillDate,_tmpNextRefillDate,_tmpStartDate,_tmpEndDate,_tmpSortOrder,_tmpIsActive,_tmpCreatedAt);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+        }
+      }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
+  }
+
+  @Override
+  public Flow<List<MedicationEntity>> getMedicationsForUser(final long userId) {
+    final String _sql = "SELECT * FROM medications WHERE userId = ? AND isActive = 1 ORDER BY sortOrder ASC, createdAt ASC";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, userId);
+    return CoroutinesRoom.createFlow(__db, false, new String[] {"medications"}, new Callable<List<MedicationEntity>>() {
+      @Override
+      @NonNull
+      public List<MedicationEntity> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfUserId = CursorUtil.getColumnIndexOrThrow(_cursor, "userId");
+          final int _cursorIndexOfName = CursorUtil.getColumnIndexOrThrow(_cursor, "name");
+          final int _cursorIndexOfGenericName = CursorUtil.getColumnIndexOrThrow(_cursor, "genericName");
+          final int _cursorIndexOfDosage = CursorUtil.getColumnIndexOrThrow(_cursor, "dosage");
+          final int _cursorIndexOfDosageUnit = CursorUtil.getColumnIndexOrThrow(_cursor, "dosageUnit");
+          final int _cursorIndexOfForm = CursorUtil.getColumnIndexOrThrow(_cursor, "form");
+          final int _cursorIndexOfFrequency = CursorUtil.getColumnIndexOrThrow(_cursor, "frequency");
+          final int _cursorIndexOfTimesPerDay = CursorUtil.getColumnIndexOrThrow(_cursor, "timesPerDay");
+          final int _cursorIndexOfScheduledTimes = CursorUtil.getColumnIndexOrThrow(_cursor, "scheduledTimes");
+          final int _cursorIndexOfWithFood = CursorUtil.getColumnIndexOrThrow(_cursor, "withFood");
+          final int _cursorIndexOfInstructions = CursorUtil.getColumnIndexOrThrow(_cursor, "instructions");
+          final int _cursorIndexOfPrescriber = CursorUtil.getColumnIndexOrThrow(_cursor, "prescriber");
+          final int _cursorIndexOfPharmacy = CursorUtil.getColumnIndexOrThrow(_cursor, "pharmacy");
+          final int _cursorIndexOfRxNumber = CursorUtil.getColumnIndexOrThrow(_cursor, "rxNumber");
+          final int _cursorIndexOfColor = CursorUtil.getColumnIndexOrThrow(_cursor, "color");
+          final int _cursorIndexOfCurrentCount = CursorUtil.getColumnIndexOrThrow(_cursor, "currentCount");
+          final int _cursorIndexOfPillsPerRefill = CursorUtil.getColumnIndexOrThrow(_cursor, "pillsPerRefill");
+          final int _cursorIndexOfRefillReminderAt = CursorUtil.getColumnIndexOrThrow(_cursor, "refillReminderAt");
+          final int _cursorIndexOfLastRefillDate = CursorUtil.getColumnIndexOrThrow(_cursor, "lastRefillDate");
+          final int _cursorIndexOfNextRefillDate = CursorUtil.getColumnIndexOrThrow(_cursor, "nextRefillDate");
+          final int _cursorIndexOfStartDate = CursorUtil.getColumnIndexOrThrow(_cursor, "startDate");
+          final int _cursorIndexOfEndDate = CursorUtil.getColumnIndexOrThrow(_cursor, "endDate");
+          final int _cursorIndexOfSortOrder = CursorUtil.getColumnIndexOrThrow(_cursor, "sortOrder");
+          final int _cursorIndexOfIsActive = CursorUtil.getColumnIndexOrThrow(_cursor, "isActive");
+          final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
+          final List<MedicationEntity> _result = new ArrayList<MedicationEntity>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final MedicationEntity _item;
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final long _tmpUserId;
+            _tmpUserId = _cursor.getLong(_cursorIndexOfUserId);
+            final String _tmpName;
+            _tmpName = _cursor.getString(_cursorIndexOfName);
+            final String _tmpGenericName;
+            if (_cursor.isNull(_cursorIndexOfGenericName)) {
+              _tmpGenericName = null;
+            } else {
+              _tmpGenericName = _cursor.getString(_cursorIndexOfGenericName);
+            }
+            final String _tmpDosage;
+            if (_cursor.isNull(_cursorIndexOfDosage)) {
+              _tmpDosage = null;
+            } else {
+              _tmpDosage = _cursor.getString(_cursorIndexOfDosage);
+            }
+            final String _tmpDosageUnit;
+            _tmpDosageUnit = _cursor.getString(_cursorIndexOfDosageUnit);
+            final String _tmpForm;
+            _tmpForm = _cursor.getString(_cursorIndexOfForm);
+            final String _tmpFrequency;
+            if (_cursor.isNull(_cursorIndexOfFrequency)) {
+              _tmpFrequency = null;
+            } else {
+              _tmpFrequency = _cursor.getString(_cursorIndexOfFrequency);
+            }
+            final int _tmpTimesPerDay;
+            _tmpTimesPerDay = _cursor.getInt(_cursorIndexOfTimesPerDay);
+            final String _tmpScheduledTimes;
+            if (_cursor.isNull(_cursorIndexOfScheduledTimes)) {
+              _tmpScheduledTimes = null;
+            } else {
+              _tmpScheduledTimes = _cursor.getString(_cursorIndexOfScheduledTimes);
+            }
+            final boolean _tmpWithFood;
+            final int _tmp;
+            _tmp = _cursor.getInt(_cursorIndexOfWithFood);
+            _tmpWithFood = _tmp != 0;
+            final String _tmpInstructions;
+            if (_cursor.isNull(_cursorIndexOfInstructions)) {
+              _tmpInstructions = null;
+            } else {
+              _tmpInstructions = _cursor.getString(_cursorIndexOfInstructions);
+            }
+            final String _tmpPrescriber;
+            if (_cursor.isNull(_cursorIndexOfPrescriber)) {
+              _tmpPrescriber = null;
+            } else {
+              _tmpPrescriber = _cursor.getString(_cursorIndexOfPrescriber);
+            }
+            final String _tmpPharmacy;
+            if (_cursor.isNull(_cursorIndexOfPharmacy)) {
+              _tmpPharmacy = null;
+            } else {
+              _tmpPharmacy = _cursor.getString(_cursorIndexOfPharmacy);
+            }
+            final String _tmpRxNumber;
+            if (_cursor.isNull(_cursorIndexOfRxNumber)) {
+              _tmpRxNumber = null;
+            } else {
+              _tmpRxNumber = _cursor.getString(_cursorIndexOfRxNumber);
+            }
+            final String _tmpColor;
+            _tmpColor = _cursor.getString(_cursorIndexOfColor);
+            final int _tmpCurrentCount;
+            _tmpCurrentCount = _cursor.getInt(_cursorIndexOfCurrentCount);
+            final Integer _tmpPillsPerRefill;
+            if (_cursor.isNull(_cursorIndexOfPillsPerRefill)) {
+              _tmpPillsPerRefill = null;
+            } else {
+              _tmpPillsPerRefill = _cursor.getInt(_cursorIndexOfPillsPerRefill);
+            }
+            final int _tmpRefillReminderAt;
+            _tmpRefillReminderAt = _cursor.getInt(_cursorIndexOfRefillReminderAt);
+            final String _tmpLastRefillDate;
+            if (_cursor.isNull(_cursorIndexOfLastRefillDate)) {
+              _tmpLastRefillDate = null;
+            } else {
+              _tmpLastRefillDate = _cursor.getString(_cursorIndexOfLastRefillDate);
+            }
+            final String _tmpNextRefillDate;
+            if (_cursor.isNull(_cursorIndexOfNextRefillDate)) {
+              _tmpNextRefillDate = null;
+            } else {
+              _tmpNextRefillDate = _cursor.getString(_cursorIndexOfNextRefillDate);
+            }
+            final String _tmpStartDate;
+            if (_cursor.isNull(_cursorIndexOfStartDate)) {
+              _tmpStartDate = null;
+            } else {
+              _tmpStartDate = _cursor.getString(_cursorIndexOfStartDate);
+            }
+            final String _tmpEndDate;
+            if (_cursor.isNull(_cursorIndexOfEndDate)) {
+              _tmpEndDate = null;
+            } else {
+              _tmpEndDate = _cursor.getString(_cursorIndexOfEndDate);
+            }
+            final int _tmpSortOrder;
+            _tmpSortOrder = _cursor.getInt(_cursorIndexOfSortOrder);
+            final boolean _tmpIsActive;
+            final int _tmp_1;
+            _tmp_1 = _cursor.getInt(_cursorIndexOfIsActive);
+            _tmpIsActive = _tmp_1 != 0;
+            final long _tmpCreatedAt;
+            _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
+            _item = new MedicationEntity(_tmpId,_tmpUserId,_tmpName,_tmpGenericName,_tmpDosage,_tmpDosageUnit,_tmpForm,_tmpFrequency,_tmpTimesPerDay,_tmpScheduledTimes,_tmpWithFood,_tmpInstructions,_tmpPrescriber,_tmpPharmacy,_tmpRxNumber,_tmpColor,_tmpCurrentCount,_tmpPillsPerRefill,_tmpRefillReminderAt,_tmpLastRefillDate,_tmpNextRefillDate,_tmpStartDate,_tmpEndDate,_tmpSortOrder,_tmpIsActive,_tmpCreatedAt);
             _result.add(_item);
           }
           return _result;
@@ -550,6 +718,7 @@ public final class MedicationDao_Impl implements MedicationDao {
           final int _cursorIndexOfNextRefillDate = CursorUtil.getColumnIndexOrThrow(_cursor, "nextRefillDate");
           final int _cursorIndexOfStartDate = CursorUtil.getColumnIndexOrThrow(_cursor, "startDate");
           final int _cursorIndexOfEndDate = CursorUtil.getColumnIndexOrThrow(_cursor, "endDate");
+          final int _cursorIndexOfSortOrder = CursorUtil.getColumnIndexOrThrow(_cursor, "sortOrder");
           final int _cursorIndexOfIsActive = CursorUtil.getColumnIndexOrThrow(_cursor, "isActive");
           final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
           final MedicationEntity _result;
@@ -654,13 +823,15 @@ public final class MedicationDao_Impl implements MedicationDao {
             } else {
               _tmpEndDate = _cursor.getString(_cursorIndexOfEndDate);
             }
+            final int _tmpSortOrder;
+            _tmpSortOrder = _cursor.getInt(_cursorIndexOfSortOrder);
             final boolean _tmpIsActive;
             final int _tmp_1;
             _tmp_1 = _cursor.getInt(_cursorIndexOfIsActive);
             _tmpIsActive = _tmp_1 != 0;
             final long _tmpCreatedAt;
             _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
-            _result = new MedicationEntity(_tmpId,_tmpUserId,_tmpName,_tmpGenericName,_tmpDosage,_tmpDosageUnit,_tmpForm,_tmpFrequency,_tmpTimesPerDay,_tmpScheduledTimes,_tmpWithFood,_tmpInstructions,_tmpPrescriber,_tmpPharmacy,_tmpRxNumber,_tmpColor,_tmpCurrentCount,_tmpPillsPerRefill,_tmpRefillReminderAt,_tmpLastRefillDate,_tmpNextRefillDate,_tmpStartDate,_tmpEndDate,_tmpIsActive,_tmpCreatedAt);
+            _result = new MedicationEntity(_tmpId,_tmpUserId,_tmpName,_tmpGenericName,_tmpDosage,_tmpDosageUnit,_tmpForm,_tmpFrequency,_tmpTimesPerDay,_tmpScheduledTimes,_tmpWithFood,_tmpInstructions,_tmpPrescriber,_tmpPharmacy,_tmpRxNumber,_tmpColor,_tmpCurrentCount,_tmpPillsPerRefill,_tmpRefillReminderAt,_tmpLastRefillDate,_tmpNextRefillDate,_tmpStartDate,_tmpEndDate,_tmpSortOrder,_tmpIsActive,_tmpCreatedAt);
           } else {
             _result = null;
           }

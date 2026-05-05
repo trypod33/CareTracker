@@ -24,7 +24,7 @@ import com.caretracker.data.entities.*
         BloodPressureReadingEntity::class,
         BloodSugarReadingEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class CareTrackerDatabase : RoomDatabase() {
@@ -76,6 +76,14 @@ abstract class CareTrackerDatabase : RoomDatabase() {
             }
         }
 
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE habits ADD COLUMN sortOrder INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("ALTER TABLE tasks ADD COLUMN sortOrder INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("ALTER TABLE medications ADD COLUMN sortOrder INTEGER NOT NULL DEFAULT 0")
+            }
+        }
+
         fun getDatabase(context: Context): CareTrackerDatabase {
             return INSTANCE ?: synchronized(this) {
                 Room.databaseBuilder(
@@ -83,8 +91,9 @@ abstract class CareTrackerDatabase : RoomDatabase() {
                     CareTrackerDatabase::class.java,
                     "caretracker_db"
                 )
-                .addMigrations(MIGRATION_1_2)
-                .build().also { INSTANCE = it }
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                    .build()
+                    .also { INSTANCE = it }
             }
         }
     }

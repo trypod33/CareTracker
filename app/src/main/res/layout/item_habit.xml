@@ -3,9 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="16dp"
+    android:padding="14dp"
     android:background="@drawable/bg_habit_item"
-    android:layout_marginBottom="8dp"
+    android:layout_marginBottom="10dp"
     android:gravity="center_vertical">
 
     <TextView
@@ -13,14 +13,16 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:gravity="center"
-        android:text="⭐"
-        android:textSize="18sp" />
+        android:text="✨"
+        android:textSize="20sp"
+        android:textColor="#ffffff"
+        android:background="@drawable/bg_toggle_unchecked"
+        android:layout_marginEnd="12dp"/>
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_marginStart="12dp"
         android:orientation="vertical">
 
         <TextView
@@ -36,48 +38,46 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="12sp"
-            android:textColor="#f3b34c"
-            android:layout_marginTop="2dp"/>
+            android:textColor="#d9a441"
+            android:layout_marginTop="3dp"/>
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/tvHabitCategory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="4dp"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:id="@+id/tvHabitCategory"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="11sp"
-                android:textColor="#aaaaaa"
-                android:background="@drawable/bg_category_chip"
-                android:paddingLeft="8dp"
-                android:paddingTop="2dp"
-                android:paddingRight="8dp"
-                android:paddingBottom="2dp"/>
-
-            <TextView
-                android:id="@+id/tvHabitCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:textSize="12sp"
-                android:textColor="#8db87a"
-                android:textStyle="bold"
-                android:visibility="gone"
-                android:text="0/1"/>
-        </LinearLayout>
+            android:textSize="11sp"
+            android:textColor="#888888"
+            android:layout_marginTop="2dp"/>
     </LinearLayout>
 
     <TextView
+        android:id="@+id/btnHabitEdit"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:gravity="center"
+        android:text="⋮"
+        android:textSize="18sp"
+        android:textColor="#d0d0d0"
+        android:layout_marginEnd="8dp"/>
+
+    <TextView
         android:id="@+id/tvToggle"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
+        android:layout_width="54dp"
+        android:layout_height="40dp"
         android:gravity="center"
         android:text="+"
         android:textSize="16sp"
-        android:textColor="#d7f5df"
-        android:background="@drawable/bg_toggle_unchecked"/>
+        android:textStyle="bold"
+        android:textColor="#111811"
+        android:background="@drawable/bg_toggle_checked"
+        android:layout_marginEnd="8dp"/>
+
+    <TextView
+        android:id="@+id/btnDrag"
+        android:layout_width="28dp"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:text="≡"
+        android:textSize="20sp"
+        android:textColor="#777777"/>
 </LinearLayout>

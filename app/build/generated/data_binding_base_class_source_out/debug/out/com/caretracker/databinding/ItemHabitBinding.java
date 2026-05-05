@@ -20,16 +20,38 @@ public final class ItemHabitBinding implements ViewBinding {
   private final LinearLayout rootView;
 
   @NonNull
+  public final TextView btnDrag;
+
+  @NonNull
+  public final TextView btnHabitEdit;
+
+  @NonNull
   public final TextView tvHabitCategory;
+
+  @NonNull
+  public final TextView tvHabitIcon;
 
   @NonNull
   public final TextView tvHabitName;
 
-  private ItemHabitBinding(@NonNull LinearLayout rootView, @NonNull TextView tvHabitCategory,
-      @NonNull TextView tvHabitName) {
+  @NonNull
+  public final TextView tvHabitStreak;
+
+  @NonNull
+  public final TextView tvToggle;
+
+  private ItemHabitBinding(@NonNull LinearLayout rootView, @NonNull TextView btnDrag,
+      @NonNull TextView btnHabitEdit, @NonNull TextView tvHabitCategory,
+      @NonNull TextView tvHabitIcon, @NonNull TextView tvHabitName, @NonNull TextView tvHabitStreak,
+      @NonNull TextView tvToggle) {
     this.rootView = rootView;
+    this.btnDrag = btnDrag;
+    this.btnHabitEdit = btnHabitEdit;
     this.tvHabitCategory = tvHabitCategory;
+    this.tvHabitIcon = tvHabitIcon;
     this.tvHabitName = tvHabitName;
+    this.tvHabitStreak = tvHabitStreak;
+    this.tvToggle = tvToggle;
   }
 
   @Override
@@ -59,9 +81,27 @@ public final class ItemHabitBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.btnDrag;
+      TextView btnDrag = ViewBindings.findChildViewById(rootView, id);
+      if (btnDrag == null) {
+        break missingId;
+      }
+
+      id = R.id.btnHabitEdit;
+      TextView btnHabitEdit = ViewBindings.findChildViewById(rootView, id);
+      if (btnHabitEdit == null) {
+        break missingId;
+      }
+
       id = R.id.tvHabitCategory;
       TextView tvHabitCategory = ViewBindings.findChildViewById(rootView, id);
       if (tvHabitCategory == null) {
+        break missingId;
+      }
+
+      id = R.id.tvHabitIcon;
+      TextView tvHabitIcon = ViewBindings.findChildViewById(rootView, id);
+      if (tvHabitIcon == null) {
         break missingId;
       }
 
@@ -71,7 +111,20 @@ public final class ItemHabitBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ItemHabitBinding((LinearLayout) rootView, tvHabitCategory, tvHabitName);
+      id = R.id.tvHabitStreak;
+      TextView tvHabitStreak = ViewBindings.findChildViewById(rootView, id);
+      if (tvHabitStreak == null) {
+        break missingId;
+      }
+
+      id = R.id.tvToggle;
+      TextView tvToggle = ViewBindings.findChildViewById(rootView, id);
+      if (tvToggle == null) {
+        break missingId;
+      }
+
+      return new ItemHabitBinding((LinearLayout) rootView, btnDrag, btnHabitEdit, tvHabitCategory,
+          tvHabitIcon, tvHabitName, tvHabitStreak, tvToggle);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

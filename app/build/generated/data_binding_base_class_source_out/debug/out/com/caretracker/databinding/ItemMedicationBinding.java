@@ -41,6 +41,9 @@ public final class ItemMedicationBinding implements ViewBinding {
   public final TextView tvDosage;
 
   @NonNull
+  public final TextView tvDragHandleMed;
+
+  @NonNull
   public final TextView tvForm;
 
   @NonNull
@@ -63,9 +66,10 @@ public final class ItemMedicationBinding implements ViewBinding {
 
   private ItemMedicationBinding(@NonNull CardView rootView, @NonNull ImageButton btnDelete,
       @NonNull ImageButton btnEdit, @NonNull Button btnRefill, @NonNull Button btnTake,
-      @NonNull ProgressBar progressPills, @NonNull TextView tvDosage, @NonNull TextView tvForm,
-      @NonNull TextView tvFrequency, @NonNull TextView tvMedName, @NonNull TextView tvPillCount,
-      @NonNull TextView tvPrescriber, @NonNull TextView tvTakenStatus, @NonNull View viewMedColor) {
+      @NonNull ProgressBar progressPills, @NonNull TextView tvDosage,
+      @NonNull TextView tvDragHandleMed, @NonNull TextView tvForm, @NonNull TextView tvFrequency,
+      @NonNull TextView tvMedName, @NonNull TextView tvPillCount, @NonNull TextView tvPrescriber,
+      @NonNull TextView tvTakenStatus, @NonNull View viewMedColor) {
     this.rootView = rootView;
     this.btnDelete = btnDelete;
     this.btnEdit = btnEdit;
@@ -73,6 +77,7 @@ public final class ItemMedicationBinding implements ViewBinding {
     this.btnTake = btnTake;
     this.progressPills = progressPills;
     this.tvDosage = tvDosage;
+    this.tvDragHandleMed = tvDragHandleMed;
     this.tvForm = tvForm;
     this.tvFrequency = tvFrequency;
     this.tvMedName = tvMedName;
@@ -145,6 +150,12 @@ public final class ItemMedicationBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tvDragHandleMed;
+      TextView tvDragHandleMed = ViewBindings.findChildViewById(rootView, id);
+      if (tvDragHandleMed == null) {
+        break missingId;
+      }
+
       id = R.id.tvForm;
       TextView tvForm = ViewBindings.findChildViewById(rootView, id);
       if (tvForm == null) {
@@ -188,8 +199,8 @@ public final class ItemMedicationBinding implements ViewBinding {
       }
 
       return new ItemMedicationBinding((CardView) rootView, btnDelete, btnEdit, btnRefill, btnTake,
-          progressPills, tvDosage, tvForm, tvFrequency, tvMedName, tvPillCount, tvPrescriber,
-          tvTakenStatus, viewMedColor);
+          progressPills, tvDosage, tvDragHandleMed, tvForm, tvFrequency, tvMedName, tvPillCount,
+          tvPrescriber, tvTakenStatus, viewMedColor);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

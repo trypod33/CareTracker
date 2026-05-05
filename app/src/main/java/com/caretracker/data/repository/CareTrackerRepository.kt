@@ -13,17 +13,17 @@ class CareTrackerRepository(
     private val taskDao: TaskDao,
     private val moodDao: MoodDao
 ) {
-    // Users
     fun getAllUsers(): Flow<List<UserEntity>> = userDao.getAllUsers()
     suspend fun getUserById(id: Long) = userDao.getUserById(id)
     suspend fun getUserByUsername(username: String) = userDao.getUserByUsername(username)
     suspend fun insertUser(user: UserEntity) = userDao.insert(user)
     suspend fun updateUser(user: UserEntity) = userDao.update(user)
 
-    // Habits
     fun getHabitsForUser(userId: Long) = habitDao.getHabitsForUser(userId)
     fun getRecentHabitLogs(habitId: Long) = habitDao.getRecentLogs(habitId)
     suspend fun getHabitLogForDate(habitId: Long, date: String) = habitDao.getLogForDate(habitId, date)
+    suspend fun getLogCount(habitId: Long, date: String) = habitDao.getLogCount(habitId, date)
+    suspend fun updateLogCount(habitId: Long, date: String, count: Int) = habitDao.updateLogCount(habitId, date, count)
     suspend fun getAllLogsForHabit(habitId: Long) = habitDao.getAllLogsForHabit(habitId)
     suspend fun getLogsForUserOnDate(userId: Long, date: String) = habitDao.getLogsForUserOnDate(userId, date)
     suspend fun getLogsForUserInRange(userId: Long, startDate: String, endDate: String) = habitDao.getLogsForUserInRange(userId, startDate, endDate)
@@ -33,7 +33,6 @@ class CareTrackerRepository(
     suspend fun deleteHabit(habit: HabitEntity) = habitDao.deleteHabit(habit)
     suspend fun deleteHabitLog(log: HabitLogEntity) = habitDao.deleteLog(log)
 
-    // Health
     fun getHealthEntries(userId: Long) = healthDao.getEntriesForUser(userId)
     fun getRecentHealthEntries(userId: Long) = healthDao.getRecentEntries(userId)
     suspend fun getHealthEntryForDate(userId: Long, date: String) = healthDao.getEntryForDate(userId, date)
@@ -43,7 +42,6 @@ class CareTrackerRepository(
     fun getVitalLogs(userId: Long) = healthDao.getVitalLogs(userId)
     suspend fun insertVitalLog(log: VitalLogEntity) = healthDao.insertVitalLog(log)
 
-    // Medications
     fun getAllMedications() = medicationDao.getAllMedications()
     fun getMedicationsForUser(userId: Long) = medicationDao.getMedicationsForUser(userId)
     suspend fun getMedicationById(id: Long) = medicationDao.getMedicationById(id)
@@ -55,29 +53,21 @@ class CareTrackerRepository(
     suspend fun deleteMedication(med: MedicationEntity) = medicationDao.deleteMedication(med)
     suspend fun getMedLogsForDateOnce(medId: Long, date: String) = medicationDao.getMedLogsForDateOnce(medId, date)
 
-    // Calendar
     fun getEventsForUser(userId: Long) = calendarDao.getEventsForUser(userId)
     fun getEventsInRange(userId: Long, start: Long, end: Long) = calendarDao.getEventsInRange(userId, start, end)
     suspend fun insertEvent(event: CalendarEventEntity) = calendarDao.insertEvent(event)
     suspend fun updateEvent(event: CalendarEventEntity) = calendarDao.updateEvent(event)
     suspend fun deleteEvent(event: CalendarEventEntity) = calendarDao.deleteEvent(event)
 
-    // Tasks
     fun getTasksForUser(userId: Long) = taskDao.getTasksForUser(userId)
     fun getActiveTasks(userId: Long) = taskDao.getActiveTasks(userId)
     suspend fun insertTask(task: TaskEntity) = taskDao.insertTask(task)
     suspend fun updateTask(task: TaskEntity) = taskDao.updateTask(task)
     suspend fun deleteTask(task: TaskEntity) = taskDao.deleteTask(task)
 
-    // Mood / Journal
     fun getMoodEntries(userId: Long) = moodDao.getMoodEntriesForUser(userId)
     suspend fun getMoodEntryForDate(userId: Long, date: String) = moodDao.getEntryForDate(userId, date)
     suspend fun insertMoodEntry(entry: MoodJournalEntity) = moodDao.insertEntry(entry)
     suspend fun updateMoodEntry(entry: MoodJournalEntity) = moodDao.updateEntry(entry)
     suspend fun deleteMoodEntry(entry: MoodJournalEntity) = moodDao.deleteEntry(entry)
-    suspend fun getLogCount(habitId: Long, date: String) =
-        habitDao.getLogCount(habitId, date)
-
-    suspend fun updateLogCount(habitId: Long, date: String, count: Int) =
-        habitDao.updateLogCount(habitId, date, count)
 }

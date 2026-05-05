@@ -7,10 +7,10 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MedicationDao {
-    @Query("SELECT * FROM medications WHERE isActive = 1 ORDER BY userId, name")
+    @Query("SELECT * FROM medications WHERE isActive = 1 ORDER BY userId ASC, sortOrder ASC, createdAt ASC")
     fun getAllMedications(): Flow<List<MedicationEntity>>
 
-    @Query("SELECT * FROM medications WHERE userId = :userId AND isActive = 1")
+    @Query("SELECT * FROM medications WHERE userId = :userId AND isActive = 1 ORDER BY sortOrder ASC, createdAt ASC")
     fun getMedicationsForUser(userId: Long): Flow<List<MedicationEntity>>
 
     @Query("SELECT * FROM medications WHERE id = :id")
@@ -21,6 +21,7 @@ interface MedicationDao {
 
     @Query("SELECT * FROM med_logs WHERE medicationId = :medId ORDER BY takenAt DESC LIMIT 30")
     fun getRecentLogs(medId: Long): Flow<List<MedLogEntity>>
+
     @Query("SELECT * FROM med_logs WHERE medicationId = :medId AND takenDate = :date")
     suspend fun getMedLogsForDateOnce(medId: Long, date: String): List<MedLogEntity>
 

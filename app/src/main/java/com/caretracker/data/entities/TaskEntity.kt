@@ -16,6 +16,7 @@ data class TaskEntity(
     val dueTime: String? = null,
     val estimatedMinutes: Int? = null,
     val tags: String? = null,
+    val sortOrder: Int = 0,
     val completedAt: Long? = null,
     val createdAt: Long = System.currentTimeMillis()
 )

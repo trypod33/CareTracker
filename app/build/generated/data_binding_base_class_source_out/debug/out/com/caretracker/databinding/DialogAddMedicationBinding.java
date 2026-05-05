@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
@@ -93,6 +94,9 @@ public final class DialogAddMedicationBinding implements ViewBinding {
   @NonNull
   public final RadioButton rbRed;
 
+  @NonNull
+  public final Spinner spinnerPerson;
+
   private DialogAddMedicationBinding(@NonNull ScrollView rootView, @NonNull CheckBox cbWithFood,
       @NonNull TextInputEditText etCurrentCount, @NonNull TextInputEditText etDosage,
       @NonNull TextInputEditText etDosageUnit, @NonNull TextInputEditText etForm,
@@ -104,7 +108,7 @@ public final class DialogAddMedicationBinding implements ViewBinding {
       @NonNull TextInputEditText etTimesPerDay, @NonNull RadioButton rbAmber,
       @NonNull RadioButton rbBlue, @NonNull RadioButton rbCyan, @NonNull RadioButton rbGreen,
       @NonNull RadioButton rbOrange, @NonNull RadioButton rbPink, @NonNull RadioButton rbPurple,
-      @NonNull RadioButton rbRed) {
+      @NonNull RadioButton rbRed, @NonNull Spinner spinnerPerson) {
     this.rootView = rootView;
     this.cbWithFood = cbWithFood;
     this.etCurrentCount = etCurrentCount;
@@ -130,6 +134,7 @@ public final class DialogAddMedicationBinding implements ViewBinding {
     this.rbPink = rbPink;
     this.rbPurple = rbPurple;
     this.rbRed = rbRed;
+    this.spinnerPerson = spinnerPerson;
   }
 
   @Override
@@ -303,11 +308,17 @@ public final class DialogAddMedicationBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.spinnerPerson;
+      Spinner spinnerPerson = ViewBindings.findChildViewById(rootView, id);
+      if (spinnerPerson == null) {
+        break missingId;
+      }
+
       return new DialogAddMedicationBinding((ScrollView) rootView, cbWithFood, etCurrentCount,
           etDosage, etDosageUnit, etForm, etFrequency, etGenericName, etInstructions, etMedName,
           etPharmacy, etPillsPerRefill, etPrescriber, etRefillReminder, etRxNumber,
           etScheduledTimes, etTimesPerDay, rbAmber, rbBlue, rbCyan, rbGreen, rbOrange, rbPink,
-          rbPurple, rbRed);
+          rbPurple, rbRed, spinnerPerson);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

@@ -14,6 +14,7 @@ data class HabitEntity(
     val icon: String = "⭐",
     val frequency: String = "daily",
     val targetCount: Int = 1,
+    val sortOrder: Int = 0,
     val isActive: Boolean = true,
     val createdAt: Long = System.currentTimeMillis()
 )
