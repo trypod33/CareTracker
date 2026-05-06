@@ -78,6 +78,10 @@ id etValue
 id etWater
 id etWeight
 id fabAddTask
+id graphBp
+id graphHeart
+id graphSleep
+id graphSugar
 id habitsFragment
 id healthFragment
 id layoutEmpty
@@ -120,6 +124,8 @@ id tvAttention
 id tvAttentionSub
 id tvBloodPressure
 id tvBloodSugar
+id tvBpTrend
+id tvBpTrendTitle
 id tvCalories
 id tvDashboardScore
 id tvDate
@@ -142,6 +148,7 @@ id tvHabitName
 id tvHabitStreak
 id tvHealthDate
 id tvHeartRate
+id tvHeartTrend
 id tvJournalContent
 id tvJournalDate
 id tvJournalMood
@@ -156,8 +163,10 @@ id tvPastEntriesHeader
 id tvPillCount
 id tvPrescriber
 id tvProgressPct
+id tvSectionHeader
 id tvSleep
 id tvSleepQuality
+id tvSleepTrend
 id tvStatBestStreak
 id tvStatHabits
 id tvStatMeds
@@ -166,6 +175,7 @@ id tvStatToday
 id tvStatWeek
 id tvSteps
 id tvStreakCount
+id tvSugarTrend
 id tvTakenStatus
 id tvTaskDue
 id tvTaskInstructions
@@ -197,6 +207,7 @@ layout item_journal_entry
 layout item_medication
 layout item_sugar_reading
 layout item_task
+layout item_task_header
 menu bottom_nav_menu
 mipmap ic_launcher
 mipmap ic_launcher_round

@@ -3406,6 +3406,10 @@ id ghost_view
 id ghost_view_holder
 id gone
 id graph
+id graphBp
+id graphHeart
+id graphSleep
+id graphSugar
 id graph_wrap
 id group_divider
 id grouping
@@ -3725,6 +3729,8 @@ id tvAttention
 id tvAttentionSub
 id tvBloodPressure
 id tvBloodSugar
+id tvBpTrend
+id tvBpTrendTitle
 id tvCalories
 id tvDashboardScore
 id tvDate
@@ -3747,6 +3753,7 @@ id tvHabitName
 id tvHabitStreak
 id tvHealthDate
 id tvHeartRate
+id tvHeartTrend
 id tvJournalContent
 id tvJournalDate
 id tvJournalMood
@@ -3761,8 +3768,10 @@ id tvPastEntriesHeader
 id tvPillCount
 id tvPrescriber
 id tvProgressPct
+id tvSectionHeader
 id tvSleep
 id tvSleepQuality
+id tvSleepTrend
 id tvStatBestStreak
 id tvStatHabits
 id tvStatMeds
@@ -3771,6 +3780,7 @@ id tvStatToday
 id tvStatWeek
 id tvSteps
 id tvStreakCount
+id tvSugarTrend
 id tvTakenStatus
 id tvTaskDue
 id tvTaskInstructions
@@ -3958,6 +3968,7 @@ layout item_journal_entry
 layout item_medication
 layout item_sugar_reading
 layout item_task
+layout item_task_header
 layout m3_alert_dialog
 layout m3_alert_dialog_actions
 layout m3_alert_dialog_title

@@ -16,41 +16,60 @@ class TasksViewModel(private val repository: CareTrackerRepository) : ViewModel(
     fun loadForUser(userId: Long) {
         currentUserId = userId
         viewModelScope.launch {
-            repository.getActiveTasks(userId).collect { list ->
-                _tasks.value = list
+            repository.getTasksForUser(userId).collect { list ->
+                _tasks.value = list.sortedWith(
+                    compareBy<TaskEntity>(
+                        { if (it.status == "done") 1 else 0 },
+                        { if (it.dueDate.isNullOrBlank()) 0 else 1 },
+                        { it.dueDate ?: "9999-12-31" },
+                        {
+                            when (it.priority.lowercase()) {
+                                "high" -> 0
+                                "medium" -> 1
+                                else -> 2
+                            }
+                        }
+                    )
+                )
             }
         }
     }
 
     fun addTask(title: String, dueDate: String?, priority: String?) {
         viewModelScope.launch {
-            val nextOrder = (_tasks.value.maxOfOrNull { it.sortOrder } ?: -1) + 1
             repository.insertTask(
                 TaskEntity(
                     userId = currentUserId,
                     title = title,
                     dueDate = dueDate,
                     priority = priority ?: "medium",
-                    status = "todo",
-                    sortOrder = nextOrder
+                    status = "todo"
                 )
             )
         }
     }
 
-    fun updateTask(task: TaskEntity) {
+    fun updateTask(task: TaskEntity, title: String, dueDate: String?, priority: String?) {
         viewModelScope.launch {
-            repository.updateTask(task)
+            repository.updateTask(
+                task.copy(
+                    title = title,
+                    dueDate = dueDate,
+                    priority = priority ?: task.priority
+                )
+            )
         }
     }
 
     fun toggleComplete(task: TaskEntity) {
         viewModelScope.launch {
             val newStatus = if (task.status == "done") "todo" else "done"
-            repository.updateTask(task.copy(
-                status = newStatus,
-                completedAt = if (newStatus == "done") System.currentTimeMillis() else null
-            ))
+            repository.updateTask(
+                task.copy(
+                    status = newStatus,
+                    completedAt = if (newStatus == "done") System.currentTimeMillis() else null
+                )
+            )
         }
     }
 

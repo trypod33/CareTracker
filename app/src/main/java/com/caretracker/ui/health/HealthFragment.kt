@@ -1,6 +1,7 @@
 package com.caretracker.ui.health
 
 import android.app.*
+import android.graphics.Color
 import android.os.Bundle
 import android.view.*
 import android.widget.*
@@ -63,11 +64,11 @@ class HealthFragment : Fragment() {
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            vm.entries.collect {
-                adapter.submitList(it.toList())
-                b.layoutEmpty.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
-                b.rvHealthHistory.visibility = if (it.isEmpty()) View.GONE else View.VISIBLE
-                updateTrendCards(it)
+            vm.entries.collect { entries ->
+                adapter.submitList(entries.toList())
+                b.layoutEmpty.visibility = if (entries.isEmpty()) View.VISIBLE else View.GONE
+                b.rvHealthHistory.visibility = if (entries.isEmpty()) View.GONE else View.VISIBLE
+                updateTrendGraphs(entries)
             }
         }
     }
@@ -84,45 +85,50 @@ class HealthFragment : Fragment() {
         b.tvCalories.text = e?.calories?.let { "%,d".format(it) } ?: "--"
     }
 
-    private fun updateTrendCards(entries: List<HealthEntryEntity>) {
-        val recent = entries.take(14)
+    private fun updateTrendGraphs(entries: List<HealthEntryEntity>) {
+        val recent = entries.take(14).reversed()
 
         val bp = recent.filter { it.bloodPressureSystolic != null && it.bloodPressureDiastolic != null }
         if (bp.isEmpty()) {
-            b.tvBpTrend.text = "Blood pressure: no recent data"
+            b.tvBpTrend.text = "No blood pressure data yet"
+            b.graphBp.setData(emptyList(), Color.parseColor("#cf6679"))
         } else {
-            val latest = bp.first()
+            val values = bp.map { (((it.bloodPressureSystolic ?: 0) + (it.bloodPressureDiastolic ?: 0)) / 2f) }
+            val latest = bp.last()
             val avgSys = bp.mapNotNull { it.bloodPressureSystolic }.average()
             val avgDia = bp.mapNotNull { it.bloodPressureDiastolic }.average()
-            b.tvBpTrend.text =
-                "Blood pressure: latest ${latest.bloodPressureSystolic}/${latest.bloodPressureDiastolic}, avg ${avgSys.toInt()}/${avgDia.toInt()} over ${bp.size} entries"
+            b.graphBp.setData(values, Color.parseColor("#cf6679"))
+            b.tvBpTrend.text = "Latest ${latest.bloodPressureSystolic}/${latest.bloodPressureDiastolic} • Avg ${avgSys.toInt()}/${avgDia.toInt()} • ${bp.size} entries"
         }
 
         val sugar = recent.filter { it.bloodSugar != null }
         if (sugar.isEmpty()) {
-            b.tvSugarTrend.text = "Blood sugar: no recent data"
+            b.tvSugarTrend.text = "No blood sugar data yet"
+            b.graphSugar.setData(emptyList(), Color.parseColor("#fbbf24"))
         } else {
             val values = sugar.mapNotNull { it.bloodSugar }
-            b.tvSugarTrend.text =
-                "Blood sugar: latest ${values.first().toInt()}, high ${values.maxOrNull()?.toInt()}, low ${values.minOrNull()?.toInt()}, avg ${values.average().toInt()}"
+            b.graphSugar.setData(values, Color.parseColor("#fbbf24"))
+            b.tvSugarTrend.text = "Latest ${values.last().toInt()} • High ${values.maxOrNull()?.toInt()} • Low ${values.minOrNull()?.toInt()} • Avg ${values.average().toInt()}"
         }
 
-        val hr = recent.filter { it.heartRate != null }
-        if (hr.isEmpty()) {
-            b.tvHeartTrend.text = "Heart rate: no recent data"
+        val heart = recent.filter { it.heartRate != null }
+        if (heart.isEmpty()) {
+            b.tvHeartTrend.text = "No heart rate data yet"
+            b.graphHeart.setData(emptyList(), Color.parseColor("#ff6b6b"))
         } else {
-            val values = hr.mapNotNull { it.heartRate }
-            b.tvHeartTrend.text =
-                "Heart rate: latest ${values.first()} bpm, high ${values.maxOrNull()}, low ${values.minOrNull()}, avg ${values.average().toInt()} bpm"
+            val values = heart.mapNotNull { it.heartRate?.toFloat() }
+            b.graphHeart.setData(values, Color.parseColor("#ff6b6b"))
+            b.tvHeartTrend.text = "Latest ${values.last().toInt()} bpm • High ${values.maxOrNull()?.toInt()} • Low ${values.minOrNull()?.toInt()} • Avg ${values.average().toInt()} bpm"
         }
 
         val sleep = recent.filter { it.sleepHours != null }
         if (sleep.isEmpty()) {
-            b.tvSleepTrend.text = "Sleep: no recent data"
+            b.tvSleepTrend.text = "No sleep data yet"
+            b.graphSleep.setData(emptyList(), Color.parseColor("#a78bfa"))
         } else {
             val values = sleep.mapNotNull { it.sleepHours }
-            b.tvSleepTrend.text =
-                "Sleep: latest ${"%.1f".format(values.first())} hrs, high ${"%.1f".format(values.maxOrNull() ?: 0f)}, low ${"%.1f".format(values.minOrNull() ?: 0f)}, avg ${"%.1f".format(values.average())} hrs"
+            b.graphSleep.setData(values, Color.parseColor("#a78bfa"))
+            b.tvSleepTrend.text = "Latest ${"%.1f".format(values.last())} hrs • High ${"%.1f".format(values.maxOrNull() ?: 0f)} • Low ${"%.1f".format(values.minOrNull() ?: 0f)} • Avg ${"%.1f".format(values.average())} hrs"
         }
     }
 
@@ -130,8 +136,7 @@ class HealthFragment : Fragment() {
         val d = DialogLogHealthBinding.inflate(layoutInflater)
         val app = requireActivity().application as CareTrackerApp
 
-        var date = existing?.entryDate
-            ?: LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE)
+        var date = existing?.entryDate ?: LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE)
 
         d.etDate.setText(fmt(date))
         d.etDate.setOnClickListener {

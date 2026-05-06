@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.caretracker.R;
+import com.caretracker.ui.views.SparklineView;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
@@ -24,6 +25,18 @@ public final class FragmentHealthBinding implements ViewBinding {
 
   @NonNull
   public final Button btnLogHealth;
+
+  @NonNull
+  public final SparklineView graphBp;
+
+  @NonNull
+  public final SparklineView graphHeart;
+
+  @NonNull
+  public final SparklineView graphSleep;
+
+  @NonNull
+  public final SparklineView graphSugar;
 
   @NonNull
   public final LinearLayout layoutEmpty;
@@ -38,6 +51,12 @@ public final class FragmentHealthBinding implements ViewBinding {
   public final TextView tvBloodSugar;
 
   @NonNull
+  public final TextView tvBpTrend;
+
+  @NonNull
+  public final TextView tvBpTrendTitle;
+
+  @NonNull
   public final TextView tvCalories;
 
   @NonNull
@@ -47,10 +66,19 @@ public final class FragmentHealthBinding implements ViewBinding {
   public final TextView tvHeartRate;
 
   @NonNull
+  public final TextView tvHeartTrend;
+
+  @NonNull
   public final TextView tvSleep;
 
   @NonNull
+  public final TextView tvSleepTrend;
+
+  @NonNull
   public final TextView tvSteps;
+
+  @NonNull
+  public final TextView tvSugarTrend;
 
   @NonNull
   public final TextView tvWater;
@@ -59,22 +87,34 @@ public final class FragmentHealthBinding implements ViewBinding {
   public final TextView tvWeight;
 
   private FragmentHealthBinding(@NonNull NestedScrollView rootView, @NonNull Button btnLogHealth,
+      @NonNull SparklineView graphBp, @NonNull SparklineView graphHeart,
+      @NonNull SparklineView graphSleep, @NonNull SparklineView graphSugar,
       @NonNull LinearLayout layoutEmpty, @NonNull RecyclerView rvHealthHistory,
       @NonNull TextView tvBloodPressure, @NonNull TextView tvBloodSugar,
-      @NonNull TextView tvCalories, @NonNull TextView tvHealthDate, @NonNull TextView tvHeartRate,
-      @NonNull TextView tvSleep, @NonNull TextView tvSteps, @NonNull TextView tvWater,
-      @NonNull TextView tvWeight) {
+      @NonNull TextView tvBpTrend, @NonNull TextView tvBpTrendTitle, @NonNull TextView tvCalories,
+      @NonNull TextView tvHealthDate, @NonNull TextView tvHeartRate, @NonNull TextView tvHeartTrend,
+      @NonNull TextView tvSleep, @NonNull TextView tvSleepTrend, @NonNull TextView tvSteps,
+      @NonNull TextView tvSugarTrend, @NonNull TextView tvWater, @NonNull TextView tvWeight) {
     this.rootView = rootView;
     this.btnLogHealth = btnLogHealth;
+    this.graphBp = graphBp;
+    this.graphHeart = graphHeart;
+    this.graphSleep = graphSleep;
+    this.graphSugar = graphSugar;
     this.layoutEmpty = layoutEmpty;
     this.rvHealthHistory = rvHealthHistory;
     this.tvBloodPressure = tvBloodPressure;
     this.tvBloodSugar = tvBloodSugar;
+    this.tvBpTrend = tvBpTrend;
+    this.tvBpTrendTitle = tvBpTrendTitle;
     this.tvCalories = tvCalories;
     this.tvHealthDate = tvHealthDate;
     this.tvHeartRate = tvHeartRate;
+    this.tvHeartTrend = tvHeartTrend;
     this.tvSleep = tvSleep;
+    this.tvSleepTrend = tvSleepTrend;
     this.tvSteps = tvSteps;
+    this.tvSugarTrend = tvSugarTrend;
     this.tvWater = tvWater;
     this.tvWeight = tvWeight;
   }
@@ -112,6 +152,30 @@ public final class FragmentHealthBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.graphBp;
+      SparklineView graphBp = ViewBindings.findChildViewById(rootView, id);
+      if (graphBp == null) {
+        break missingId;
+      }
+
+      id = R.id.graphHeart;
+      SparklineView graphHeart = ViewBindings.findChildViewById(rootView, id);
+      if (graphHeart == null) {
+        break missingId;
+      }
+
+      id = R.id.graphSleep;
+      SparklineView graphSleep = ViewBindings.findChildViewById(rootView, id);
+      if (graphSleep == null) {
+        break missingId;
+      }
+
+      id = R.id.graphSugar;
+      SparklineView graphSugar = ViewBindings.findChildViewById(rootView, id);
+      if (graphSugar == null) {
+        break missingId;
+      }
+
       id = R.id.layoutEmpty;
       LinearLayout layoutEmpty = ViewBindings.findChildViewById(rootView, id);
       if (layoutEmpty == null) {
@@ -136,6 +200,18 @@ public final class FragmentHealthBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tvBpTrend;
+      TextView tvBpTrend = ViewBindings.findChildViewById(rootView, id);
+      if (tvBpTrend == null) {
+        break missingId;
+      }
+
+      id = R.id.tvBpTrendTitle;
+      TextView tvBpTrendTitle = ViewBindings.findChildViewById(rootView, id);
+      if (tvBpTrendTitle == null) {
+        break missingId;
+      }
+
       id = R.id.tvCalories;
       TextView tvCalories = ViewBindings.findChildViewById(rootView, id);
       if (tvCalories == null) {
@@ -154,15 +230,33 @@ public final class FragmentHealthBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tvHeartTrend;
+      TextView tvHeartTrend = ViewBindings.findChildViewById(rootView, id);
+      if (tvHeartTrend == null) {
+        break missingId;
+      }
+
       id = R.id.tvSleep;
       TextView tvSleep = ViewBindings.findChildViewById(rootView, id);
       if (tvSleep == null) {
         break missingId;
       }
 
+      id = R.id.tvSleepTrend;
+      TextView tvSleepTrend = ViewBindings.findChildViewById(rootView, id);
+      if (tvSleepTrend == null) {
+        break missingId;
+      }
+
       id = R.id.tvSteps;
       TextView tvSteps = ViewBindings.findChildViewById(rootView, id);
       if (tvSteps == null) {
+        break missingId;
+      }
+
+      id = R.id.tvSugarTrend;
+      TextView tvSugarTrend = ViewBindings.findChildViewById(rootView, id);
+      if (tvSugarTrend == null) {
         break missingId;
       }
 
@@ -178,9 +272,10 @@ public final class FragmentHealthBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentHealthBinding((NestedScrollView) rootView, btnLogHealth, layoutEmpty,
-          rvHealthHistory, tvBloodPressure, tvBloodSugar, tvCalories, tvHealthDate, tvHeartRate,
-          tvSleep, tvSteps, tvWater, tvWeight);
+      return new FragmentHealthBinding((NestedScrollView) rootView, btnLogHealth, graphBp,
+          graphHeart, graphSleep, graphSugar, layoutEmpty, rvHealthHistory, tvBloodPressure,
+          tvBloodSugar, tvBpTrend, tvBpTrendTitle, tvCalories, tvHealthDate, tvHeartRate,
+          tvHeartTrend, tvSleep, tvSleepTrend, tvSteps, tvSugarTrend, tvWater, tvWeight);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

@@ -893,6 +893,739 @@ public final class HealthDao_Impl implements HealthDao {
     });
   }
 
+  @Override
+  public Flow<List<HealthEntryEntity>> getRecentBPEntries(final long userId) {
+    final String _sql = "SELECT * FROM health_entries WHERE userId = ? AND bloodPressureSystolic IS NOT NULL ORDER BY entryDate DESC LIMIT 14";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, userId);
+    return CoroutinesRoom.createFlow(__db, false, new String[] {"health_entries"}, new Callable<List<HealthEntryEntity>>() {
+      @Override
+      @NonNull
+      public List<HealthEntryEntity> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfUserId = CursorUtil.getColumnIndexOrThrow(_cursor, "userId");
+          final int _cursorIndexOfEntryDate = CursorUtil.getColumnIndexOrThrow(_cursor, "entryDate");
+          final int _cursorIndexOfWeight = CursorUtil.getColumnIndexOrThrow(_cursor, "weight");
+          final int _cursorIndexOfWeightUnit = CursorUtil.getColumnIndexOrThrow(_cursor, "weightUnit");
+          final int _cursorIndexOfBloodPressureSystolic = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodPressureSystolic");
+          final int _cursorIndexOfBloodPressureDiastolic = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodPressureDiastolic");
+          final int _cursorIndexOfHeartRate = CursorUtil.getColumnIndexOrThrow(_cursor, "heartRate");
+          final int _cursorIndexOfBloodSugar = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodSugar");
+          final int _cursorIndexOfBloodSugarUnit = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodSugarUnit");
+          final int _cursorIndexOfSleepHours = CursorUtil.getColumnIndexOrThrow(_cursor, "sleepHours");
+          final int _cursorIndexOfSleepQuality = CursorUtil.getColumnIndexOrThrow(_cursor, "sleepQuality");
+          final int _cursorIndexOfMood = CursorUtil.getColumnIndexOrThrow(_cursor, "mood");
+          final int _cursorIndexOfEnergy = CursorUtil.getColumnIndexOrThrow(_cursor, "energy");
+          final int _cursorIndexOfSteps = CursorUtil.getColumnIndexOrThrow(_cursor, "steps");
+          final int _cursorIndexOfWaterOz = CursorUtil.getColumnIndexOrThrow(_cursor, "waterOz");
+          final int _cursorIndexOfCalories = CursorUtil.getColumnIndexOrThrow(_cursor, "calories");
+          final int _cursorIndexOfExerciseMinutes = CursorUtil.getColumnIndexOrThrow(_cursor, "exerciseMinutes");
+          final int _cursorIndexOfNotes = CursorUtil.getColumnIndexOrThrow(_cursor, "notes");
+          final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
+          final List<HealthEntryEntity> _result = new ArrayList<HealthEntryEntity>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final HealthEntryEntity _item;
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final long _tmpUserId;
+            _tmpUserId = _cursor.getLong(_cursorIndexOfUserId);
+            final String _tmpEntryDate;
+            _tmpEntryDate = _cursor.getString(_cursorIndexOfEntryDate);
+            final Float _tmpWeight;
+            if (_cursor.isNull(_cursorIndexOfWeight)) {
+              _tmpWeight = null;
+            } else {
+              _tmpWeight = _cursor.getFloat(_cursorIndexOfWeight);
+            }
+            final String _tmpWeightUnit;
+            _tmpWeightUnit = _cursor.getString(_cursorIndexOfWeightUnit);
+            final Integer _tmpBloodPressureSystolic;
+            if (_cursor.isNull(_cursorIndexOfBloodPressureSystolic)) {
+              _tmpBloodPressureSystolic = null;
+            } else {
+              _tmpBloodPressureSystolic = _cursor.getInt(_cursorIndexOfBloodPressureSystolic);
+            }
+            final Integer _tmpBloodPressureDiastolic;
+            if (_cursor.isNull(_cursorIndexOfBloodPressureDiastolic)) {
+              _tmpBloodPressureDiastolic = null;
+            } else {
+              _tmpBloodPressureDiastolic = _cursor.getInt(_cursorIndexOfBloodPressureDiastolic);
+            }
+            final Integer _tmpHeartRate;
+            if (_cursor.isNull(_cursorIndexOfHeartRate)) {
+              _tmpHeartRate = null;
+            } else {
+              _tmpHeartRate = _cursor.getInt(_cursorIndexOfHeartRate);
+            }
+            final Float _tmpBloodSugar;
+            if (_cursor.isNull(_cursorIndexOfBloodSugar)) {
+              _tmpBloodSugar = null;
+            } else {
+              _tmpBloodSugar = _cursor.getFloat(_cursorIndexOfBloodSugar);
+            }
+            final String _tmpBloodSugarUnit;
+            _tmpBloodSugarUnit = _cursor.getString(_cursorIndexOfBloodSugarUnit);
+            final Float _tmpSleepHours;
+            if (_cursor.isNull(_cursorIndexOfSleepHours)) {
+              _tmpSleepHours = null;
+            } else {
+              _tmpSleepHours = _cursor.getFloat(_cursorIndexOfSleepHours);
+            }
+            final Integer _tmpSleepQuality;
+            if (_cursor.isNull(_cursorIndexOfSleepQuality)) {
+              _tmpSleepQuality = null;
+            } else {
+              _tmpSleepQuality = _cursor.getInt(_cursorIndexOfSleepQuality);
+            }
+            final Integer _tmpMood;
+            if (_cursor.isNull(_cursorIndexOfMood)) {
+              _tmpMood = null;
+            } else {
+              _tmpMood = _cursor.getInt(_cursorIndexOfMood);
+            }
+            final Integer _tmpEnergy;
+            if (_cursor.isNull(_cursorIndexOfEnergy)) {
+              _tmpEnergy = null;
+            } else {
+              _tmpEnergy = _cursor.getInt(_cursorIndexOfEnergy);
+            }
+            final Integer _tmpSteps;
+            if (_cursor.isNull(_cursorIndexOfSteps)) {
+              _tmpSteps = null;
+            } else {
+              _tmpSteps = _cursor.getInt(_cursorIndexOfSteps);
+            }
+            final Float _tmpWaterOz;
+            if (_cursor.isNull(_cursorIndexOfWaterOz)) {
+              _tmpWaterOz = null;
+            } else {
+              _tmpWaterOz = _cursor.getFloat(_cursorIndexOfWaterOz);
+            }
+            final Integer _tmpCalories;
+            if (_cursor.isNull(_cursorIndexOfCalories)) {
+              _tmpCalories = null;
+            } else {
+              _tmpCalories = _cursor.getInt(_cursorIndexOfCalories);
+            }
+            final Integer _tmpExerciseMinutes;
+            if (_cursor.isNull(_cursorIndexOfExerciseMinutes)) {
+              _tmpExerciseMinutes = null;
+            } else {
+              _tmpExerciseMinutes = _cursor.getInt(_cursorIndexOfExerciseMinutes);
+            }
+            final String _tmpNotes;
+            if (_cursor.isNull(_cursorIndexOfNotes)) {
+              _tmpNotes = null;
+            } else {
+              _tmpNotes = _cursor.getString(_cursorIndexOfNotes);
+            }
+            final long _tmpCreatedAt;
+            _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
+            _item = new HealthEntryEntity(_tmpId,_tmpUserId,_tmpEntryDate,_tmpWeight,_tmpWeightUnit,_tmpBloodPressureSystolic,_tmpBloodPressureDiastolic,_tmpHeartRate,_tmpBloodSugar,_tmpBloodSugarUnit,_tmpSleepHours,_tmpSleepQuality,_tmpMood,_tmpEnergy,_tmpSteps,_tmpWaterOz,_tmpCalories,_tmpExerciseMinutes,_tmpNotes,_tmpCreatedAt);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+        }
+      }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
+  }
+
+  @Override
+  public Flow<List<HealthEntryEntity>> getRecentSugarEntries(final long userId) {
+    final String _sql = "SELECT * FROM health_entries WHERE userId = ? AND bloodSugar IS NOT NULL ORDER BY entryDate DESC LIMIT 14";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, userId);
+    return CoroutinesRoom.createFlow(__db, false, new String[] {"health_entries"}, new Callable<List<HealthEntryEntity>>() {
+      @Override
+      @NonNull
+      public List<HealthEntryEntity> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfUserId = CursorUtil.getColumnIndexOrThrow(_cursor, "userId");
+          final int _cursorIndexOfEntryDate = CursorUtil.getColumnIndexOrThrow(_cursor, "entryDate");
+          final int _cursorIndexOfWeight = CursorUtil.getColumnIndexOrThrow(_cursor, "weight");
+          final int _cursorIndexOfWeightUnit = CursorUtil.getColumnIndexOrThrow(_cursor, "weightUnit");
+          final int _cursorIndexOfBloodPressureSystolic = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodPressureSystolic");
+          final int _cursorIndexOfBloodPressureDiastolic = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodPressureDiastolic");
+          final int _cursorIndexOfHeartRate = CursorUtil.getColumnIndexOrThrow(_cursor, "heartRate");
+          final int _cursorIndexOfBloodSugar = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodSugar");
+          final int _cursorIndexOfBloodSugarUnit = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodSugarUnit");
+          final int _cursorIndexOfSleepHours = CursorUtil.getColumnIndexOrThrow(_cursor, "sleepHours");
+          final int _cursorIndexOfSleepQuality = CursorUtil.getColumnIndexOrThrow(_cursor, "sleepQuality");
+          final int _cursorIndexOfMood = CursorUtil.getColumnIndexOrThrow(_cursor, "mood");
+          final int _cursorIndexOfEnergy = CursorUtil.getColumnIndexOrThrow(_cursor, "energy");
+          final int _cursorIndexOfSteps = CursorUtil.getColumnIndexOrThrow(_cursor, "steps");
+          final int _cursorIndexOfWaterOz = CursorUtil.getColumnIndexOrThrow(_cursor, "waterOz");
+          final int _cursorIndexOfCalories = CursorUtil.getColumnIndexOrThrow(_cursor, "calories");
+          final int _cursorIndexOfExerciseMinutes = CursorUtil.getColumnIndexOrThrow(_cursor, "exerciseMinutes");
+          final int _cursorIndexOfNotes = CursorUtil.getColumnIndexOrThrow(_cursor, "notes");
+          final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
+          final List<HealthEntryEntity> _result = new ArrayList<HealthEntryEntity>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final HealthEntryEntity _item;
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final long _tmpUserId;
+            _tmpUserId = _cursor.getLong(_cursorIndexOfUserId);
+            final String _tmpEntryDate;
+            _tmpEntryDate = _cursor.getString(_cursorIndexOfEntryDate);
+            final Float _tmpWeight;
+            if (_cursor.isNull(_cursorIndexOfWeight)) {
+              _tmpWeight = null;
+            } else {
+              _tmpWeight = _cursor.getFloat(_cursorIndexOfWeight);
+            }
+            final String _tmpWeightUnit;
+            _tmpWeightUnit = _cursor.getString(_cursorIndexOfWeightUnit);
+            final Integer _tmpBloodPressureSystolic;
+            if (_cursor.isNull(_cursorIndexOfBloodPressureSystolic)) {
+              _tmpBloodPressureSystolic = null;
+            } else {
+              _tmpBloodPressureSystolic = _cursor.getInt(_cursorIndexOfBloodPressureSystolic);
+            }
+            final Integer _tmpBloodPressureDiastolic;
+            if (_cursor.isNull(_cursorIndexOfBloodPressureDiastolic)) {
+              _tmpBloodPressureDiastolic = null;
+            } else {
+              _tmpBloodPressureDiastolic = _cursor.getInt(_cursorIndexOfBloodPressureDiastolic);
+            }
+            final Integer _tmpHeartRate;
+            if (_cursor.isNull(_cursorIndexOfHeartRate)) {
+              _tmpHeartRate = null;
+            } else {
+              _tmpHeartRate = _cursor.getInt(_cursorIndexOfHeartRate);
+            }
+            final Float _tmpBloodSugar;
+            if (_cursor.isNull(_cursorIndexOfBloodSugar)) {
+              _tmpBloodSugar = null;
+            } else {
+              _tmpBloodSugar = _cursor.getFloat(_cursorIndexOfBloodSugar);
+            }
+            final String _tmpBloodSugarUnit;
+            _tmpBloodSugarUnit = _cursor.getString(_cursorIndexOfBloodSugarUnit);
+            final Float _tmpSleepHours;
+            if (_cursor.isNull(_cursorIndexOfSleepHours)) {
+              _tmpSleepHours = null;
+            } else {
+              _tmpSleepHours = _cursor.getFloat(_cursorIndexOfSleepHours);
+            }
+            final Integer _tmpSleepQuality;
+            if (_cursor.isNull(_cursorIndexOfSleepQuality)) {
+              _tmpSleepQuality = null;
+            } else {
+              _tmpSleepQuality = _cursor.getInt(_cursorIndexOfSleepQuality);
+            }
+            final Integer _tmpMood;
+            if (_cursor.isNull(_cursorIndexOfMood)) {
+              _tmpMood = null;
+            } else {
+              _tmpMood = _cursor.getInt(_cursorIndexOfMood);
+            }
+            final Integer _tmpEnergy;
+            if (_cursor.isNull(_cursorIndexOfEnergy)) {
+              _tmpEnergy = null;
+            } else {
+              _tmpEnergy = _cursor.getInt(_cursorIndexOfEnergy);
+            }
+            final Integer _tmpSteps;
+            if (_cursor.isNull(_cursorIndexOfSteps)) {
+              _tmpSteps = null;
+            } else {
+              _tmpSteps = _cursor.getInt(_cursorIndexOfSteps);
+            }
+            final Float _tmpWaterOz;
+            if (_cursor.isNull(_cursorIndexOfWaterOz)) {
+              _tmpWaterOz = null;
+            } else {
+              _tmpWaterOz = _cursor.getFloat(_cursorIndexOfWaterOz);
+            }
+            final Integer _tmpCalories;
+            if (_cursor.isNull(_cursorIndexOfCalories)) {
+              _tmpCalories = null;
+            } else {
+              _tmpCalories = _cursor.getInt(_cursorIndexOfCalories);
+            }
+            final Integer _tmpExerciseMinutes;
+            if (_cursor.isNull(_cursorIndexOfExerciseMinutes)) {
+              _tmpExerciseMinutes = null;
+            } else {
+              _tmpExerciseMinutes = _cursor.getInt(_cursorIndexOfExerciseMinutes);
+            }
+            final String _tmpNotes;
+            if (_cursor.isNull(_cursorIndexOfNotes)) {
+              _tmpNotes = null;
+            } else {
+              _tmpNotes = _cursor.getString(_cursorIndexOfNotes);
+            }
+            final long _tmpCreatedAt;
+            _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
+            _item = new HealthEntryEntity(_tmpId,_tmpUserId,_tmpEntryDate,_tmpWeight,_tmpWeightUnit,_tmpBloodPressureSystolic,_tmpBloodPressureDiastolic,_tmpHeartRate,_tmpBloodSugar,_tmpBloodSugarUnit,_tmpSleepHours,_tmpSleepQuality,_tmpMood,_tmpEnergy,_tmpSteps,_tmpWaterOz,_tmpCalories,_tmpExerciseMinutes,_tmpNotes,_tmpCreatedAt);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+        }
+      }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
+  }
+
+  @Override
+  public Flow<List<HealthEntryEntity>> getRecentHeartRateEntries(final long userId) {
+    final String _sql = "SELECT * FROM health_entries WHERE userId = ? AND heartRate IS NOT NULL ORDER BY entryDate DESC LIMIT 14";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, userId);
+    return CoroutinesRoom.createFlow(__db, false, new String[] {"health_entries"}, new Callable<List<HealthEntryEntity>>() {
+      @Override
+      @NonNull
+      public List<HealthEntryEntity> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfUserId = CursorUtil.getColumnIndexOrThrow(_cursor, "userId");
+          final int _cursorIndexOfEntryDate = CursorUtil.getColumnIndexOrThrow(_cursor, "entryDate");
+          final int _cursorIndexOfWeight = CursorUtil.getColumnIndexOrThrow(_cursor, "weight");
+          final int _cursorIndexOfWeightUnit = CursorUtil.getColumnIndexOrThrow(_cursor, "weightUnit");
+          final int _cursorIndexOfBloodPressureSystolic = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodPressureSystolic");
+          final int _cursorIndexOfBloodPressureDiastolic = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodPressureDiastolic");
+          final int _cursorIndexOfHeartRate = CursorUtil.getColumnIndexOrThrow(_cursor, "heartRate");
+          final int _cursorIndexOfBloodSugar = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodSugar");
+          final int _cursorIndexOfBloodSugarUnit = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodSugarUnit");
+          final int _cursorIndexOfSleepHours = CursorUtil.getColumnIndexOrThrow(_cursor, "sleepHours");
+          final int _cursorIndexOfSleepQuality = CursorUtil.getColumnIndexOrThrow(_cursor, "sleepQuality");
+          final int _cursorIndexOfMood = CursorUtil.getColumnIndexOrThrow(_cursor, "mood");
+          final int _cursorIndexOfEnergy = CursorUtil.getColumnIndexOrThrow(_cursor, "energy");
+          final int _cursorIndexOfSteps = CursorUtil.getColumnIndexOrThrow(_cursor, "steps");
+          final int _cursorIndexOfWaterOz = CursorUtil.getColumnIndexOrThrow(_cursor, "waterOz");
+          final int _cursorIndexOfCalories = CursorUtil.getColumnIndexOrThrow(_cursor, "calories");
+          final int _cursorIndexOfExerciseMinutes = CursorUtil.getColumnIndexOrThrow(_cursor, "exerciseMinutes");
+          final int _cursorIndexOfNotes = CursorUtil.getColumnIndexOrThrow(_cursor, "notes");
+          final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
+          final List<HealthEntryEntity> _result = new ArrayList<HealthEntryEntity>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final HealthEntryEntity _item;
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final long _tmpUserId;
+            _tmpUserId = _cursor.getLong(_cursorIndexOfUserId);
+            final String _tmpEntryDate;
+            _tmpEntryDate = _cursor.getString(_cursorIndexOfEntryDate);
+            final Float _tmpWeight;
+            if (_cursor.isNull(_cursorIndexOfWeight)) {
+              _tmpWeight = null;
+            } else {
+              _tmpWeight = _cursor.getFloat(_cursorIndexOfWeight);
+            }
+            final String _tmpWeightUnit;
+            _tmpWeightUnit = _cursor.getString(_cursorIndexOfWeightUnit);
+            final Integer _tmpBloodPressureSystolic;
+            if (_cursor.isNull(_cursorIndexOfBloodPressureSystolic)) {
+              _tmpBloodPressureSystolic = null;
+            } else {
+              _tmpBloodPressureSystolic = _cursor.getInt(_cursorIndexOfBloodPressureSystolic);
+            }
+            final Integer _tmpBloodPressureDiastolic;
+            if (_cursor.isNull(_cursorIndexOfBloodPressureDiastolic)) {
+              _tmpBloodPressureDiastolic = null;
+            } else {
+              _tmpBloodPressureDiastolic = _cursor.getInt(_cursorIndexOfBloodPressureDiastolic);
+            }
+            final Integer _tmpHeartRate;
+            if (_cursor.isNull(_cursorIndexOfHeartRate)) {
+              _tmpHeartRate = null;
+            } else {
+              _tmpHeartRate = _cursor.getInt(_cursorIndexOfHeartRate);
+            }
+            final Float _tmpBloodSugar;
+            if (_cursor.isNull(_cursorIndexOfBloodSugar)) {
+              _tmpBloodSugar = null;
+            } else {
+              _tmpBloodSugar = _cursor.getFloat(_cursorIndexOfBloodSugar);
+            }
+            final String _tmpBloodSugarUnit;
+            _tmpBloodSugarUnit = _cursor.getString(_cursorIndexOfBloodSugarUnit);
+            final Float _tmpSleepHours;
+            if (_cursor.isNull(_cursorIndexOfSleepHours)) {
+              _tmpSleepHours = null;
+            } else {
+              _tmpSleepHours = _cursor.getFloat(_cursorIndexOfSleepHours);
+            }
+            final Integer _tmpSleepQuality;
+            if (_cursor.isNull(_cursorIndexOfSleepQuality)) {
+              _tmpSleepQuality = null;
+            } else {
+              _tmpSleepQuality = _cursor.getInt(_cursorIndexOfSleepQuality);
+            }
+            final Integer _tmpMood;
+            if (_cursor.isNull(_cursorIndexOfMood)) {
+              _tmpMood = null;
+            } else {
+              _tmpMood = _cursor.getInt(_cursorIndexOfMood);
+            }
+            final Integer _tmpEnergy;
+            if (_cursor.isNull(_cursorIndexOfEnergy)) {
+              _tmpEnergy = null;
+            } else {
+              _tmpEnergy = _cursor.getInt(_cursorIndexOfEnergy);
+            }
+            final Integer _tmpSteps;
+            if (_cursor.isNull(_cursorIndexOfSteps)) {
+              _tmpSteps = null;
+            } else {
+              _tmpSteps = _cursor.getInt(_cursorIndexOfSteps);
+            }
+            final Float _tmpWaterOz;
+            if (_cursor.isNull(_cursorIndexOfWaterOz)) {
+              _tmpWaterOz = null;
+            } else {
+              _tmpWaterOz = _cursor.getFloat(_cursorIndexOfWaterOz);
+            }
+            final Integer _tmpCalories;
+            if (_cursor.isNull(_cursorIndexOfCalories)) {
+              _tmpCalories = null;
+            } else {
+              _tmpCalories = _cursor.getInt(_cursorIndexOfCalories);
+            }
+            final Integer _tmpExerciseMinutes;
+            if (_cursor.isNull(_cursorIndexOfExerciseMinutes)) {
+              _tmpExerciseMinutes = null;
+            } else {
+              _tmpExerciseMinutes = _cursor.getInt(_cursorIndexOfExerciseMinutes);
+            }
+            final String _tmpNotes;
+            if (_cursor.isNull(_cursorIndexOfNotes)) {
+              _tmpNotes = null;
+            } else {
+              _tmpNotes = _cursor.getString(_cursorIndexOfNotes);
+            }
+            final long _tmpCreatedAt;
+            _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
+            _item = new HealthEntryEntity(_tmpId,_tmpUserId,_tmpEntryDate,_tmpWeight,_tmpWeightUnit,_tmpBloodPressureSystolic,_tmpBloodPressureDiastolic,_tmpHeartRate,_tmpBloodSugar,_tmpBloodSugarUnit,_tmpSleepHours,_tmpSleepQuality,_tmpMood,_tmpEnergy,_tmpSteps,_tmpWaterOz,_tmpCalories,_tmpExerciseMinutes,_tmpNotes,_tmpCreatedAt);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+        }
+      }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
+  }
+
+  @Override
+  public Flow<List<HealthEntryEntity>> getRecentSleepEntries(final long userId) {
+    final String _sql = "SELECT * FROM health_entries WHERE userId = ? AND sleepHours IS NOT NULL ORDER BY entryDate DESC LIMIT 14";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, userId);
+    return CoroutinesRoom.createFlow(__db, false, new String[] {"health_entries"}, new Callable<List<HealthEntryEntity>>() {
+      @Override
+      @NonNull
+      public List<HealthEntryEntity> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfUserId = CursorUtil.getColumnIndexOrThrow(_cursor, "userId");
+          final int _cursorIndexOfEntryDate = CursorUtil.getColumnIndexOrThrow(_cursor, "entryDate");
+          final int _cursorIndexOfWeight = CursorUtil.getColumnIndexOrThrow(_cursor, "weight");
+          final int _cursorIndexOfWeightUnit = CursorUtil.getColumnIndexOrThrow(_cursor, "weightUnit");
+          final int _cursorIndexOfBloodPressureSystolic = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodPressureSystolic");
+          final int _cursorIndexOfBloodPressureDiastolic = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodPressureDiastolic");
+          final int _cursorIndexOfHeartRate = CursorUtil.getColumnIndexOrThrow(_cursor, "heartRate");
+          final int _cursorIndexOfBloodSugar = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodSugar");
+          final int _cursorIndexOfBloodSugarUnit = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodSugarUnit");
+          final int _cursorIndexOfSleepHours = CursorUtil.getColumnIndexOrThrow(_cursor, "sleepHours");
+          final int _cursorIndexOfSleepQuality = CursorUtil.getColumnIndexOrThrow(_cursor, "sleepQuality");
+          final int _cursorIndexOfMood = CursorUtil.getColumnIndexOrThrow(_cursor, "mood");
+          final int _cursorIndexOfEnergy = CursorUtil.getColumnIndexOrThrow(_cursor, "energy");
+          final int _cursorIndexOfSteps = CursorUtil.getColumnIndexOrThrow(_cursor, "steps");
+          final int _cursorIndexOfWaterOz = CursorUtil.getColumnIndexOrThrow(_cursor, "waterOz");
+          final int _cursorIndexOfCalories = CursorUtil.getColumnIndexOrThrow(_cursor, "calories");
+          final int _cursorIndexOfExerciseMinutes = CursorUtil.getColumnIndexOrThrow(_cursor, "exerciseMinutes");
+          final int _cursorIndexOfNotes = CursorUtil.getColumnIndexOrThrow(_cursor, "notes");
+          final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
+          final List<HealthEntryEntity> _result = new ArrayList<HealthEntryEntity>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final HealthEntryEntity _item;
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final long _tmpUserId;
+            _tmpUserId = _cursor.getLong(_cursorIndexOfUserId);
+            final String _tmpEntryDate;
+            _tmpEntryDate = _cursor.getString(_cursorIndexOfEntryDate);
+            final Float _tmpWeight;
+            if (_cursor.isNull(_cursorIndexOfWeight)) {
+              _tmpWeight = null;
+            } else {
+              _tmpWeight = _cursor.getFloat(_cursorIndexOfWeight);
+            }
+            final String _tmpWeightUnit;
+            _tmpWeightUnit = _cursor.getString(_cursorIndexOfWeightUnit);
+            final Integer _tmpBloodPressureSystolic;
+            if (_cursor.isNull(_cursorIndexOfBloodPressureSystolic)) {
+              _tmpBloodPressureSystolic = null;
+            } else {
+              _tmpBloodPressureSystolic = _cursor.getInt(_cursorIndexOfBloodPressureSystolic);
+            }
+            final Integer _tmpBloodPressureDiastolic;
+            if (_cursor.isNull(_cursorIndexOfBloodPressureDiastolic)) {
+              _tmpBloodPressureDiastolic = null;
+            } else {
+              _tmpBloodPressureDiastolic = _cursor.getInt(_cursorIndexOfBloodPressureDiastolic);
+            }
+            final Integer _tmpHeartRate;
+            if (_cursor.isNull(_cursorIndexOfHeartRate)) {
+              _tmpHeartRate = null;
+            } else {
+              _tmpHeartRate = _cursor.getInt(_cursorIndexOfHeartRate);
+            }
+            final Float _tmpBloodSugar;
+            if (_cursor.isNull(_cursorIndexOfBloodSugar)) {
+              _tmpBloodSugar = null;
+            } else {
+              _tmpBloodSugar = _cursor.getFloat(_cursorIndexOfBloodSugar);
+            }
+            final String _tmpBloodSugarUnit;
+            _tmpBloodSugarUnit = _cursor.getString(_cursorIndexOfBloodSugarUnit);
+            final Float _tmpSleepHours;
+            if (_cursor.isNull(_cursorIndexOfSleepHours)) {
+              _tmpSleepHours = null;
+            } else {
+              _tmpSleepHours = _cursor.getFloat(_cursorIndexOfSleepHours);
+            }
+            final Integer _tmpSleepQuality;
+            if (_cursor.isNull(_cursorIndexOfSleepQuality)) {
+              _tmpSleepQuality = null;
+            } else {
+              _tmpSleepQuality = _cursor.getInt(_cursorIndexOfSleepQuality);
+            }
+            final Integer _tmpMood;
+            if (_cursor.isNull(_cursorIndexOfMood)) {
+              _tmpMood = null;
+            } else {
+              _tmpMood = _cursor.getInt(_cursorIndexOfMood);
+            }
+            final Integer _tmpEnergy;
+            if (_cursor.isNull(_cursorIndexOfEnergy)) {
+              _tmpEnergy = null;
+            } else {
+              _tmpEnergy = _cursor.getInt(_cursorIndexOfEnergy);
+            }
+            final Integer _tmpSteps;
+            if (_cursor.isNull(_cursorIndexOfSteps)) {
+              _tmpSteps = null;
+            } else {
+              _tmpSteps = _cursor.getInt(_cursorIndexOfSteps);
+            }
+            final Float _tmpWaterOz;
+            if (_cursor.isNull(_cursorIndexOfWaterOz)) {
+              _tmpWaterOz = null;
+            } else {
+              _tmpWaterOz = _cursor.getFloat(_cursorIndexOfWaterOz);
+            }
+            final Integer _tmpCalories;
+            if (_cursor.isNull(_cursorIndexOfCalories)) {
+              _tmpCalories = null;
+            } else {
+              _tmpCalories = _cursor.getInt(_cursorIndexOfCalories);
+            }
+            final Integer _tmpExerciseMinutes;
+            if (_cursor.isNull(_cursorIndexOfExerciseMinutes)) {
+              _tmpExerciseMinutes = null;
+            } else {
+              _tmpExerciseMinutes = _cursor.getInt(_cursorIndexOfExerciseMinutes);
+            }
+            final String _tmpNotes;
+            if (_cursor.isNull(_cursorIndexOfNotes)) {
+              _tmpNotes = null;
+            } else {
+              _tmpNotes = _cursor.getString(_cursorIndexOfNotes);
+            }
+            final long _tmpCreatedAt;
+            _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
+            _item = new HealthEntryEntity(_tmpId,_tmpUserId,_tmpEntryDate,_tmpWeight,_tmpWeightUnit,_tmpBloodPressureSystolic,_tmpBloodPressureDiastolic,_tmpHeartRate,_tmpBloodSugar,_tmpBloodSugarUnit,_tmpSleepHours,_tmpSleepQuality,_tmpMood,_tmpEnergy,_tmpSteps,_tmpWaterOz,_tmpCalories,_tmpExerciseMinutes,_tmpNotes,_tmpCreatedAt);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+        }
+      }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
+  }
+
+  @Override
+  public Object getLatestVitalEntry(final long userId,
+      final Continuation<? super HealthEntryEntity> $completion) {
+    final String _sql = "SELECT * FROM health_entries WHERE userId = ? AND (bloodPressureSystolic IS NOT NULL OR bloodSugar IS NOT NULL) ORDER BY entryDate DESC LIMIT 1";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, userId);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<HealthEntryEntity>() {
+      @Override
+      @Nullable
+      public HealthEntryEntity call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfUserId = CursorUtil.getColumnIndexOrThrow(_cursor, "userId");
+          final int _cursorIndexOfEntryDate = CursorUtil.getColumnIndexOrThrow(_cursor, "entryDate");
+          final int _cursorIndexOfWeight = CursorUtil.getColumnIndexOrThrow(_cursor, "weight");
+          final int _cursorIndexOfWeightUnit = CursorUtil.getColumnIndexOrThrow(_cursor, "weightUnit");
+          final int _cursorIndexOfBloodPressureSystolic = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodPressureSystolic");
+          final int _cursorIndexOfBloodPressureDiastolic = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodPressureDiastolic");
+          final int _cursorIndexOfHeartRate = CursorUtil.getColumnIndexOrThrow(_cursor, "heartRate");
+          final int _cursorIndexOfBloodSugar = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodSugar");
+          final int _cursorIndexOfBloodSugarUnit = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodSugarUnit");
+          final int _cursorIndexOfSleepHours = CursorUtil.getColumnIndexOrThrow(_cursor, "sleepHours");
+          final int _cursorIndexOfSleepQuality = CursorUtil.getColumnIndexOrThrow(_cursor, "sleepQuality");
+          final int _cursorIndexOfMood = CursorUtil.getColumnIndexOrThrow(_cursor, "mood");
+          final int _cursorIndexOfEnergy = CursorUtil.getColumnIndexOrThrow(_cursor, "energy");
+          final int _cursorIndexOfSteps = CursorUtil.getColumnIndexOrThrow(_cursor, "steps");
+          final int _cursorIndexOfWaterOz = CursorUtil.getColumnIndexOrThrow(_cursor, "waterOz");
+          final int _cursorIndexOfCalories = CursorUtil.getColumnIndexOrThrow(_cursor, "calories");
+          final int _cursorIndexOfExerciseMinutes = CursorUtil.getColumnIndexOrThrow(_cursor, "exerciseMinutes");
+          final int _cursorIndexOfNotes = CursorUtil.getColumnIndexOrThrow(_cursor, "notes");
+          final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
+          final HealthEntryEntity _result;
+          if (_cursor.moveToFirst()) {
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final long _tmpUserId;
+            _tmpUserId = _cursor.getLong(_cursorIndexOfUserId);
+            final String _tmpEntryDate;
+            _tmpEntryDate = _cursor.getString(_cursorIndexOfEntryDate);
+            final Float _tmpWeight;
+            if (_cursor.isNull(_cursorIndexOfWeight)) {
+              _tmpWeight = null;
+            } else {
+              _tmpWeight = _cursor.getFloat(_cursorIndexOfWeight);
+            }
+            final String _tmpWeightUnit;
+            _tmpWeightUnit = _cursor.getString(_cursorIndexOfWeightUnit);
+            final Integer _tmpBloodPressureSystolic;
+            if (_cursor.isNull(_cursorIndexOfBloodPressureSystolic)) {
+              _tmpBloodPressureSystolic = null;
+            } else {
+              _tmpBloodPressureSystolic = _cursor.getInt(_cursorIndexOfBloodPressureSystolic);
+            }
+            final Integer _tmpBloodPressureDiastolic;
+            if (_cursor.isNull(_cursorIndexOfBloodPressureDiastolic)) {
+              _tmpBloodPressureDiastolic = null;
+            } else {
+              _tmpBloodPressureDiastolic = _cursor.getInt(_cursorIndexOfBloodPressureDiastolic);
+            }
+            final Integer _tmpHeartRate;
+            if (_cursor.isNull(_cursorIndexOfHeartRate)) {
+              _tmpHeartRate = null;
+            } else {
+              _tmpHeartRate = _cursor.getInt(_cursorIndexOfHeartRate);
+            }
+            final Float _tmpBloodSugar;
+            if (_cursor.isNull(_cursorIndexOfBloodSugar)) {
+              _tmpBloodSugar = null;
+            } else {
+              _tmpBloodSugar = _cursor.getFloat(_cursorIndexOfBloodSugar);
+            }
+            final String _tmpBloodSugarUnit;
+            _tmpBloodSugarUnit = _cursor.getString(_cursorIndexOfBloodSugarUnit);
+            final Float _tmpSleepHours;
+            if (_cursor.isNull(_cursorIndexOfSleepHours)) {
+              _tmpSleepHours = null;
+            } else {
+              _tmpSleepHours = _cursor.getFloat(_cursorIndexOfSleepHours);
+            }
+            final Integer _tmpSleepQuality;
+            if (_cursor.isNull(_cursorIndexOfSleepQuality)) {
+              _tmpSleepQuality = null;
+            } else {
+              _tmpSleepQuality = _cursor.getInt(_cursorIndexOfSleepQuality);
+            }
+            final Integer _tmpMood;
+            if (_cursor.isNull(_cursorIndexOfMood)) {
+              _tmpMood = null;
+            } else {
+              _tmpMood = _cursor.getInt(_cursorIndexOfMood);
+            }
+            final Integer _tmpEnergy;
+            if (_cursor.isNull(_cursorIndexOfEnergy)) {
+              _tmpEnergy = null;
+            } else {
+              _tmpEnergy = _cursor.getInt(_cursorIndexOfEnergy);
+            }
+            final Integer _tmpSteps;
+            if (_cursor.isNull(_cursorIndexOfSteps)) {
+              _tmpSteps = null;
+            } else {
+              _tmpSteps = _cursor.getInt(_cursorIndexOfSteps);
+            }
+            final Float _tmpWaterOz;
+            if (_cursor.isNull(_cursorIndexOfWaterOz)) {
+              _tmpWaterOz = null;
+            } else {
+              _tmpWaterOz = _cursor.getFloat(_cursorIndexOfWaterOz);
+            }
+            final Integer _tmpCalories;
+            if (_cursor.isNull(_cursorIndexOfCalories)) {
+              _tmpCalories = null;
+            } else {
+              _tmpCalories = _cursor.getInt(_cursorIndexOfCalories);
+            }
+            final Integer _tmpExerciseMinutes;
+            if (_cursor.isNull(_cursorIndexOfExerciseMinutes)) {
+              _tmpExerciseMinutes = null;
+            } else {
+              _tmpExerciseMinutes = _cursor.getInt(_cursorIndexOfExerciseMinutes);
+            }
+            final String _tmpNotes;
+            if (_cursor.isNull(_cursorIndexOfNotes)) {
+              _tmpNotes = null;
+            } else {
+              _tmpNotes = _cursor.getString(_cursorIndexOfNotes);
+            }
+            final long _tmpCreatedAt;
+            _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
+            _result = new HealthEntryEntity(_tmpId,_tmpUserId,_tmpEntryDate,_tmpWeight,_tmpWeightUnit,_tmpBloodPressureSystolic,_tmpBloodPressureDiastolic,_tmpHeartRate,_tmpBloodSugar,_tmpBloodSugarUnit,_tmpSleepHours,_tmpSleepQuality,_tmpMood,_tmpEnergy,_tmpSteps,_tmpWaterOz,_tmpCalories,_tmpExerciseMinutes,_tmpNotes,_tmpCreatedAt);
+          } else {
+            _result = null;
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
+  }
+
   @NonNull
   public static List<Class<?>> getRequiredConverters() {
     return Collections.emptyList();

@@ -33,4 +33,19 @@ interface HealthDao {
 
     @Delete
     suspend fun deleteVitalLog(log: VitalLogEntity)
+
+    @Query("SELECT * FROM health_entries WHERE userId = :userId AND bloodPressureSystolic IS NOT NULL ORDER BY entryDate DESC LIMIT 14")
+    fun getRecentBPEntries(userId: Long): Flow<List<HealthEntryEntity>>
+
+    @Query("SELECT * FROM health_entries WHERE userId = :userId AND bloodSugar IS NOT NULL ORDER BY entryDate DESC LIMIT 14")
+    fun getRecentSugarEntries(userId: Long): Flow<List<HealthEntryEntity>>
+
+    @Query("SELECT * FROM health_entries WHERE userId = :userId AND heartRate IS NOT NULL ORDER BY entryDate DESC LIMIT 14")
+    fun getRecentHeartRateEntries(userId: Long): Flow<List<HealthEntryEntity>>
+
+    @Query("SELECT * FROM health_entries WHERE userId = :userId AND sleepHours IS NOT NULL ORDER BY entryDate DESC LIMIT 14")
+    fun getRecentSleepEntries(userId: Long): Flow<List<HealthEntryEntity>>
+
+    @Query("SELECT * FROM health_entries WHERE userId = :userId AND (bloodPressureSystolic IS NOT NULL OR bloodSugar IS NOT NULL) ORDER BY entryDate DESC LIMIT 1")
+    suspend fun getLatestVitalEntry(userId: Long): HealthEntryEntity?
 }

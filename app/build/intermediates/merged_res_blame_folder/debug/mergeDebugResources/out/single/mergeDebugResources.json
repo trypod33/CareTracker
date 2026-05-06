@@ -32,6 +32,10 @@
         "source": "com.caretracker.app-main-57:/drawable/bg_card_dark.xml"
     },
     {
+        "merged": "com.caretracker.app-debug-55:/layout_item_task_header.xml.flat",
+        "source": "com.caretracker.app-main-57:/layout/item_task_header.xml"
+    },
+    {
         "merged": "com.caretracker.app-debug-55:/drawable_bg_category_chip.xml.flat",
         "source": "com.caretracker.app-main-57:/drawable/bg_category_chip.xml"
     },

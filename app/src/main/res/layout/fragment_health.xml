@@ -2,6 +2,7 @@
 <androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#121212">
@@ -52,7 +53,6 @@
                 style="@style/Widget.MaterialComponents.Button"/>
         </LinearLayout>
 
-        <!-- Stats -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -384,12 +384,26 @@
                 android:orientation="vertical"
                 android:padding="12dp">
                 <TextView
+                    android:id="@+id/tvBpTrendTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Blood pressure"
+                    android:textColor="#ffffff"
+                    android:textSize="14sp"
+                    android:textStyle="bold"/>
+                <com.caretracker.ui.views.SparklineView
+                    android:id="@+id/graphBp"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_marginTop="8dp"/>
+                <TextView
                     android:id="@+id/tvBpTrend"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Blood pressure trend will appear here"
-                    android:textColor="#e0e0e0"
-                    android:textSize="14sp"/>
+                    android:textColor="#aaaaaa"
+                    android:textSize="12sp"
+                    android:layout_marginTop="8dp"
+                    tools:text="Latest 136/83 • Avg 146/91"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -405,13 +419,25 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="12dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Blood sugar"
+                    android:textColor="#ffffff"
+                    android:textSize="14sp"
+                    android:textStyle="bold"/>
+                <com.caretracker.ui.views.SparklineView
+                    android:id="@+id/graphSugar"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_marginTop="8dp"/>
                 <TextView
                     android:id="@+id/tvSugarTrend"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Blood sugar trend will appear here"
-                    android:textColor="#e0e0e0"
-                    android:textSize="14sp"/>
+                    android:textColor="#aaaaaa"
+                    android:textSize="12sp"
+                    android:layout_marginTop="8dp"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -428,12 +454,24 @@
                 android:orientation="vertical"
                 android:padding="12dp">
                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Heart rate"
+                    android:textColor="#ffffff"
+                    android:textSize="14sp"
+                    android:textStyle="bold"/>
+                <com.caretracker.ui.views.SparklineView
+                    android:id="@+id/graphHeart"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_marginTop="8dp"/>
+                <TextView
                     android:id="@+id/tvHeartTrend"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Heart rate trend will appear here"
-                    android:textColor="#e0e0e0"
-                    android:textSize="14sp"/>
+                    android:textColor="#aaaaaa"
+                    android:textSize="12sp"
+                    android:layout_marginTop="8dp"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -450,12 +488,24 @@
                 android:orientation="vertical"
                 android:padding="12dp">
                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Sleep"
+                    android:textColor="#ffffff"
+                    android:textSize="14sp"
+                    android:textStyle="bold"/>
+                <com.caretracker.ui.views.SparklineView
+                    android:id="@+id/graphSleep"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_marginTop="8dp"/>
+                <TextView
                     android:id="@+id/tvSleepTrend"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Sleep trend will appear here"
-                    android:textColor="#e0e0e0"
-                    android:textSize="14sp"/>
+                    android:textColor="#aaaaaa"
+                    android:textSize="12sp"
+                    android:layout_marginTop="8dp"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 

@@ -1,25 +1,26 @@
 package com.caretracker.ui.tasks
 
-import android.app.AlertDialog
+import android.app.DatePickerDialog
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Spinner
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.caretracker.CareTrackerApp
 import com.caretracker.data.entities.TaskEntity
 import com.caretracker.databinding.FragmentTasksBinding
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 class TasksFragment : Fragment() {
-
     private var _binding: FragmentTasksBinding? = null
     private val binding get() = _binding!!
 
@@ -28,8 +29,6 @@ class TasksFragment : Fragment() {
     }
 
     private lateinit var adapter: TaskAdapter
-    private lateinit var itemTouchHelper: ItemTouchHelper
-    private var latestTasks: List<TaskEntity> = emptyList()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentTasksBinding.inflate(inflater, container, false)
@@ -38,93 +37,145 @@ class TasksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val app = requireActivity().application as CareTrackerApp
 
         adapter = TaskAdapter(
             onToggle = { vm.toggleComplete(it) },
-            onDelete = { vm.deleteTask(it) },
-            onStartDrag = { holder -> itemTouchHelper.startDrag(holder) }
+            onDelete = { confirmDelete(it) },
+            onEdit = { showEditTaskDialog(it) }
         )
-
         binding.rvTasks.layoutManager = LinearLayoutManager(requireContext())
         binding.rvTasks.adapter = adapter
 
-        itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
-            ItemTouchHelper.UP or ItemTouchHelper.DOWN,
-            0
-        ) {
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                adapter.moveItem(viewHolder.adapterPosition, target.adapterPosition)
-                return true
+        viewLifecycleOwner.lifecycleScope.launch {
+            app.currentUserIdFlow.collect { userId ->
+                vm.loadForUser(userId)
             }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) = Unit
-
-            override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
-                super.clearView(recyclerView, viewHolder)
-                persistTaskOrder()
-            }
-
-            override fun isLongPressDragEnabled(): Boolean = false
-        })
-        itemTouchHelper.attachToRecyclerView(binding.rvTasks)
-
-        binding.fabAddTask.setOnClickListener { showAddTaskDialog() }
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             vm.tasks.collect { list ->
-                latestTasks = list
-                adapter.submitItems(list)
-                binding.tvTasksEmpty.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
+                adapter.submitList(list)
+                binding.tvTasksEmpty.visibility =
+                    if (list.isEmpty()) View.VISIBLE else View.GONE
             }
         }
 
-        vm.loadForUser((requireActivity().application as CareTrackerApp).currentUserId)
-    }
-
-    private fun persistTaskOrder() {
-        val reordered = adapter.currentItems()
-        if (reordered.isEmpty()) return
-        viewLifecycleOwner.lifecycleScope.launch {
-            reordered.forEachIndexed { index, task ->
-                vm.updateTask(task.copy(sortOrder = index))
-            }
-        }
+        binding.fabAddTask.setOnClickListener { showAddTaskDialog() }
     }
 
     private fun showAddTaskDialog() {
-        val layout = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(50, 40, 50, 10)
-        }
+        var selectedDate: String? = null
 
         val etTitle = EditText(requireContext()).apply { hint = "Task title" }
-        val etDue = EditText(requireContext()).apply { hint = "Due date (YYYY-MM-DD)" }
-        val spinner = Spinner(requireContext())
+        val etDueDate = EditText(requireContext()).apply {
+            hint = "Due date (tap to pick)"
+            isFocusable = false
+            isClickable = true
+            setOnClickListener {
+                val cal = Calendar.getInstance()
+                DatePickerDialog(requireContext(), { _, y, m, d ->
+                    selectedDate = "%04d-%02d-%02d".format(y, m + 1, d)
+                    setText(selectedDate)
+                }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
+            }
+        }
+        val spinnerPriority = Spinner(requireContext()).apply {
+            adapter = ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_spinner_dropdown_item,
+                listOf("medium", "high", "low")
+            )
+        }
 
-        val priorities = listOf("low", "medium", "high")
-        spinner.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, priorities)
-
-        layout.addView(etTitle)
-        layout.addView(etDue)
-        layout.addView(spinner)
+        val container = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(48, 16, 48, 8)
+            addView(etTitle)
+            addView(etDueDate)
+            addView(spinnerPriority)
+        }
 
         AlertDialog.Builder(requireContext())
             .setTitle("Add Task")
-            .setView(layout)
+            .setView(container)
             .setPositiveButton("Add") { _, _ ->
                 val title = etTitle.text.toString().trim()
                 if (title.isNotEmpty()) {
-                    vm.addTask(
-                        title = title,
-                        dueDate = etDue.text.toString().trim().ifBlank { null },
-                        priority = spinner.selectedItem.toString()
-                    )
+                    vm.addTask(title, selectedDate, spinnerPriority.selectedItem.toString())
                 }
             }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun showEditTaskDialog(task: TaskEntity) {
+        var selectedDate: String? = task.dueDate
+
+        val etTitle = EditText(requireContext()).apply {
+            hint = "Task title"
+            setText(task.title)
+        }
+        val etDueDate = EditText(requireContext()).apply {
+            hint = "Due date (tap to pick)"
+            isFocusable = false
+            isClickable = true
+            setText(task.dueDate ?: "")
+            setOnClickListener {
+                val cal = Calendar.getInstance()
+                DatePickerDialog(requireContext(), { _, y, m, d ->
+                    selectedDate = "%04d-%02d-%02d".format(y, m + 1, d)
+                    setText(selectedDate)
+                }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
+            }
+            setOnLongClickListener {
+                selectedDate = null
+                setText("")
+                true
+            }
+        }
+        val priorities = listOf("medium", "high", "low")
+        val spinnerPriority = Spinner(requireContext()).apply {
+            adapter = ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_spinner_dropdown_item,
+                priorities
+            )
+            setSelection(priorities.indexOf(task.priority.lowercase()).coerceAtLeast(0))
+        }
+
+        val container = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(48, 16, 48, 8)
+            addView(etTitle)
+            addView(etDueDate)
+            addView(spinnerPriority)
+        }
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Edit Task")
+            .setView(container)
+            .setPositiveButton("Save") { _, _ ->
+                val title = etTitle.text.toString().trim()
+                if (title.isNotEmpty()) {
+                    vm.updateTask(task, title, selectedDate, spinnerPriority.selectedItem.toString())
+                }
+            }
+            .setNeutralButton("Clear Date") { _, _ ->
+                val title = etTitle.text.toString().trim()
+                if (title.isNotEmpty()) {
+                    vm.updateTask(task, title, null, spinnerPriority.selectedItem.toString())
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun confirmDelete(task: TaskEntity) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Delete task?")
+            .setMessage(task.title + " will be removed.")
+            .setPositiveButton("Delete") { _, _ -> vm.deleteTask(task) }
             .setNegativeButton("Cancel", null)
             .show()
     }

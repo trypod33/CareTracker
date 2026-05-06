@@ -61,6 +61,7 @@ class CareTrackerRepository(
 
     fun getTasksForUser(userId: Long) = taskDao.getTasksForUser(userId)
     fun getActiveTasks(userId: Long) = taskDao.getActiveTasks(userId)
+    fun getAllTasksForUser(userId: Long) = taskDao.getAllTasksForUser(userId)
     suspend fun insertTask(task: TaskEntity) = taskDao.insertTask(task)
     suspend fun updateTask(task: TaskEntity) = taskDao.updateTask(task)
     suspend fun deleteTask(task: TaskEntity) = taskDao.deleteTask(task)

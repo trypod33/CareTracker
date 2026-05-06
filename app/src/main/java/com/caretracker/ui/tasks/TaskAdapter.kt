@@ -2,41 +2,38 @@ package com.caretracker.ui.tasks
 
 import android.graphics.Paint
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.caretracker.R
 import com.caretracker.data.entities.TaskEntity
-import java.util.Collections
 
 class TaskAdapter(
     private val onToggle: (TaskEntity) -> Unit,
     private val onDelete: (TaskEntity) -> Unit,
-    private val onStartDrag: (RecyclerView.ViewHolder) -> Unit
-) : RecyclerView.Adapter<TaskAdapter.VH>() {
-
-    private val items = mutableListOf<TaskEntity>()
+    private val onEdit: (TaskEntity) -> Unit
+) : ListAdapter<TaskEntity, TaskAdapter.VH>(DIFF) {
 
     inner class VH(v: View) : RecyclerView.ViewHolder(v) {
         val tvTitle: TextView = v.findViewById(R.id.tvTaskTitle)
         val tvDue: TextView = v.findViewById(R.id.tvTaskDue)
         val tvPriority: TextView = v.findViewById(R.id.tvTaskPriority)
         val btnDelete: ImageButton = v.findViewById(R.id.btnDeleteTask)
-        val tvDragHandle: TextView = v.findViewById(R.id.tvDragHandleTask)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH =
         VH(LayoutInflater.from(parent.context).inflate(R.layout.item_task, parent, false))
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-        val task = items[position]
+        val task = getItem(position)
 
         holder.tvTitle.text = task.title
-        holder.tvDue.text = task.dueDate?.let { "Due: $it" } ?: ""
-        holder.tvDue.visibility = if (task.dueDate != null) View.VISIBLE else View.GONE
+        holder.tvDue.text = task.dueDate?.let { "Due: $it" } ?: "No due date"
+        holder.tvDue.visibility = View.VISIBLE
 
         holder.tvPriority.text = task.priority.uppercase()
         holder.tvPriority.setTextColor(
@@ -56,32 +53,18 @@ class TaskAdapter(
             holder.tvTitle.alpha = 1.0f
         }
 
-        holder.itemView.setOnClickListener { onToggle(task) }
+        holder.itemView.setOnClickListener { onEdit(task) }
+        holder.itemView.setOnLongClickListener {
+            onToggle(task)
+            true
+        }
         holder.btnDelete.setOnClickListener { onDelete(task) }
+    }
 
-        holder.tvDragHandle.setOnTouchListener { _, event ->
-            if (event.actionMasked == MotionEvent.ACTION_DOWN) {
-                onStartDrag(holder)
-                true
-            } else {
-                false
-            }
+    companion object {
+        val DIFF = object : DiffUtil.ItemCallback<TaskEntity>() {
+            override fun areItemsTheSame(a: TaskEntity, b: TaskEntity) = a.id == b.id
+            override fun areContentsTheSame(a: TaskEntity, b: TaskEntity) = a == b
         }
     }
-
-    override fun getItemCount(): Int = items.size
-
-    fun submitItems(newItems: List<TaskEntity>) {
-        items.clear()
-        items.addAll(newItems)
-        notifyDataSetChanged()
-    }
-
-    fun moveItem(from: Int, to: Int) {
-        if (from !in items.indices || to !in items.indices) return
-        Collections.swap(items, from, to)
-        notifyItemMoved(from, to)
-    }
-
-    fun currentItems(): List<TaskEntity> = items.toList()
 }

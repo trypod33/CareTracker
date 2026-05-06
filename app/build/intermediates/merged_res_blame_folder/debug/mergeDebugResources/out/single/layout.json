@@ -28,6 +28,10 @@
         "source": "com.caretracker.app-main-57:/layout/fragment_tasks.xml"
     },
     {
+        "merged": "com.caretracker.app-mergeDebugResources-54:/layout/item_task_header.xml",
+        "source": "com.caretracker.app-main-57:/layout/item_task_header.xml"
+    },
+    {
         "merged": "com.caretracker.app-mergeDebugResources-54:/layout/item_health_entry.xml",
         "source": "com.caretracker.app-main-57:/layout/item_health_entry.xml"
     },
