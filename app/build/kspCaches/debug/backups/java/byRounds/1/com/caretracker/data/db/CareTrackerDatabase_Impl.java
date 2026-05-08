@@ -66,13 +66,13 @@ public final class CareTrackerDatabase_Impl extends CareTrackerDatabase {
   @Override
   @NonNull
   protected SupportSQLiteOpenHelper createOpenHelper(@NonNull final DatabaseConfiguration config) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(3) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(4) {
       @Override
       public void createAllTables(@NonNull final SupportSQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS `users` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `username` TEXT NOT NULL, `email` TEXT NOT NULL, `passwordHash` TEXT NOT NULL, `displayName` TEXT, `avatarColor` TEXT NOT NULL, `role` TEXT NOT NULL, `isActive` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `habits` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` INTEGER NOT NULL, `name` TEXT NOT NULL, `description` TEXT, `category` TEXT NOT NULL, `color` TEXT NOT NULL, `icon` TEXT NOT NULL, `frequency` TEXT NOT NULL, `targetCount` INTEGER NOT NULL, `sortOrder` INTEGER NOT NULL, `isActive` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `habit_logs` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `habitId` INTEGER NOT NULL, `loggedDate` TEXT NOT NULL, `count` INTEGER NOT NULL, `note` TEXT, `loggedAt` INTEGER NOT NULL)");
-        db.execSQL("CREATE TABLE IF NOT EXISTS `health_entries` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` INTEGER NOT NULL, `entryDate` TEXT NOT NULL, `weight` REAL, `weightUnit` TEXT NOT NULL, `bloodPressureSystolic` INTEGER, `bloodPressureDiastolic` INTEGER, `heartRate` INTEGER, `bloodSugar` REAL, `bloodSugarUnit` TEXT NOT NULL, `sleepHours` REAL, `sleepQuality` INTEGER, `mood` INTEGER, `energy` INTEGER, `steps` INTEGER, `waterOz` REAL, `calories` INTEGER, `exerciseMinutes` INTEGER, `notes` TEXT, `createdAt` INTEGER NOT NULL)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `health_entries` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` INTEGER NOT NULL, `entryDate` TEXT NOT NULL, `weight` REAL, `weightUnit` TEXT, `heartRate` INTEGER, `bloodPressureSystolic` INTEGER, `bloodPressureDiastolic` INTEGER, `bloodSugar` REAL, `sleepHours` REAL, `sleepQuality` INTEGER, `mood` INTEGER, `moodScore` INTEGER, `energy` INTEGER, `steps` INTEGER, `exerciseMinutes` INTEGER, `waterOz` REAL, `calories` INTEGER, `notes` TEXT)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `medications` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` INTEGER NOT NULL, `name` TEXT NOT NULL, `genericName` TEXT, `dosage` TEXT, `dosageUnit` TEXT NOT NULL, `form` TEXT NOT NULL, `frequency` TEXT, `timesPerDay` INTEGER NOT NULL, `scheduledTimes` TEXT, `withFood` INTEGER NOT NULL, `instructions` TEXT, `prescriber` TEXT, `pharmacy` TEXT, `rxNumber` TEXT, `color` TEXT NOT NULL, `currentCount` INTEGER NOT NULL, `pillsPerRefill` INTEGER, `refillReminderAt` INTEGER NOT NULL, `lastRefillDate` TEXT, `nextRefillDate` TEXT, `startDate` TEXT, `endDate` TEXT, `sortOrder` INTEGER NOT NULL, `isActive` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `med_logs` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `medicationId` INTEGER NOT NULL, `takenAt` INTEGER NOT NULL, `takenDate` TEXT NOT NULL, `scheduledTime` TEXT, `status` TEXT NOT NULL, `note` TEXT, `doseTaken` TEXT)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `calendar_events` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` INTEGER NOT NULL, `title` TEXT NOT NULL, `description` TEXT, `category` TEXT NOT NULL, `color` TEXT NOT NULL, `startDatetime` INTEGER NOT NULL, `endDatetime` INTEGER, `allDay` INTEGER NOT NULL, `location` TEXT, `reminderMinutes` INTEGER NOT NULL, `recurrence` TEXT NOT NULL, `isCompleted` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL)");
@@ -84,7 +84,7 @@ public final class CareTrackerDatabase_Impl extends CareTrackerDatabase {
         db.execSQL("CREATE TABLE IF NOT EXISTS `blood_sugar_readings` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `entryId` INTEGER NOT NULL, `value` REAL NOT NULL, `readingTime` TEXT NOT NULL, `label` TEXT NOT NULL, FOREIGN KEY(`entryId`) REFERENCES `health_entries`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_blood_sugar_readings_entryId` ON `blood_sugar_readings` (`entryId`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '725866bb92488f09ac960bfdebaa6bd4')");
+        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1e723767337cab8dc0ff2a6b98682b09')");
       }
 
       @Override
@@ -202,27 +202,26 @@ public final class CareTrackerDatabase_Impl extends CareTrackerDatabase {
                   + " Expected:\n" + _infoHabitLogs + "\n"
                   + " Found:\n" + _existingHabitLogs);
         }
-        final HashMap<String, TableInfo.Column> _columnsHealthEntries = new HashMap<String, TableInfo.Column>(20);
+        final HashMap<String, TableInfo.Column> _columnsHealthEntries = new HashMap<String, TableInfo.Column>(19);
         _columnsHealthEntries.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsHealthEntries.put("userId", new TableInfo.Column("userId", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsHealthEntries.put("entryDate", new TableInfo.Column("entryDate", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsHealthEntries.put("weight", new TableInfo.Column("weight", "REAL", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
-        _columnsHealthEntries.put("weightUnit", new TableInfo.Column("weightUnit", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsHealthEntries.put("weightUnit", new TableInfo.Column("weightUnit", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsHealthEntries.put("heartRate", new TableInfo.Column("heartRate", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsHealthEntries.put("bloodPressureSystolic", new TableInfo.Column("bloodPressureSystolic", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsHealthEntries.put("bloodPressureDiastolic", new TableInfo.Column("bloodPressureDiastolic", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
-        _columnsHealthEntries.put("heartRate", new TableInfo.Column("heartRate", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsHealthEntries.put("bloodSugar", new TableInfo.Column("bloodSugar", "REAL", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
-        _columnsHealthEntries.put("bloodSugarUnit", new TableInfo.Column("bloodSugarUnit", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsHealthEntries.put("sleepHours", new TableInfo.Column("sleepHours", "REAL", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsHealthEntries.put("sleepQuality", new TableInfo.Column("sleepQuality", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsHealthEntries.put("mood", new TableInfo.Column("mood", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsHealthEntries.put("moodScore", new TableInfo.Column("moodScore", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsHealthEntries.put("energy", new TableInfo.Column("energy", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsHealthEntries.put("steps", new TableInfo.Column("steps", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsHealthEntries.put("exerciseMinutes", new TableInfo.Column("exerciseMinutes", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsHealthEntries.put("waterOz", new TableInfo.Column("waterOz", "REAL", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsHealthEntries.put("calories", new TableInfo.Column("calories", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
-        _columnsHealthEntries.put("exerciseMinutes", new TableInfo.Column("exerciseMinutes", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsHealthEntries.put("notes", new TableInfo.Column("notes", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
-        _columnsHealthEntries.put("createdAt", new TableInfo.Column("createdAt", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         final HashSet<TableInfo.ForeignKey> _foreignKeysHealthEntries = new HashSet<TableInfo.ForeignKey>(0);
         final HashSet<TableInfo.Index> _indicesHealthEntries = new HashSet<TableInfo.Index>(0);
         final TableInfo _infoHealthEntries = new TableInfo("health_entries", _columnsHealthEntries, _foreignKeysHealthEntries, _indicesHealthEntries);
@@ -407,7 +406,7 @@ public final class CareTrackerDatabase_Impl extends CareTrackerDatabase {
         }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "725866bb92488f09ac960bfdebaa6bd4", "c31947f6877b98fa54c5672bf61b0a76");
+    }, "1e723767337cab8dc0ff2a6b98682b09", "8637c630382d08d16537a45d9c74b0fe");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(config.context).name(config.name).callback(_openCallback).build();
     final SupportSQLiteOpenHelper _helper = config.sqliteOpenHelperFactory.create(_sqliteConfig);
     return _helper;

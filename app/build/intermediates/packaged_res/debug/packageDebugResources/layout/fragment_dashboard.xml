@@ -2,375 +2,581 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0b1220"
+    android:background="@color/colorBackground"
     android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="80dp">
+        android:paddingBottom="88dp"
+        android:paddingTop="12dp">
 
+        <!-- ── STAT CARDS ROW ── -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingHorizontal="16dp"
-            android:paddingTop="20dp"
-            android:paddingBottom="4dp">
+            android:layout_marginHorizontal="12dp"
+            android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/cardHabits"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
                 android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tvWelcome"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Welcome back!"
-                    android:textSize="30sp"
-                    android:textStyle="bold"
-                    android:textColor="#ffffff"
-                    android:lineSpacingMultiplier="0.95" />
-
-                <TextView
-                    android:id="@+id/tvDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="13sp"
-                    android:textColor="#7d8ca8"
-                    android:layout_marginTop="4dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="72dp"
-                android:layout_height="72dp"
-                android:background="@drawable/bg_streak_badge"
+                android:background="@drawable/bg_card_habits"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
                 android:orientation="vertical"
-                android:gravity="center">
-
-                <TextView
-                    android:text="◉"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:textColor="#7fb3ff" />
-
-                <TextView
-                    android:id="@+id/tvDashboardScore"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="#ffffff"
-                    android:text="0" />
-
-                <TextView
-                    android:text="SNAPSHOT"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="7sp"
-                    android:textColor="#7d8ca8"
-                    android:letterSpacing="0.04" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="12dp">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:background="@drawable/bg_card_dark"
-                android:padding="12dp"
-                android:layout_marginEnd="6dp">
-
-                <TextView android:text="HABITS" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="10sp" android:textColor="#7d8ca8" android:letterSpacing="0.05" />
-                <TextView android:id="@+id/tvStatHabits" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="22sp" android:textStyle="bold" android:textColor="#ffffff" android:text="0/0" />
-                <TextView android:text="done today" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="11sp" android:textColor="#5d6c84" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:background="@drawable/bg_card_dark"
-                android:padding="12dp"
-                android:layout_marginHorizontal="3dp">
-
-                <TextView android:text="MEDS" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="10sp" android:textColor="#7d8ca8" android:letterSpacing="0.05" />
-                <TextView android:id="@+id/tvStatMeds" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="22sp" android:textStyle="bold" android:textColor="#7fb3ff" android:text="0/0" />
-                <TextView android:text="taken today" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="11sp" android:textColor="#5d6c84" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:background="@drawable/bg_card_dark"
-                android:padding="12dp"
-                android:layout_marginStart="6dp">
-
-                <TextView android:text="TASKS" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="10sp" android:textColor="#7d8ca8" android:letterSpacing="0.05" />
-                <TextView android:id="@+id/tvStatTasks" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="22sp" android:textStyle="bold" android:textColor="#ffffff" android:text="0" />
-                <TextView android:text="open" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="11sp" android:textColor="#5d6c84" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/bg_card_dark"
-            android:padding="16dp">
-
-            <FrameLayout
-                android:layout_width="72dp"
-                android:layout_height="72dp"
-                android:layout_marginEnd="16dp">
-
-                <ProgressBar
-                    android:id="@+id/progressRing"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
-                    android:progressDrawable="@drawable/progress_ring"
-                    android:max="100"
-                    android:progress="0"
-                    android:rotation="-90" />
+                android:padding="12dp">
 
                 <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:letterSpacing="0.05"
+                        android:text="HABITS TODAY"
+                        android:textColor="@color/colorTextSecondary"
+                        android:textSize="9sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="✅"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvStatHabits"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                    android:layout_marginTop="4dp"
+                    android:text="0/0"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/tvProgressPct"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        android:textColor="#ffffff"
-                        android:text="0%" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="8sp"
-                        android:textColor="#7d8ca8"
-                        android:text="TODAY" />
-                </LinearLayout>
-            </FrameLayout>
+                <TextView
+                    android:id="@+id/tvStatHabitsSub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="0% complete"
+                    android:textColor="@color/colorTextMuted"
+                    android:textSize="10sp" />
+            </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/cardMeds"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
                 android:layout_weight="1"
+                android:background="@drawable/bg_card_meds"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
                 android:orientation="vertical"
-                android:gravity="center_vertical">
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:letterSpacing="0.05"
+                        android:text="MEDS TAKEN"
+                        android:textColor="@color/colorTextSecondary"
+                        android:textSize="9sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="💊"
+                        android:textSize="14sp" />
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/tvMomentumTitle"
+                    android:id="@+id/tvStatMeds"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="#ffffff"
-                    android:text="Let’s get started!" />
-
-                <TextView
-                    android:id="@+id/tvMomentumSub"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="13sp"
-                    android:textColor="#7d8ca8"
                     android:layout_marginTop="4dp"
-                    android:text="No snapshot data yet." />
+                    android:text="0/0"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Today's doses"
+                    android:textColor="@color/colorTextMuted"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/cardTasks"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_card_tasks"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:letterSpacing="0.05"
+                        android:text="TASKS DUE"
+                        android:textColor="@color/colorTextSecondary"
+                        android:textSize="9sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📋"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvStatTasks"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="0"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="This week"
+                    android:textColor="@color/colorTextMuted"
+                    android:textSize="10sp" />
             </LinearLayout>
         </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="16dp"
-            android:paddingTop="22dp"
-            android:paddingBottom="8dp"
-            android:text="WEEKLY SNAPSHOT"
-            android:textSize="11sp"
-            android:textColor="#7d8ca8"
-            android:letterSpacing="0.08" />
-
+        <!-- ── MOOD + WATER ROW ── -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginHorizontal="16dp"
-            android:background="@drawable/bg_card_dark"
-            android:padding="16dp">
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tvWeekSummary"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/cardMood"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Habits 0% · Meds 0% · Tasks 0 open"
-                android:textSize="14sp"
-                android:textColor="#ffffff"
-                android:textStyle="bold" />
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_card_mood"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:orientation="vertical"
+                android:padding="14dp">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#1e293a"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="12dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-            <TextView android:text="Habits" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="11sp" android:textColor="#7d8ca8" />
-            <ProgressBar
-                android:id="@+id/progressHabits"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="8dp"
-                android:max="100"
-                android:progress="0"
-                android:progressTint="#3f6fb8"
-                android:backgroundTint="#172133"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="10dp" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:letterSpacing="0.05"
+                        android:text="MOOD SCORE"
+                        android:textColor="@color/colorTextSecondary"
+                        android:textSize="9sp" />
 
-            <TextView android:text="Medications" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="11sp" android:textColor="#7d8ca8" />
-            <ProgressBar
-                android:id="@+id/progressMeds"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="8dp"
-                android:max="100"
-                android:progress="0"
-                android:progressTint="#7fb3ff"
-                android:backgroundTint="#172133"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="10dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="❤️"
+                        android:textSize="14sp" />
+                </LinearLayout>
 
-            <TextView android:text="Tasks" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="11sp" android:textColor="#7d8ca8" />
-            <ProgressBar
-                android:id="@+id/progressTasks"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="8dp"
-                android:max="100"
-                android:progress="0"
-                android:progressTint="#89a8ff"
-                android:backgroundTint="#172133"
-                android:layout_marginTop="4dp" />
+                <TextView
+                    android:id="@+id/tvMoodScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="—"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvMoodDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:textColor="@color/colorTextMuted"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/cardWater"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_weight="2"
+                android:background="@drawable/bg_card_dark"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:orientation="vertical"
+                android:padding="14dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:letterSpacing="0.05"
+                            android:text="WATER TODAY"
+                            android:textColor="@color/colorTextSecondary"
+                            android:textSize="9sp" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:gravity="bottom"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tvWaterOz"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0"
+                                android:textColor="@color/colorTextPrimary"
+                                android:textSize="28sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:text="oz"
+                                android:textColor="@color/colorTextSecondary"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:letterSpacing="0.04"
+                            android:text="BOTTLE SIZE (OZ)"
+                            android:textColor="@color/colorTextSecondary"
+                            android:textSize="8sp" />
+
+                        <EditText
+                            android:id="@+id/etBottleSize"
+                            android:layout_width="80dp"
+                            android:layout_height="36dp"
+                            android:layout_marginTop="4dp"
+                            android:background="@drawable/bg_card_dark"
+                            android:inputType="numberDecimal"
+                            android:paddingHorizontal="8dp"
+                            android:text="16.9"
+                            android:textColor="@color/colorTextPrimary"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Default 16.9 fl oz"
+                            android:textColor="@color/colorTextMuted"
+                            android:textSize="8sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnAddWater"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_btn_take"
+                    android:paddingHorizontal="16dp"
+                    android:text="+ Add Bottle"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textSize="12sp" />
+            </LinearLayout>
         </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="16dp"
-            android:paddingTop="22dp"
-            android:paddingBottom="8dp"
-            android:text="ATTENTION"
-            android:textSize="11sp"
-            android:textColor="#7d8ca8"
-            android:letterSpacing="0.08" />
-
+        <!-- ── TODAY\'S HABITS + MEDICATIONS TODAY ── -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginHorizontal="16dp"
-            android:background="@drawable/bg_card_dark"
-            android:padding="16dp">
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tvAttention"
-                android:layout_width="wrap_content"
+            <!-- Habits column -->
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="No urgent items."
-                android:textSize="14sp"
-                android:textColor="#ffffff"
-                android:textStyle="bold" />
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_card_dark"
+                android:orientation="vertical"
+                android:padding="12dp">
 
-            <TextView
-                android:id="@+id/tvAttentionSub"
-                android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:letterSpacing="0.05"
+                        android:text="TODAY\'S HABITS"
+                        android:textColor="@color/colorTextSecondary"
+                        android:textSize="9sp" />
+
+                    <TextView
+                        android:id="@+id/btnViewAllHabits"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_btn_outline"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="4dp"
+                        android:text="View All"
+                        android:textColor="@color/colorTextSecondary"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvHabits"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:nestedScrollingEnabled="false" />
+
+                <LinearLayout
+                    android:id="@+id/emptyHabits"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="16dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="✅"
+                        android:textSize="32sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="No habits yet"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btnAddHabit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/bg_btn_take"
+                        android:paddingHorizontal="16dp"
+                        android:text="Add Habit"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Medications column -->
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Everything looks stable right now."
-                android:textSize="13sp"
-                android:textColor="#7d8ca8"
-                android:layout_marginTop="4dp" />
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_card_dark"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:letterSpacing="0.05"
+                        android:text="MEDICATIONS TODAY"
+                        android:textColor="@color/colorTextSecondary"
+                        android:textSize="9sp" />
+
+                    <TextView
+                        android:id="@+id/btnViewAllMeds"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_btn_outline"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="4dp"
+                        android:text="View All"
+                        android:textColor="@color/colorTextSecondary"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvMeds"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:nestedScrollingEnabled="false" />
+            </LinearLayout>
         </LinearLayout>
 
-        <TextView
+        <!-- ── UPCOMING TASKS ── -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="16dp"
-            android:paddingTop="22dp"
-            android:paddingBottom="8dp"
-            android:text="TODAY"
-            android:textSize="11sp"
-            android:textColor="#7d8ca8"
-            android:letterSpacing="0.08" />
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_card_dark"
+            android:orientation="vertical"
+            android:padding="14dp">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvHabits"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="16dp"
-            android:nestedScrollingEnabled="false"
-            android:clipToPadding="false" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="16dp"
-            android:paddingTop="22dp"
-            android:paddingBottom="8dp"
-            android:text="MEDICATIONS DUE"
-            android:textSize="11sp"
-            android:textColor="#7d8ca8"
-            android:letterSpacing="0.08" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:letterSpacing="0.05"
+                    android:text="UPCOMING TASKS"
+                    android:textColor="@color/colorTextSecondary"
+                    android:textSize="9sp" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvMeds"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="16dp"
-            android:nestedScrollingEnabled="false"
-            android:clipToPadding="false" />
+                <TextView
+                    android:id="@+id/btnViewAllTasks"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_btn_outline"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="4dp"
+                    android:text="View All"
+                    android:textColor="@color/colorTextSecondary"
+                    android:textSize="10sp" />
+            </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="16dp"
-            android:paddingTop="22dp"
-            android:paddingBottom="8dp"
-            android:text="UPCOMING TASKS"
-            android:textSize="11sp"
-            android:textColor="#7d8ca8"
-            android:letterSpacing="0.08" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvTasks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:nestedScrollingEnabled="false" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvTasks"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="16dp"
-            android:nestedScrollingEnabled="false"
-            android:clipToPadding="false" />
+            <LinearLayout
+                android:id="@+id/emptyTasks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingVertical="16dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📋"
+                    android:textSize="32sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="All clear!"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="No tasks due this week."
+                    android:textColor="@color/colorTextMuted"
+                    android:textSize="11sp" />
+
+                <Button
+                    android:id="@+id/btnAddTask"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_btn_take"
+                    android:paddingHorizontal="16dp"
+                    android:text="Add Task"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
-

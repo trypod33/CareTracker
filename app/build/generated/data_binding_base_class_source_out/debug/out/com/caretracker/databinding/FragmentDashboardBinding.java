@@ -4,7 +4,9 @@ package com.caretracker.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,16 +24,46 @@ public final class FragmentDashboardBinding implements ViewBinding {
   private final NestedScrollView rootView;
 
   @NonNull
-  public final ProgressBar progressHabits;
+  public final Button btnAddHabit;
 
   @NonNull
-  public final ProgressBar progressMeds;
+  public final Button btnAddTask;
 
   @NonNull
-  public final ProgressBar progressRing;
+  public final Button btnAddWater;
 
   @NonNull
-  public final ProgressBar progressTasks;
+  public final TextView btnViewAllHabits;
+
+  @NonNull
+  public final TextView btnViewAllMeds;
+
+  @NonNull
+  public final TextView btnViewAllTasks;
+
+  @NonNull
+  public final LinearLayout cardHabits;
+
+  @NonNull
+  public final LinearLayout cardMeds;
+
+  @NonNull
+  public final LinearLayout cardMood;
+
+  @NonNull
+  public final LinearLayout cardTasks;
+
+  @NonNull
+  public final LinearLayout cardWater;
+
+  @NonNull
+  public final LinearLayout emptyHabits;
+
+  @NonNull
+  public final LinearLayout emptyTasks;
+
+  @NonNull
+  public final EditText etBottleSize;
 
   @NonNull
   public final RecyclerView rvHabits;
@@ -43,28 +75,16 @@ public final class FragmentDashboardBinding implements ViewBinding {
   public final RecyclerView rvTasks;
 
   @NonNull
-  public final TextView tvAttention;
+  public final TextView tvMoodDate;
 
   @NonNull
-  public final TextView tvAttentionSub;
-
-  @NonNull
-  public final TextView tvDashboardScore;
-
-  @NonNull
-  public final TextView tvDate;
-
-  @NonNull
-  public final TextView tvMomentumSub;
-
-  @NonNull
-  public final TextView tvMomentumTitle;
-
-  @NonNull
-  public final TextView tvProgressPct;
+  public final TextView tvMoodScore;
 
   @NonNull
   public final TextView tvStatHabits;
+
+  @NonNull
+  public final TextView tvStatHabitsSub;
 
   @NonNull
   public final TextView tvStatMeds;
@@ -73,40 +93,44 @@ public final class FragmentDashboardBinding implements ViewBinding {
   public final TextView tvStatTasks;
 
   @NonNull
-  public final TextView tvWeekSummary;
+  public final TextView tvWaterOz;
 
-  @NonNull
-  public final TextView tvWelcome;
-
-  private FragmentDashboardBinding(@NonNull NestedScrollView rootView,
-      @NonNull ProgressBar progressHabits, @NonNull ProgressBar progressMeds,
-      @NonNull ProgressBar progressRing, @NonNull ProgressBar progressTasks,
+  private FragmentDashboardBinding(@NonNull NestedScrollView rootView, @NonNull Button btnAddHabit,
+      @NonNull Button btnAddTask, @NonNull Button btnAddWater, @NonNull TextView btnViewAllHabits,
+      @NonNull TextView btnViewAllMeds, @NonNull TextView btnViewAllTasks,
+      @NonNull LinearLayout cardHabits, @NonNull LinearLayout cardMeds,
+      @NonNull LinearLayout cardMood, @NonNull LinearLayout cardTasks,
+      @NonNull LinearLayout cardWater, @NonNull LinearLayout emptyHabits,
+      @NonNull LinearLayout emptyTasks, @NonNull EditText etBottleSize,
       @NonNull RecyclerView rvHabits, @NonNull RecyclerView rvMeds, @NonNull RecyclerView rvTasks,
-      @NonNull TextView tvAttention, @NonNull TextView tvAttentionSub,
-      @NonNull TextView tvDashboardScore, @NonNull TextView tvDate, @NonNull TextView tvMomentumSub,
-      @NonNull TextView tvMomentumTitle, @NonNull TextView tvProgressPct,
-      @NonNull TextView tvStatHabits, @NonNull TextView tvStatMeds, @NonNull TextView tvStatTasks,
-      @NonNull TextView tvWeekSummary, @NonNull TextView tvWelcome) {
+      @NonNull TextView tvMoodDate, @NonNull TextView tvMoodScore, @NonNull TextView tvStatHabits,
+      @NonNull TextView tvStatHabitsSub, @NonNull TextView tvStatMeds,
+      @NonNull TextView tvStatTasks, @NonNull TextView tvWaterOz) {
     this.rootView = rootView;
-    this.progressHabits = progressHabits;
-    this.progressMeds = progressMeds;
-    this.progressRing = progressRing;
-    this.progressTasks = progressTasks;
+    this.btnAddHabit = btnAddHabit;
+    this.btnAddTask = btnAddTask;
+    this.btnAddWater = btnAddWater;
+    this.btnViewAllHabits = btnViewAllHabits;
+    this.btnViewAllMeds = btnViewAllMeds;
+    this.btnViewAllTasks = btnViewAllTasks;
+    this.cardHabits = cardHabits;
+    this.cardMeds = cardMeds;
+    this.cardMood = cardMood;
+    this.cardTasks = cardTasks;
+    this.cardWater = cardWater;
+    this.emptyHabits = emptyHabits;
+    this.emptyTasks = emptyTasks;
+    this.etBottleSize = etBottleSize;
     this.rvHabits = rvHabits;
     this.rvMeds = rvMeds;
     this.rvTasks = rvTasks;
-    this.tvAttention = tvAttention;
-    this.tvAttentionSub = tvAttentionSub;
-    this.tvDashboardScore = tvDashboardScore;
-    this.tvDate = tvDate;
-    this.tvMomentumSub = tvMomentumSub;
-    this.tvMomentumTitle = tvMomentumTitle;
-    this.tvProgressPct = tvProgressPct;
+    this.tvMoodDate = tvMoodDate;
+    this.tvMoodScore = tvMoodScore;
     this.tvStatHabits = tvStatHabits;
+    this.tvStatHabitsSub = tvStatHabitsSub;
     this.tvStatMeds = tvStatMeds;
     this.tvStatTasks = tvStatTasks;
-    this.tvWeekSummary = tvWeekSummary;
-    this.tvWelcome = tvWelcome;
+    this.tvWaterOz = tvWaterOz;
   }
 
   @Override
@@ -136,27 +160,87 @@ public final class FragmentDashboardBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
-      id = R.id.progressHabits;
-      ProgressBar progressHabits = ViewBindings.findChildViewById(rootView, id);
-      if (progressHabits == null) {
+      id = R.id.btnAddHabit;
+      Button btnAddHabit = ViewBindings.findChildViewById(rootView, id);
+      if (btnAddHabit == null) {
         break missingId;
       }
 
-      id = R.id.progressMeds;
-      ProgressBar progressMeds = ViewBindings.findChildViewById(rootView, id);
-      if (progressMeds == null) {
+      id = R.id.btnAddTask;
+      Button btnAddTask = ViewBindings.findChildViewById(rootView, id);
+      if (btnAddTask == null) {
         break missingId;
       }
 
-      id = R.id.progressRing;
-      ProgressBar progressRing = ViewBindings.findChildViewById(rootView, id);
-      if (progressRing == null) {
+      id = R.id.btnAddWater;
+      Button btnAddWater = ViewBindings.findChildViewById(rootView, id);
+      if (btnAddWater == null) {
         break missingId;
       }
 
-      id = R.id.progressTasks;
-      ProgressBar progressTasks = ViewBindings.findChildViewById(rootView, id);
-      if (progressTasks == null) {
+      id = R.id.btnViewAllHabits;
+      TextView btnViewAllHabits = ViewBindings.findChildViewById(rootView, id);
+      if (btnViewAllHabits == null) {
+        break missingId;
+      }
+
+      id = R.id.btnViewAllMeds;
+      TextView btnViewAllMeds = ViewBindings.findChildViewById(rootView, id);
+      if (btnViewAllMeds == null) {
+        break missingId;
+      }
+
+      id = R.id.btnViewAllTasks;
+      TextView btnViewAllTasks = ViewBindings.findChildViewById(rootView, id);
+      if (btnViewAllTasks == null) {
+        break missingId;
+      }
+
+      id = R.id.cardHabits;
+      LinearLayout cardHabits = ViewBindings.findChildViewById(rootView, id);
+      if (cardHabits == null) {
+        break missingId;
+      }
+
+      id = R.id.cardMeds;
+      LinearLayout cardMeds = ViewBindings.findChildViewById(rootView, id);
+      if (cardMeds == null) {
+        break missingId;
+      }
+
+      id = R.id.cardMood;
+      LinearLayout cardMood = ViewBindings.findChildViewById(rootView, id);
+      if (cardMood == null) {
+        break missingId;
+      }
+
+      id = R.id.cardTasks;
+      LinearLayout cardTasks = ViewBindings.findChildViewById(rootView, id);
+      if (cardTasks == null) {
+        break missingId;
+      }
+
+      id = R.id.cardWater;
+      LinearLayout cardWater = ViewBindings.findChildViewById(rootView, id);
+      if (cardWater == null) {
+        break missingId;
+      }
+
+      id = R.id.emptyHabits;
+      LinearLayout emptyHabits = ViewBindings.findChildViewById(rootView, id);
+      if (emptyHabits == null) {
+        break missingId;
+      }
+
+      id = R.id.emptyTasks;
+      LinearLayout emptyTasks = ViewBindings.findChildViewById(rootView, id);
+      if (emptyTasks == null) {
+        break missingId;
+      }
+
+      id = R.id.etBottleSize;
+      EditText etBottleSize = ViewBindings.findChildViewById(rootView, id);
+      if (etBottleSize == null) {
         break missingId;
       }
 
@@ -178,51 +262,27 @@ public final class FragmentDashboardBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.tvAttention;
-      TextView tvAttention = ViewBindings.findChildViewById(rootView, id);
-      if (tvAttention == null) {
+      id = R.id.tvMoodDate;
+      TextView tvMoodDate = ViewBindings.findChildViewById(rootView, id);
+      if (tvMoodDate == null) {
         break missingId;
       }
 
-      id = R.id.tvAttentionSub;
-      TextView tvAttentionSub = ViewBindings.findChildViewById(rootView, id);
-      if (tvAttentionSub == null) {
-        break missingId;
-      }
-
-      id = R.id.tvDashboardScore;
-      TextView tvDashboardScore = ViewBindings.findChildViewById(rootView, id);
-      if (tvDashboardScore == null) {
-        break missingId;
-      }
-
-      id = R.id.tvDate;
-      TextView tvDate = ViewBindings.findChildViewById(rootView, id);
-      if (tvDate == null) {
-        break missingId;
-      }
-
-      id = R.id.tvMomentumSub;
-      TextView tvMomentumSub = ViewBindings.findChildViewById(rootView, id);
-      if (tvMomentumSub == null) {
-        break missingId;
-      }
-
-      id = R.id.tvMomentumTitle;
-      TextView tvMomentumTitle = ViewBindings.findChildViewById(rootView, id);
-      if (tvMomentumTitle == null) {
-        break missingId;
-      }
-
-      id = R.id.tvProgressPct;
-      TextView tvProgressPct = ViewBindings.findChildViewById(rootView, id);
-      if (tvProgressPct == null) {
+      id = R.id.tvMoodScore;
+      TextView tvMoodScore = ViewBindings.findChildViewById(rootView, id);
+      if (tvMoodScore == null) {
         break missingId;
       }
 
       id = R.id.tvStatHabits;
       TextView tvStatHabits = ViewBindings.findChildViewById(rootView, id);
       if (tvStatHabits == null) {
+        break missingId;
+      }
+
+      id = R.id.tvStatHabitsSub;
+      TextView tvStatHabitsSub = ViewBindings.findChildViewById(rootView, id);
+      if (tvStatHabitsSub == null) {
         break missingId;
       }
 
@@ -238,22 +298,17 @@ public final class FragmentDashboardBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.tvWeekSummary;
-      TextView tvWeekSummary = ViewBindings.findChildViewById(rootView, id);
-      if (tvWeekSummary == null) {
+      id = R.id.tvWaterOz;
+      TextView tvWaterOz = ViewBindings.findChildViewById(rootView, id);
+      if (tvWaterOz == null) {
         break missingId;
       }
 
-      id = R.id.tvWelcome;
-      TextView tvWelcome = ViewBindings.findChildViewById(rootView, id);
-      if (tvWelcome == null) {
-        break missingId;
-      }
-
-      return new FragmentDashboardBinding((NestedScrollView) rootView, progressHabits, progressMeds,
-          progressRing, progressTasks, rvHabits, rvMeds, rvTasks, tvAttention, tvAttentionSub,
-          tvDashboardScore, tvDate, tvMomentumSub, tvMomentumTitle, tvProgressPct, tvStatHabits,
-          tvStatMeds, tvStatTasks, tvWeekSummary, tvWelcome);
+      return new FragmentDashboardBinding((NestedScrollView) rootView, btnAddHabit, btnAddTask,
+          btnAddWater, btnViewAllHabits, btnViewAllMeds, btnViewAllTasks, cardHabits, cardMeds,
+          cardMood, cardTasks, cardWater, emptyHabits, emptyTasks, etBottleSize, rvHabits, rvMeds,
+          rvTasks, tvMoodDate, tvMoodScore, tvStatHabits, tvStatHabitsSub, tvStatMeds, tvStatTasks,
+          tvWaterOz);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

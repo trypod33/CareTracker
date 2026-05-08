@@ -24,7 +24,7 @@ import com.caretracker.data.entities.*
         BloodPressureReadingEntity::class,
         BloodSugarReadingEntity::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 abstract class CareTrackerDatabase : RoomDatabase() {
@@ -92,6 +92,7 @@ abstract class CareTrackerDatabase : RoomDatabase() {
                     "caretracker_db"
                 )
                     .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                    .fallbackToDestructiveMigration()
                     .build()
                     .also { INSTANCE = it }
             }

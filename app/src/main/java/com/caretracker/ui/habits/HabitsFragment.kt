@@ -68,6 +68,14 @@ class HabitsFragment : Fragment() {
 
         binding.tvManage.setOnClickListener { showAddHabitDialog(currentUserId, app) }
 
+        if (arguments?.getBoolean("openAddDialog", false) == true) {
+            binding.root.post { showAddHabitDialog(currentUserId, app) }
+        }
+
+        if (arguments?.getBoolean("openAddDialog", false) == true) {
+            binding.root.post { showAddHabitDialog(currentUserId, app) }
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             app.currentUserIdFlow.collect { userId ->
                 currentUserId = userId

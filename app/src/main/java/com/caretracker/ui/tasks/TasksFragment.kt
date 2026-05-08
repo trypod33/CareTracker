@@ -62,6 +62,14 @@ class TasksFragment : Fragment() {
         }
 
         binding.fabAddTask.setOnClickListener { showAddTaskDialog() }
+
+        if (arguments?.getBoolean("openAddDialog", false) == true) {
+            binding.root.post { showAddTaskDialog() }
+        }
+
+        if (arguments?.getBoolean("openAddDialog", false) == true) {
+            binding.root.post { showAddTaskDialog() }
+        }
     }
 
     private fun showAddTaskDialog() {

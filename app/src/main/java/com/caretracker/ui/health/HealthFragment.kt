@@ -227,7 +227,7 @@ class HealthFragment : Fragment() {
                     id = existing?.id ?: 0L,
                     userId = app.currentUserId,
                     entryDate = date,
-                    weight = d.etWeight.text?.toString()?.toFloatOrNull(),
+                    weight = d.etWeight.text?.toString()?.toDoubleOrNull(),
                     weightUnit = units[d.spinnerWeightUnit.selectedItemPosition],
                     heartRate = d.etHeartRate.text?.toString()?.toIntOrNull(),
                     bloodPressureSystolic = d.etSystolic.text?.toString()?.toIntOrNull(),

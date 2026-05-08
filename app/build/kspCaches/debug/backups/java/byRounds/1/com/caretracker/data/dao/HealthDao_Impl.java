@@ -15,6 +15,7 @@ import androidx.sqlite.db.SupportSQLiteStatement;
 import com.caretracker.data.entities.HealthEntryEntity;
 import com.caretracker.data.entities.VitalLogEntity;
 import java.lang.Class;
+import java.lang.Double;
 import java.lang.Exception;
 import java.lang.Float;
 import java.lang.Integer;
@@ -53,7 +54,7 @@ public final class HealthDao_Impl implements HealthDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "INSERT OR REPLACE INTO `health_entries` (`id`,`userId`,`entryDate`,`weight`,`weightUnit`,`bloodPressureSystolic`,`bloodPressureDiastolic`,`heartRate`,`bloodSugar`,`bloodSugarUnit`,`sleepHours`,`sleepQuality`,`mood`,`energy`,`steps`,`waterOz`,`calories`,`exerciseMinutes`,`notes`,`createdAt`) VALUES (nullif(?, 0),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        return "INSERT OR REPLACE INTO `health_entries` (`id`,`userId`,`entryDate`,`weight`,`weightUnit`,`heartRate`,`bloodPressureSystolic`,`bloodPressureDiastolic`,`bloodSugar`,`sleepHours`,`sleepQuality`,`mood`,`moodScore`,`energy`,`steps`,`exerciseMinutes`,`waterOz`,`calories`,`notes`) VALUES (nullif(?, 0),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
       }
 
       @Override
@@ -67,42 +68,50 @@ public final class HealthDao_Impl implements HealthDao {
         } else {
           statement.bindDouble(4, entity.getWeight());
         }
-        statement.bindString(5, entity.getWeightUnit());
-        if (entity.getBloodPressureSystolic() == null) {
-          statement.bindNull(6);
+        if (entity.getWeightUnit() == null) {
+          statement.bindNull(5);
         } else {
-          statement.bindLong(6, entity.getBloodPressureSystolic());
-        }
-        if (entity.getBloodPressureDiastolic() == null) {
-          statement.bindNull(7);
-        } else {
-          statement.bindLong(7, entity.getBloodPressureDiastolic());
+          statement.bindString(5, entity.getWeightUnit());
         }
         if (entity.getHeartRate() == null) {
+          statement.bindNull(6);
+        } else {
+          statement.bindLong(6, entity.getHeartRate());
+        }
+        if (entity.getBloodPressureSystolic() == null) {
+          statement.bindNull(7);
+        } else {
+          statement.bindLong(7, entity.getBloodPressureSystolic());
+        }
+        if (entity.getBloodPressureDiastolic() == null) {
           statement.bindNull(8);
         } else {
-          statement.bindLong(8, entity.getHeartRate());
+          statement.bindLong(8, entity.getBloodPressureDiastolic());
         }
         if (entity.getBloodSugar() == null) {
           statement.bindNull(9);
         } else {
           statement.bindDouble(9, entity.getBloodSugar());
         }
-        statement.bindString(10, entity.getBloodSugarUnit());
         if (entity.getSleepHours() == null) {
-          statement.bindNull(11);
+          statement.bindNull(10);
         } else {
-          statement.bindDouble(11, entity.getSleepHours());
+          statement.bindDouble(10, entity.getSleepHours());
         }
         if (entity.getSleepQuality() == null) {
-          statement.bindNull(12);
+          statement.bindNull(11);
         } else {
-          statement.bindLong(12, entity.getSleepQuality());
+          statement.bindLong(11, entity.getSleepQuality());
         }
         if (entity.getMood() == null) {
+          statement.bindNull(12);
+        } else {
+          statement.bindLong(12, entity.getMood());
+        }
+        if (entity.getMoodScore() == null) {
           statement.bindNull(13);
         } else {
-          statement.bindLong(13, entity.getMood());
+          statement.bindLong(13, entity.getMoodScore());
         }
         if (entity.getEnergy() == null) {
           statement.bindNull(14);
@@ -114,27 +123,26 @@ public final class HealthDao_Impl implements HealthDao {
         } else {
           statement.bindLong(15, entity.getSteps());
         }
-        if (entity.getWaterOz() == null) {
+        if (entity.getExerciseMinutes() == null) {
           statement.bindNull(16);
         } else {
-          statement.bindDouble(16, entity.getWaterOz());
+          statement.bindLong(16, entity.getExerciseMinutes());
         }
-        if (entity.getCalories() == null) {
+        if (entity.getWaterOz() == null) {
           statement.bindNull(17);
         } else {
-          statement.bindLong(17, entity.getCalories());
+          statement.bindDouble(17, entity.getWaterOz());
         }
-        if (entity.getExerciseMinutes() == null) {
+        if (entity.getCalories() == null) {
           statement.bindNull(18);
         } else {
-          statement.bindLong(18, entity.getExerciseMinutes());
+          statement.bindLong(18, entity.getCalories());
         }
         if (entity.getNotes() == null) {
           statement.bindNull(19);
         } else {
           statement.bindString(19, entity.getNotes());
         }
-        statement.bindLong(20, entity.getCreatedAt());
       }
     };
     this.__insertionAdapterOfVitalLogEntity = new EntityInsertionAdapter<VitalLogEntity>(__db) {
@@ -200,7 +208,7 @@ public final class HealthDao_Impl implements HealthDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "UPDATE OR ABORT `health_entries` SET `id` = ?,`userId` = ?,`entryDate` = ?,`weight` = ?,`weightUnit` = ?,`bloodPressureSystolic` = ?,`bloodPressureDiastolic` = ?,`heartRate` = ?,`bloodSugar` = ?,`bloodSugarUnit` = ?,`sleepHours` = ?,`sleepQuality` = ?,`mood` = ?,`energy` = ?,`steps` = ?,`waterOz` = ?,`calories` = ?,`exerciseMinutes` = ?,`notes` = ?,`createdAt` = ? WHERE `id` = ?";
+        return "UPDATE OR ABORT `health_entries` SET `id` = ?,`userId` = ?,`entryDate` = ?,`weight` = ?,`weightUnit` = ?,`heartRate` = ?,`bloodPressureSystolic` = ?,`bloodPressureDiastolic` = ?,`bloodSugar` = ?,`sleepHours` = ?,`sleepQuality` = ?,`mood` = ?,`moodScore` = ?,`energy` = ?,`steps` = ?,`exerciseMinutes` = ?,`waterOz` = ?,`calories` = ?,`notes` = ? WHERE `id` = ?";
       }
 
       @Override
@@ -214,42 +222,50 @@ public final class HealthDao_Impl implements HealthDao {
         } else {
           statement.bindDouble(4, entity.getWeight());
         }
-        statement.bindString(5, entity.getWeightUnit());
-        if (entity.getBloodPressureSystolic() == null) {
-          statement.bindNull(6);
+        if (entity.getWeightUnit() == null) {
+          statement.bindNull(5);
         } else {
-          statement.bindLong(6, entity.getBloodPressureSystolic());
-        }
-        if (entity.getBloodPressureDiastolic() == null) {
-          statement.bindNull(7);
-        } else {
-          statement.bindLong(7, entity.getBloodPressureDiastolic());
+          statement.bindString(5, entity.getWeightUnit());
         }
         if (entity.getHeartRate() == null) {
+          statement.bindNull(6);
+        } else {
+          statement.bindLong(6, entity.getHeartRate());
+        }
+        if (entity.getBloodPressureSystolic() == null) {
+          statement.bindNull(7);
+        } else {
+          statement.bindLong(7, entity.getBloodPressureSystolic());
+        }
+        if (entity.getBloodPressureDiastolic() == null) {
           statement.bindNull(8);
         } else {
-          statement.bindLong(8, entity.getHeartRate());
+          statement.bindLong(8, entity.getBloodPressureDiastolic());
         }
         if (entity.getBloodSugar() == null) {
           statement.bindNull(9);
         } else {
           statement.bindDouble(9, entity.getBloodSugar());
         }
-        statement.bindString(10, entity.getBloodSugarUnit());
         if (entity.getSleepHours() == null) {
-          statement.bindNull(11);
+          statement.bindNull(10);
         } else {
-          statement.bindDouble(11, entity.getSleepHours());
+          statement.bindDouble(10, entity.getSleepHours());
         }
         if (entity.getSleepQuality() == null) {
-          statement.bindNull(12);
+          statement.bindNull(11);
         } else {
-          statement.bindLong(12, entity.getSleepQuality());
+          statement.bindLong(11, entity.getSleepQuality());
         }
         if (entity.getMood() == null) {
+          statement.bindNull(12);
+        } else {
+          statement.bindLong(12, entity.getMood());
+        }
+        if (entity.getMoodScore() == null) {
           statement.bindNull(13);
         } else {
-          statement.bindLong(13, entity.getMood());
+          statement.bindLong(13, entity.getMoodScore());
         }
         if (entity.getEnergy() == null) {
           statement.bindNull(14);
@@ -261,28 +277,27 @@ public final class HealthDao_Impl implements HealthDao {
         } else {
           statement.bindLong(15, entity.getSteps());
         }
-        if (entity.getWaterOz() == null) {
+        if (entity.getExerciseMinutes() == null) {
           statement.bindNull(16);
         } else {
-          statement.bindDouble(16, entity.getWaterOz());
+          statement.bindLong(16, entity.getExerciseMinutes());
         }
-        if (entity.getCalories() == null) {
+        if (entity.getWaterOz() == null) {
           statement.bindNull(17);
         } else {
-          statement.bindLong(17, entity.getCalories());
+          statement.bindDouble(17, entity.getWaterOz());
         }
-        if (entity.getExerciseMinutes() == null) {
+        if (entity.getCalories() == null) {
           statement.bindNull(18);
         } else {
-          statement.bindLong(18, entity.getExerciseMinutes());
+          statement.bindLong(18, entity.getCalories());
         }
         if (entity.getNotes() == null) {
           statement.bindNull(19);
         } else {
           statement.bindString(19, entity.getNotes());
         }
-        statement.bindLong(20, entity.getCreatedAt());
-        statement.bindLong(21, entity.getId());
+        statement.bindLong(20, entity.getId());
       }
     };
   }
@@ -399,21 +414,20 @@ public final class HealthDao_Impl implements HealthDao {
           final int _cursorIndexOfEntryDate = CursorUtil.getColumnIndexOrThrow(_cursor, "entryDate");
           final int _cursorIndexOfWeight = CursorUtil.getColumnIndexOrThrow(_cursor, "weight");
           final int _cursorIndexOfWeightUnit = CursorUtil.getColumnIndexOrThrow(_cursor, "weightUnit");
+          final int _cursorIndexOfHeartRate = CursorUtil.getColumnIndexOrThrow(_cursor, "heartRate");
           final int _cursorIndexOfBloodPressureSystolic = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodPressureSystolic");
           final int _cursorIndexOfBloodPressureDiastolic = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodPressureDiastolic");
-          final int _cursorIndexOfHeartRate = CursorUtil.getColumnIndexOrThrow(_cursor, "heartRate");
           final int _cursorIndexOfBloodSugar = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodSugar");
-          final int _cursorIndexOfBloodSugarUnit = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodSugarUnit");
           final int _cursorIndexOfSleepHours = CursorUtil.getColumnIndexOrThrow(_cursor, "sleepHours");
           final int _cursorIndexOfSleepQuality = CursorUtil.getColumnIndexOrThrow(_cursor, "sleepQuality");
           final int _cursorIndexOfMood = CursorUtil.getColumnIndexOrThrow(_cursor, "mood");
+          final int _cursorIndexOfMoodScore = CursorUtil.getColumnIndexOrThrow(_cursor, "moodScore");
           final int _cursorIndexOfEnergy = CursorUtil.getColumnIndexOrThrow(_cursor, "energy");
           final int _cursorIndexOfSteps = CursorUtil.getColumnIndexOrThrow(_cursor, "steps");
+          final int _cursorIndexOfExerciseMinutes = CursorUtil.getColumnIndexOrThrow(_cursor, "exerciseMinutes");
           final int _cursorIndexOfWaterOz = CursorUtil.getColumnIndexOrThrow(_cursor, "waterOz");
           final int _cursorIndexOfCalories = CursorUtil.getColumnIndexOrThrow(_cursor, "calories");
-          final int _cursorIndexOfExerciseMinutes = CursorUtil.getColumnIndexOrThrow(_cursor, "exerciseMinutes");
           final int _cursorIndexOfNotes = CursorUtil.getColumnIndexOrThrow(_cursor, "notes");
-          final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
           final List<HealthEntryEntity> _result = new ArrayList<HealthEntryEntity>(_cursor.getCount());
           while (_cursor.moveToNext()) {
             final HealthEntryEntity _item;
@@ -423,14 +437,24 @@ public final class HealthDao_Impl implements HealthDao {
             _tmpUserId = _cursor.getLong(_cursorIndexOfUserId);
             final String _tmpEntryDate;
             _tmpEntryDate = _cursor.getString(_cursorIndexOfEntryDate);
-            final Float _tmpWeight;
+            final Double _tmpWeight;
             if (_cursor.isNull(_cursorIndexOfWeight)) {
               _tmpWeight = null;
             } else {
-              _tmpWeight = _cursor.getFloat(_cursorIndexOfWeight);
+              _tmpWeight = _cursor.getDouble(_cursorIndexOfWeight);
             }
             final String _tmpWeightUnit;
-            _tmpWeightUnit = _cursor.getString(_cursorIndexOfWeightUnit);
+            if (_cursor.isNull(_cursorIndexOfWeightUnit)) {
+              _tmpWeightUnit = null;
+            } else {
+              _tmpWeightUnit = _cursor.getString(_cursorIndexOfWeightUnit);
+            }
+            final Integer _tmpHeartRate;
+            if (_cursor.isNull(_cursorIndexOfHeartRate)) {
+              _tmpHeartRate = null;
+            } else {
+              _tmpHeartRate = _cursor.getInt(_cursorIndexOfHeartRate);
+            }
             final Integer _tmpBloodPressureSystolic;
             if (_cursor.isNull(_cursorIndexOfBloodPressureSystolic)) {
               _tmpBloodPressureSystolic = null;
@@ -443,20 +467,12 @@ public final class HealthDao_Impl implements HealthDao {
             } else {
               _tmpBloodPressureDiastolic = _cursor.getInt(_cursorIndexOfBloodPressureDiastolic);
             }
-            final Integer _tmpHeartRate;
-            if (_cursor.isNull(_cursorIndexOfHeartRate)) {
-              _tmpHeartRate = null;
-            } else {
-              _tmpHeartRate = _cursor.getInt(_cursorIndexOfHeartRate);
-            }
             final Float _tmpBloodSugar;
             if (_cursor.isNull(_cursorIndexOfBloodSugar)) {
               _tmpBloodSugar = null;
             } else {
               _tmpBloodSugar = _cursor.getFloat(_cursorIndexOfBloodSugar);
             }
-            final String _tmpBloodSugarUnit;
-            _tmpBloodSugarUnit = _cursor.getString(_cursorIndexOfBloodSugarUnit);
             final Float _tmpSleepHours;
             if (_cursor.isNull(_cursorIndexOfSleepHours)) {
               _tmpSleepHours = null;
@@ -475,6 +491,12 @@ public final class HealthDao_Impl implements HealthDao {
             } else {
               _tmpMood = _cursor.getInt(_cursorIndexOfMood);
             }
+            final Integer _tmpMoodScore;
+            if (_cursor.isNull(_cursorIndexOfMoodScore)) {
+              _tmpMoodScore = null;
+            } else {
+              _tmpMoodScore = _cursor.getInt(_cursorIndexOfMoodScore);
+            }
             final Integer _tmpEnergy;
             if (_cursor.isNull(_cursorIndexOfEnergy)) {
               _tmpEnergy = null;
@@ -486,6 +508,12 @@ public final class HealthDao_Impl implements HealthDao {
               _tmpSteps = null;
             } else {
               _tmpSteps = _cursor.getInt(_cursorIndexOfSteps);
+            }
+            final Integer _tmpExerciseMinutes;
+            if (_cursor.isNull(_cursorIndexOfExerciseMinutes)) {
+              _tmpExerciseMinutes = null;
+            } else {
+              _tmpExerciseMinutes = _cursor.getInt(_cursorIndexOfExerciseMinutes);
             }
             final Float _tmpWaterOz;
             if (_cursor.isNull(_cursorIndexOfWaterOz)) {
@@ -499,21 +527,13 @@ public final class HealthDao_Impl implements HealthDao {
             } else {
               _tmpCalories = _cursor.getInt(_cursorIndexOfCalories);
             }
-            final Integer _tmpExerciseMinutes;
-            if (_cursor.isNull(_cursorIndexOfExerciseMinutes)) {
-              _tmpExerciseMinutes = null;
-            } else {
-              _tmpExerciseMinutes = _cursor.getInt(_cursorIndexOfExerciseMinutes);
-            }
             final String _tmpNotes;
             if (_cursor.isNull(_cursorIndexOfNotes)) {
               _tmpNotes = null;
             } else {
               _tmpNotes = _cursor.getString(_cursorIndexOfNotes);
             }
-            final long _tmpCreatedAt;
-            _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
-            _item = new HealthEntryEntity(_tmpId,_tmpUserId,_tmpEntryDate,_tmpWeight,_tmpWeightUnit,_tmpBloodPressureSystolic,_tmpBloodPressureDiastolic,_tmpHeartRate,_tmpBloodSugar,_tmpBloodSugarUnit,_tmpSleepHours,_tmpSleepQuality,_tmpMood,_tmpEnergy,_tmpSteps,_tmpWaterOz,_tmpCalories,_tmpExerciseMinutes,_tmpNotes,_tmpCreatedAt);
+            _item = new HealthEntryEntity(_tmpId,_tmpUserId,_tmpEntryDate,_tmpWeight,_tmpWeightUnit,_tmpHeartRate,_tmpBloodPressureSystolic,_tmpBloodPressureDiastolic,_tmpBloodSugar,_tmpSleepHours,_tmpSleepQuality,_tmpMood,_tmpMoodScore,_tmpEnergy,_tmpSteps,_tmpExerciseMinutes,_tmpWaterOz,_tmpCalories,_tmpNotes);
             _result.add(_item);
           }
           return _result;
@@ -550,21 +570,20 @@ public final class HealthDao_Impl implements HealthDao {
           final int _cursorIndexOfEntryDate = CursorUtil.getColumnIndexOrThrow(_cursor, "entryDate");
           final int _cursorIndexOfWeight = CursorUtil.getColumnIndexOrThrow(_cursor, "weight");
           final int _cursorIndexOfWeightUnit = CursorUtil.getColumnIndexOrThrow(_cursor, "weightUnit");
+          final int _cursorIndexOfHeartRate = CursorUtil.getColumnIndexOrThrow(_cursor, "heartRate");
           final int _cursorIndexOfBloodPressureSystolic = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodPressureSystolic");
           final int _cursorIndexOfBloodPressureDiastolic = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodPressureDiastolic");
-          final int _cursorIndexOfHeartRate = CursorUtil.getColumnIndexOrThrow(_cursor, "heartRate");
           final int _cursorIndexOfBloodSugar = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodSugar");
-          final int _cursorIndexOfBloodSugarUnit = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodSugarUnit");
           final int _cursorIndexOfSleepHours = CursorUtil.getColumnIndexOrThrow(_cursor, "sleepHours");
           final int _cursorIndexOfSleepQuality = CursorUtil.getColumnIndexOrThrow(_cursor, "sleepQuality");
           final int _cursorIndexOfMood = CursorUtil.getColumnIndexOrThrow(_cursor, "mood");
+          final int _cursorIndexOfMoodScore = CursorUtil.getColumnIndexOrThrow(_cursor, "moodScore");
           final int _cursorIndexOfEnergy = CursorUtil.getColumnIndexOrThrow(_cursor, "energy");
           final int _cursorIndexOfSteps = CursorUtil.getColumnIndexOrThrow(_cursor, "steps");
+          final int _cursorIndexOfExerciseMinutes = CursorUtil.getColumnIndexOrThrow(_cursor, "exerciseMinutes");
           final int _cursorIndexOfWaterOz = CursorUtil.getColumnIndexOrThrow(_cursor, "waterOz");
           final int _cursorIndexOfCalories = CursorUtil.getColumnIndexOrThrow(_cursor, "calories");
-          final int _cursorIndexOfExerciseMinutes = CursorUtil.getColumnIndexOrThrow(_cursor, "exerciseMinutes");
           final int _cursorIndexOfNotes = CursorUtil.getColumnIndexOrThrow(_cursor, "notes");
-          final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
           final HealthEntryEntity _result;
           if (_cursor.moveToFirst()) {
             final long _tmpId;
@@ -573,14 +592,24 @@ public final class HealthDao_Impl implements HealthDao {
             _tmpUserId = _cursor.getLong(_cursorIndexOfUserId);
             final String _tmpEntryDate;
             _tmpEntryDate = _cursor.getString(_cursorIndexOfEntryDate);
-            final Float _tmpWeight;
+            final Double _tmpWeight;
             if (_cursor.isNull(_cursorIndexOfWeight)) {
               _tmpWeight = null;
             } else {
-              _tmpWeight = _cursor.getFloat(_cursorIndexOfWeight);
+              _tmpWeight = _cursor.getDouble(_cursorIndexOfWeight);
             }
             final String _tmpWeightUnit;
-            _tmpWeightUnit = _cursor.getString(_cursorIndexOfWeightUnit);
+            if (_cursor.isNull(_cursorIndexOfWeightUnit)) {
+              _tmpWeightUnit = null;
+            } else {
+              _tmpWeightUnit = _cursor.getString(_cursorIndexOfWeightUnit);
+            }
+            final Integer _tmpHeartRate;
+            if (_cursor.isNull(_cursorIndexOfHeartRate)) {
+              _tmpHeartRate = null;
+            } else {
+              _tmpHeartRate = _cursor.getInt(_cursorIndexOfHeartRate);
+            }
             final Integer _tmpBloodPressureSystolic;
             if (_cursor.isNull(_cursorIndexOfBloodPressureSystolic)) {
               _tmpBloodPressureSystolic = null;
@@ -593,20 +622,12 @@ public final class HealthDao_Impl implements HealthDao {
             } else {
               _tmpBloodPressureDiastolic = _cursor.getInt(_cursorIndexOfBloodPressureDiastolic);
             }
-            final Integer _tmpHeartRate;
-            if (_cursor.isNull(_cursorIndexOfHeartRate)) {
-              _tmpHeartRate = null;
-            } else {
-              _tmpHeartRate = _cursor.getInt(_cursorIndexOfHeartRate);
-            }
             final Float _tmpBloodSugar;
             if (_cursor.isNull(_cursorIndexOfBloodSugar)) {
               _tmpBloodSugar = null;
             } else {
               _tmpBloodSugar = _cursor.getFloat(_cursorIndexOfBloodSugar);
             }
-            final String _tmpBloodSugarUnit;
-            _tmpBloodSugarUnit = _cursor.getString(_cursorIndexOfBloodSugarUnit);
             final Float _tmpSleepHours;
             if (_cursor.isNull(_cursorIndexOfSleepHours)) {
               _tmpSleepHours = null;
@@ -625,6 +646,12 @@ public final class HealthDao_Impl implements HealthDao {
             } else {
               _tmpMood = _cursor.getInt(_cursorIndexOfMood);
             }
+            final Integer _tmpMoodScore;
+            if (_cursor.isNull(_cursorIndexOfMoodScore)) {
+              _tmpMoodScore = null;
+            } else {
+              _tmpMoodScore = _cursor.getInt(_cursorIndexOfMoodScore);
+            }
             final Integer _tmpEnergy;
             if (_cursor.isNull(_cursorIndexOfEnergy)) {
               _tmpEnergy = null;
@@ -636,6 +663,12 @@ public final class HealthDao_Impl implements HealthDao {
               _tmpSteps = null;
             } else {
               _tmpSteps = _cursor.getInt(_cursorIndexOfSteps);
+            }
+            final Integer _tmpExerciseMinutes;
+            if (_cursor.isNull(_cursorIndexOfExerciseMinutes)) {
+              _tmpExerciseMinutes = null;
+            } else {
+              _tmpExerciseMinutes = _cursor.getInt(_cursorIndexOfExerciseMinutes);
             }
             final Float _tmpWaterOz;
             if (_cursor.isNull(_cursorIndexOfWaterOz)) {
@@ -649,21 +682,13 @@ public final class HealthDao_Impl implements HealthDao {
             } else {
               _tmpCalories = _cursor.getInt(_cursorIndexOfCalories);
             }
-            final Integer _tmpExerciseMinutes;
-            if (_cursor.isNull(_cursorIndexOfExerciseMinutes)) {
-              _tmpExerciseMinutes = null;
-            } else {
-              _tmpExerciseMinutes = _cursor.getInt(_cursorIndexOfExerciseMinutes);
-            }
             final String _tmpNotes;
             if (_cursor.isNull(_cursorIndexOfNotes)) {
               _tmpNotes = null;
             } else {
               _tmpNotes = _cursor.getString(_cursorIndexOfNotes);
             }
-            final long _tmpCreatedAt;
-            _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
-            _result = new HealthEntryEntity(_tmpId,_tmpUserId,_tmpEntryDate,_tmpWeight,_tmpWeightUnit,_tmpBloodPressureSystolic,_tmpBloodPressureDiastolic,_tmpHeartRate,_tmpBloodSugar,_tmpBloodSugarUnit,_tmpSleepHours,_tmpSleepQuality,_tmpMood,_tmpEnergy,_tmpSteps,_tmpWaterOz,_tmpCalories,_tmpExerciseMinutes,_tmpNotes,_tmpCreatedAt);
+            _result = new HealthEntryEntity(_tmpId,_tmpUserId,_tmpEntryDate,_tmpWeight,_tmpWeightUnit,_tmpHeartRate,_tmpBloodPressureSystolic,_tmpBloodPressureDiastolic,_tmpBloodSugar,_tmpSleepHours,_tmpSleepQuality,_tmpMood,_tmpMoodScore,_tmpEnergy,_tmpSteps,_tmpExerciseMinutes,_tmpWaterOz,_tmpCalories,_tmpNotes);
           } else {
             _result = null;
           }
@@ -693,21 +718,20 @@ public final class HealthDao_Impl implements HealthDao {
           final int _cursorIndexOfEntryDate = CursorUtil.getColumnIndexOrThrow(_cursor, "entryDate");
           final int _cursorIndexOfWeight = CursorUtil.getColumnIndexOrThrow(_cursor, "weight");
           final int _cursorIndexOfWeightUnit = CursorUtil.getColumnIndexOrThrow(_cursor, "weightUnit");
+          final int _cursorIndexOfHeartRate = CursorUtil.getColumnIndexOrThrow(_cursor, "heartRate");
           final int _cursorIndexOfBloodPressureSystolic = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodPressureSystolic");
           final int _cursorIndexOfBloodPressureDiastolic = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodPressureDiastolic");
-          final int _cursorIndexOfHeartRate = CursorUtil.getColumnIndexOrThrow(_cursor, "heartRate");
           final int _cursorIndexOfBloodSugar = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodSugar");
-          final int _cursorIndexOfBloodSugarUnit = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodSugarUnit");
           final int _cursorIndexOfSleepHours = CursorUtil.getColumnIndexOrThrow(_cursor, "sleepHours");
           final int _cursorIndexOfSleepQuality = CursorUtil.getColumnIndexOrThrow(_cursor, "sleepQuality");
           final int _cursorIndexOfMood = CursorUtil.getColumnIndexOrThrow(_cursor, "mood");
+          final int _cursorIndexOfMoodScore = CursorUtil.getColumnIndexOrThrow(_cursor, "moodScore");
           final int _cursorIndexOfEnergy = CursorUtil.getColumnIndexOrThrow(_cursor, "energy");
           final int _cursorIndexOfSteps = CursorUtil.getColumnIndexOrThrow(_cursor, "steps");
+          final int _cursorIndexOfExerciseMinutes = CursorUtil.getColumnIndexOrThrow(_cursor, "exerciseMinutes");
           final int _cursorIndexOfWaterOz = CursorUtil.getColumnIndexOrThrow(_cursor, "waterOz");
           final int _cursorIndexOfCalories = CursorUtil.getColumnIndexOrThrow(_cursor, "calories");
-          final int _cursorIndexOfExerciseMinutes = CursorUtil.getColumnIndexOrThrow(_cursor, "exerciseMinutes");
           final int _cursorIndexOfNotes = CursorUtil.getColumnIndexOrThrow(_cursor, "notes");
-          final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
           final List<HealthEntryEntity> _result = new ArrayList<HealthEntryEntity>(_cursor.getCount());
           while (_cursor.moveToNext()) {
             final HealthEntryEntity _item;
@@ -717,14 +741,24 @@ public final class HealthDao_Impl implements HealthDao {
             _tmpUserId = _cursor.getLong(_cursorIndexOfUserId);
             final String _tmpEntryDate;
             _tmpEntryDate = _cursor.getString(_cursorIndexOfEntryDate);
-            final Float _tmpWeight;
+            final Double _tmpWeight;
             if (_cursor.isNull(_cursorIndexOfWeight)) {
               _tmpWeight = null;
             } else {
-              _tmpWeight = _cursor.getFloat(_cursorIndexOfWeight);
+              _tmpWeight = _cursor.getDouble(_cursorIndexOfWeight);
             }
             final String _tmpWeightUnit;
-            _tmpWeightUnit = _cursor.getString(_cursorIndexOfWeightUnit);
+            if (_cursor.isNull(_cursorIndexOfWeightUnit)) {
+              _tmpWeightUnit = null;
+            } else {
+              _tmpWeightUnit = _cursor.getString(_cursorIndexOfWeightUnit);
+            }
+            final Integer _tmpHeartRate;
+            if (_cursor.isNull(_cursorIndexOfHeartRate)) {
+              _tmpHeartRate = null;
+            } else {
+              _tmpHeartRate = _cursor.getInt(_cursorIndexOfHeartRate);
+            }
             final Integer _tmpBloodPressureSystolic;
             if (_cursor.isNull(_cursorIndexOfBloodPressureSystolic)) {
               _tmpBloodPressureSystolic = null;
@@ -737,20 +771,12 @@ public final class HealthDao_Impl implements HealthDao {
             } else {
               _tmpBloodPressureDiastolic = _cursor.getInt(_cursorIndexOfBloodPressureDiastolic);
             }
-            final Integer _tmpHeartRate;
-            if (_cursor.isNull(_cursorIndexOfHeartRate)) {
-              _tmpHeartRate = null;
-            } else {
-              _tmpHeartRate = _cursor.getInt(_cursorIndexOfHeartRate);
-            }
             final Float _tmpBloodSugar;
             if (_cursor.isNull(_cursorIndexOfBloodSugar)) {
               _tmpBloodSugar = null;
             } else {
               _tmpBloodSugar = _cursor.getFloat(_cursorIndexOfBloodSugar);
             }
-            final String _tmpBloodSugarUnit;
-            _tmpBloodSugarUnit = _cursor.getString(_cursorIndexOfBloodSugarUnit);
             final Float _tmpSleepHours;
             if (_cursor.isNull(_cursorIndexOfSleepHours)) {
               _tmpSleepHours = null;
@@ -769,6 +795,12 @@ public final class HealthDao_Impl implements HealthDao {
             } else {
               _tmpMood = _cursor.getInt(_cursorIndexOfMood);
             }
+            final Integer _tmpMoodScore;
+            if (_cursor.isNull(_cursorIndexOfMoodScore)) {
+              _tmpMoodScore = null;
+            } else {
+              _tmpMoodScore = _cursor.getInt(_cursorIndexOfMoodScore);
+            }
             final Integer _tmpEnergy;
             if (_cursor.isNull(_cursorIndexOfEnergy)) {
               _tmpEnergy = null;
@@ -780,6 +812,12 @@ public final class HealthDao_Impl implements HealthDao {
               _tmpSteps = null;
             } else {
               _tmpSteps = _cursor.getInt(_cursorIndexOfSteps);
+            }
+            final Integer _tmpExerciseMinutes;
+            if (_cursor.isNull(_cursorIndexOfExerciseMinutes)) {
+              _tmpExerciseMinutes = null;
+            } else {
+              _tmpExerciseMinutes = _cursor.getInt(_cursorIndexOfExerciseMinutes);
             }
             final Float _tmpWaterOz;
             if (_cursor.isNull(_cursorIndexOfWaterOz)) {
@@ -793,21 +831,13 @@ public final class HealthDao_Impl implements HealthDao {
             } else {
               _tmpCalories = _cursor.getInt(_cursorIndexOfCalories);
             }
-            final Integer _tmpExerciseMinutes;
-            if (_cursor.isNull(_cursorIndexOfExerciseMinutes)) {
-              _tmpExerciseMinutes = null;
-            } else {
-              _tmpExerciseMinutes = _cursor.getInt(_cursorIndexOfExerciseMinutes);
-            }
             final String _tmpNotes;
             if (_cursor.isNull(_cursorIndexOfNotes)) {
               _tmpNotes = null;
             } else {
               _tmpNotes = _cursor.getString(_cursorIndexOfNotes);
             }
-            final long _tmpCreatedAt;
-            _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
-            _item = new HealthEntryEntity(_tmpId,_tmpUserId,_tmpEntryDate,_tmpWeight,_tmpWeightUnit,_tmpBloodPressureSystolic,_tmpBloodPressureDiastolic,_tmpHeartRate,_tmpBloodSugar,_tmpBloodSugarUnit,_tmpSleepHours,_tmpSleepQuality,_tmpMood,_tmpEnergy,_tmpSteps,_tmpWaterOz,_tmpCalories,_tmpExerciseMinutes,_tmpNotes,_tmpCreatedAt);
+            _item = new HealthEntryEntity(_tmpId,_tmpUserId,_tmpEntryDate,_tmpWeight,_tmpWeightUnit,_tmpHeartRate,_tmpBloodPressureSystolic,_tmpBloodPressureDiastolic,_tmpBloodSugar,_tmpSleepHours,_tmpSleepQuality,_tmpMood,_tmpMoodScore,_tmpEnergy,_tmpSteps,_tmpExerciseMinutes,_tmpWaterOz,_tmpCalories,_tmpNotes);
             _result.add(_item);
           }
           return _result;
@@ -910,21 +940,20 @@ public final class HealthDao_Impl implements HealthDao {
           final int _cursorIndexOfEntryDate = CursorUtil.getColumnIndexOrThrow(_cursor, "entryDate");
           final int _cursorIndexOfWeight = CursorUtil.getColumnIndexOrThrow(_cursor, "weight");
           final int _cursorIndexOfWeightUnit = CursorUtil.getColumnIndexOrThrow(_cursor, "weightUnit");
+          final int _cursorIndexOfHeartRate = CursorUtil.getColumnIndexOrThrow(_cursor, "heartRate");
           final int _cursorIndexOfBloodPressureSystolic = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodPressureSystolic");
           final int _cursorIndexOfBloodPressureDiastolic = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodPressureDiastolic");
-          final int _cursorIndexOfHeartRate = CursorUtil.getColumnIndexOrThrow(_cursor, "heartRate");
           final int _cursorIndexOfBloodSugar = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodSugar");
-          final int _cursorIndexOfBloodSugarUnit = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodSugarUnit");
           final int _cursorIndexOfSleepHours = CursorUtil.getColumnIndexOrThrow(_cursor, "sleepHours");
           final int _cursorIndexOfSleepQuality = CursorUtil.getColumnIndexOrThrow(_cursor, "sleepQuality");
           final int _cursorIndexOfMood = CursorUtil.getColumnIndexOrThrow(_cursor, "mood");
+          final int _cursorIndexOfMoodScore = CursorUtil.getColumnIndexOrThrow(_cursor, "moodScore");
           final int _cursorIndexOfEnergy = CursorUtil.getColumnIndexOrThrow(_cursor, "energy");
           final int _cursorIndexOfSteps = CursorUtil.getColumnIndexOrThrow(_cursor, "steps");
+          final int _cursorIndexOfExerciseMinutes = CursorUtil.getColumnIndexOrThrow(_cursor, "exerciseMinutes");
           final int _cursorIndexOfWaterOz = CursorUtil.getColumnIndexOrThrow(_cursor, "waterOz");
           final int _cursorIndexOfCalories = CursorUtil.getColumnIndexOrThrow(_cursor, "calories");
-          final int _cursorIndexOfExerciseMinutes = CursorUtil.getColumnIndexOrThrow(_cursor, "exerciseMinutes");
           final int _cursorIndexOfNotes = CursorUtil.getColumnIndexOrThrow(_cursor, "notes");
-          final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
           final List<HealthEntryEntity> _result = new ArrayList<HealthEntryEntity>(_cursor.getCount());
           while (_cursor.moveToNext()) {
             final HealthEntryEntity _item;
@@ -934,14 +963,24 @@ public final class HealthDao_Impl implements HealthDao {
             _tmpUserId = _cursor.getLong(_cursorIndexOfUserId);
             final String _tmpEntryDate;
             _tmpEntryDate = _cursor.getString(_cursorIndexOfEntryDate);
-            final Float _tmpWeight;
+            final Double _tmpWeight;
             if (_cursor.isNull(_cursorIndexOfWeight)) {
               _tmpWeight = null;
             } else {
-              _tmpWeight = _cursor.getFloat(_cursorIndexOfWeight);
+              _tmpWeight = _cursor.getDouble(_cursorIndexOfWeight);
             }
             final String _tmpWeightUnit;
-            _tmpWeightUnit = _cursor.getString(_cursorIndexOfWeightUnit);
+            if (_cursor.isNull(_cursorIndexOfWeightUnit)) {
+              _tmpWeightUnit = null;
+            } else {
+              _tmpWeightUnit = _cursor.getString(_cursorIndexOfWeightUnit);
+            }
+            final Integer _tmpHeartRate;
+            if (_cursor.isNull(_cursorIndexOfHeartRate)) {
+              _tmpHeartRate = null;
+            } else {
+              _tmpHeartRate = _cursor.getInt(_cursorIndexOfHeartRate);
+            }
             final Integer _tmpBloodPressureSystolic;
             if (_cursor.isNull(_cursorIndexOfBloodPressureSystolic)) {
               _tmpBloodPressureSystolic = null;
@@ -954,20 +993,12 @@ public final class HealthDao_Impl implements HealthDao {
             } else {
               _tmpBloodPressureDiastolic = _cursor.getInt(_cursorIndexOfBloodPressureDiastolic);
             }
-            final Integer _tmpHeartRate;
-            if (_cursor.isNull(_cursorIndexOfHeartRate)) {
-              _tmpHeartRate = null;
-            } else {
-              _tmpHeartRate = _cursor.getInt(_cursorIndexOfHeartRate);
-            }
             final Float _tmpBloodSugar;
             if (_cursor.isNull(_cursorIndexOfBloodSugar)) {
               _tmpBloodSugar = null;
             } else {
               _tmpBloodSugar = _cursor.getFloat(_cursorIndexOfBloodSugar);
             }
-            final String _tmpBloodSugarUnit;
-            _tmpBloodSugarUnit = _cursor.getString(_cursorIndexOfBloodSugarUnit);
             final Float _tmpSleepHours;
             if (_cursor.isNull(_cursorIndexOfSleepHours)) {
               _tmpSleepHours = null;
@@ -986,6 +1017,12 @@ public final class HealthDao_Impl implements HealthDao {
             } else {
               _tmpMood = _cursor.getInt(_cursorIndexOfMood);
             }
+            final Integer _tmpMoodScore;
+            if (_cursor.isNull(_cursorIndexOfMoodScore)) {
+              _tmpMoodScore = null;
+            } else {
+              _tmpMoodScore = _cursor.getInt(_cursorIndexOfMoodScore);
+            }
             final Integer _tmpEnergy;
             if (_cursor.isNull(_cursorIndexOfEnergy)) {
               _tmpEnergy = null;
@@ -997,6 +1034,12 @@ public final class HealthDao_Impl implements HealthDao {
               _tmpSteps = null;
             } else {
               _tmpSteps = _cursor.getInt(_cursorIndexOfSteps);
+            }
+            final Integer _tmpExerciseMinutes;
+            if (_cursor.isNull(_cursorIndexOfExerciseMinutes)) {
+              _tmpExerciseMinutes = null;
+            } else {
+              _tmpExerciseMinutes = _cursor.getInt(_cursorIndexOfExerciseMinutes);
             }
             final Float _tmpWaterOz;
             if (_cursor.isNull(_cursorIndexOfWaterOz)) {
@@ -1010,21 +1053,13 @@ public final class HealthDao_Impl implements HealthDao {
             } else {
               _tmpCalories = _cursor.getInt(_cursorIndexOfCalories);
             }
-            final Integer _tmpExerciseMinutes;
-            if (_cursor.isNull(_cursorIndexOfExerciseMinutes)) {
-              _tmpExerciseMinutes = null;
-            } else {
-              _tmpExerciseMinutes = _cursor.getInt(_cursorIndexOfExerciseMinutes);
-            }
             final String _tmpNotes;
             if (_cursor.isNull(_cursorIndexOfNotes)) {
               _tmpNotes = null;
             } else {
               _tmpNotes = _cursor.getString(_cursorIndexOfNotes);
             }
-            final long _tmpCreatedAt;
-            _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
-            _item = new HealthEntryEntity(_tmpId,_tmpUserId,_tmpEntryDate,_tmpWeight,_tmpWeightUnit,_tmpBloodPressureSystolic,_tmpBloodPressureDiastolic,_tmpHeartRate,_tmpBloodSugar,_tmpBloodSugarUnit,_tmpSleepHours,_tmpSleepQuality,_tmpMood,_tmpEnergy,_tmpSteps,_tmpWaterOz,_tmpCalories,_tmpExerciseMinutes,_tmpNotes,_tmpCreatedAt);
+            _item = new HealthEntryEntity(_tmpId,_tmpUserId,_tmpEntryDate,_tmpWeight,_tmpWeightUnit,_tmpHeartRate,_tmpBloodPressureSystolic,_tmpBloodPressureDiastolic,_tmpBloodSugar,_tmpSleepHours,_tmpSleepQuality,_tmpMood,_tmpMoodScore,_tmpEnergy,_tmpSteps,_tmpExerciseMinutes,_tmpWaterOz,_tmpCalories,_tmpNotes);
             _result.add(_item);
           }
           return _result;
@@ -1057,21 +1092,20 @@ public final class HealthDao_Impl implements HealthDao {
           final int _cursorIndexOfEntryDate = CursorUtil.getColumnIndexOrThrow(_cursor, "entryDate");
           final int _cursorIndexOfWeight = CursorUtil.getColumnIndexOrThrow(_cursor, "weight");
           final int _cursorIndexOfWeightUnit = CursorUtil.getColumnIndexOrThrow(_cursor, "weightUnit");
+          final int _cursorIndexOfHeartRate = CursorUtil.getColumnIndexOrThrow(_cursor, "heartRate");
           final int _cursorIndexOfBloodPressureSystolic = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodPressureSystolic");
           final int _cursorIndexOfBloodPressureDiastolic = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodPressureDiastolic");
-          final int _cursorIndexOfHeartRate = CursorUtil.getColumnIndexOrThrow(_cursor, "heartRate");
           final int _cursorIndexOfBloodSugar = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodSugar");
-          final int _cursorIndexOfBloodSugarUnit = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodSugarUnit");
           final int _cursorIndexOfSleepHours = CursorUtil.getColumnIndexOrThrow(_cursor, "sleepHours");
           final int _cursorIndexOfSleepQuality = CursorUtil.getColumnIndexOrThrow(_cursor, "sleepQuality");
           final int _cursorIndexOfMood = CursorUtil.getColumnIndexOrThrow(_cursor, "mood");
+          final int _cursorIndexOfMoodScore = CursorUtil.getColumnIndexOrThrow(_cursor, "moodScore");
           final int _cursorIndexOfEnergy = CursorUtil.getColumnIndexOrThrow(_cursor, "energy");
           final int _cursorIndexOfSteps = CursorUtil.getColumnIndexOrThrow(_cursor, "steps");
+          final int _cursorIndexOfExerciseMinutes = CursorUtil.getColumnIndexOrThrow(_cursor, "exerciseMinutes");
           final int _cursorIndexOfWaterOz = CursorUtil.getColumnIndexOrThrow(_cursor, "waterOz");
           final int _cursorIndexOfCalories = CursorUtil.getColumnIndexOrThrow(_cursor, "calories");
-          final int _cursorIndexOfExerciseMinutes = CursorUtil.getColumnIndexOrThrow(_cursor, "exerciseMinutes");
           final int _cursorIndexOfNotes = CursorUtil.getColumnIndexOrThrow(_cursor, "notes");
-          final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
           final List<HealthEntryEntity> _result = new ArrayList<HealthEntryEntity>(_cursor.getCount());
           while (_cursor.moveToNext()) {
             final HealthEntryEntity _item;
@@ -1081,14 +1115,24 @@ public final class HealthDao_Impl implements HealthDao {
             _tmpUserId = _cursor.getLong(_cursorIndexOfUserId);
             final String _tmpEntryDate;
             _tmpEntryDate = _cursor.getString(_cursorIndexOfEntryDate);
-            final Float _tmpWeight;
+            final Double _tmpWeight;
             if (_cursor.isNull(_cursorIndexOfWeight)) {
               _tmpWeight = null;
             } else {
-              _tmpWeight = _cursor.getFloat(_cursorIndexOfWeight);
+              _tmpWeight = _cursor.getDouble(_cursorIndexOfWeight);
             }
             final String _tmpWeightUnit;
-            _tmpWeightUnit = _cursor.getString(_cursorIndexOfWeightUnit);
+            if (_cursor.isNull(_cursorIndexOfWeightUnit)) {
+              _tmpWeightUnit = null;
+            } else {
+              _tmpWeightUnit = _cursor.getString(_cursorIndexOfWeightUnit);
+            }
+            final Integer _tmpHeartRate;
+            if (_cursor.isNull(_cursorIndexOfHeartRate)) {
+              _tmpHeartRate = null;
+            } else {
+              _tmpHeartRate = _cursor.getInt(_cursorIndexOfHeartRate);
+            }
             final Integer _tmpBloodPressureSystolic;
             if (_cursor.isNull(_cursorIndexOfBloodPressureSystolic)) {
               _tmpBloodPressureSystolic = null;
@@ -1101,20 +1145,12 @@ public final class HealthDao_Impl implements HealthDao {
             } else {
               _tmpBloodPressureDiastolic = _cursor.getInt(_cursorIndexOfBloodPressureDiastolic);
             }
-            final Integer _tmpHeartRate;
-            if (_cursor.isNull(_cursorIndexOfHeartRate)) {
-              _tmpHeartRate = null;
-            } else {
-              _tmpHeartRate = _cursor.getInt(_cursorIndexOfHeartRate);
-            }
             final Float _tmpBloodSugar;
             if (_cursor.isNull(_cursorIndexOfBloodSugar)) {
               _tmpBloodSugar = null;
             } else {
               _tmpBloodSugar = _cursor.getFloat(_cursorIndexOfBloodSugar);
             }
-            final String _tmpBloodSugarUnit;
-            _tmpBloodSugarUnit = _cursor.getString(_cursorIndexOfBloodSugarUnit);
             final Float _tmpSleepHours;
             if (_cursor.isNull(_cursorIndexOfSleepHours)) {
               _tmpSleepHours = null;
@@ -1133,6 +1169,12 @@ public final class HealthDao_Impl implements HealthDao {
             } else {
               _tmpMood = _cursor.getInt(_cursorIndexOfMood);
             }
+            final Integer _tmpMoodScore;
+            if (_cursor.isNull(_cursorIndexOfMoodScore)) {
+              _tmpMoodScore = null;
+            } else {
+              _tmpMoodScore = _cursor.getInt(_cursorIndexOfMoodScore);
+            }
             final Integer _tmpEnergy;
             if (_cursor.isNull(_cursorIndexOfEnergy)) {
               _tmpEnergy = null;
@@ -1144,6 +1186,12 @@ public final class HealthDao_Impl implements HealthDao {
               _tmpSteps = null;
             } else {
               _tmpSteps = _cursor.getInt(_cursorIndexOfSteps);
+            }
+            final Integer _tmpExerciseMinutes;
+            if (_cursor.isNull(_cursorIndexOfExerciseMinutes)) {
+              _tmpExerciseMinutes = null;
+            } else {
+              _tmpExerciseMinutes = _cursor.getInt(_cursorIndexOfExerciseMinutes);
             }
             final Float _tmpWaterOz;
             if (_cursor.isNull(_cursorIndexOfWaterOz)) {
@@ -1157,21 +1205,13 @@ public final class HealthDao_Impl implements HealthDao {
             } else {
               _tmpCalories = _cursor.getInt(_cursorIndexOfCalories);
             }
-            final Integer _tmpExerciseMinutes;
-            if (_cursor.isNull(_cursorIndexOfExerciseMinutes)) {
-              _tmpExerciseMinutes = null;
-            } else {
-              _tmpExerciseMinutes = _cursor.getInt(_cursorIndexOfExerciseMinutes);
-            }
             final String _tmpNotes;
             if (_cursor.isNull(_cursorIndexOfNotes)) {
               _tmpNotes = null;
             } else {
               _tmpNotes = _cursor.getString(_cursorIndexOfNotes);
             }
-            final long _tmpCreatedAt;
-            _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
-            _item = new HealthEntryEntity(_tmpId,_tmpUserId,_tmpEntryDate,_tmpWeight,_tmpWeightUnit,_tmpBloodPressureSystolic,_tmpBloodPressureDiastolic,_tmpHeartRate,_tmpBloodSugar,_tmpBloodSugarUnit,_tmpSleepHours,_tmpSleepQuality,_tmpMood,_tmpEnergy,_tmpSteps,_tmpWaterOz,_tmpCalories,_tmpExerciseMinutes,_tmpNotes,_tmpCreatedAt);
+            _item = new HealthEntryEntity(_tmpId,_tmpUserId,_tmpEntryDate,_tmpWeight,_tmpWeightUnit,_tmpHeartRate,_tmpBloodPressureSystolic,_tmpBloodPressureDiastolic,_tmpBloodSugar,_tmpSleepHours,_tmpSleepQuality,_tmpMood,_tmpMoodScore,_tmpEnergy,_tmpSteps,_tmpExerciseMinutes,_tmpWaterOz,_tmpCalories,_tmpNotes);
             _result.add(_item);
           }
           return _result;
@@ -1204,21 +1244,20 @@ public final class HealthDao_Impl implements HealthDao {
           final int _cursorIndexOfEntryDate = CursorUtil.getColumnIndexOrThrow(_cursor, "entryDate");
           final int _cursorIndexOfWeight = CursorUtil.getColumnIndexOrThrow(_cursor, "weight");
           final int _cursorIndexOfWeightUnit = CursorUtil.getColumnIndexOrThrow(_cursor, "weightUnit");
+          final int _cursorIndexOfHeartRate = CursorUtil.getColumnIndexOrThrow(_cursor, "heartRate");
           final int _cursorIndexOfBloodPressureSystolic = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodPressureSystolic");
           final int _cursorIndexOfBloodPressureDiastolic = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodPressureDiastolic");
-          final int _cursorIndexOfHeartRate = CursorUtil.getColumnIndexOrThrow(_cursor, "heartRate");
           final int _cursorIndexOfBloodSugar = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodSugar");
-          final int _cursorIndexOfBloodSugarUnit = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodSugarUnit");
           final int _cursorIndexOfSleepHours = CursorUtil.getColumnIndexOrThrow(_cursor, "sleepHours");
           final int _cursorIndexOfSleepQuality = CursorUtil.getColumnIndexOrThrow(_cursor, "sleepQuality");
           final int _cursorIndexOfMood = CursorUtil.getColumnIndexOrThrow(_cursor, "mood");
+          final int _cursorIndexOfMoodScore = CursorUtil.getColumnIndexOrThrow(_cursor, "moodScore");
           final int _cursorIndexOfEnergy = CursorUtil.getColumnIndexOrThrow(_cursor, "energy");
           final int _cursorIndexOfSteps = CursorUtil.getColumnIndexOrThrow(_cursor, "steps");
+          final int _cursorIndexOfExerciseMinutes = CursorUtil.getColumnIndexOrThrow(_cursor, "exerciseMinutes");
           final int _cursorIndexOfWaterOz = CursorUtil.getColumnIndexOrThrow(_cursor, "waterOz");
           final int _cursorIndexOfCalories = CursorUtil.getColumnIndexOrThrow(_cursor, "calories");
-          final int _cursorIndexOfExerciseMinutes = CursorUtil.getColumnIndexOrThrow(_cursor, "exerciseMinutes");
           final int _cursorIndexOfNotes = CursorUtil.getColumnIndexOrThrow(_cursor, "notes");
-          final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
           final List<HealthEntryEntity> _result = new ArrayList<HealthEntryEntity>(_cursor.getCount());
           while (_cursor.moveToNext()) {
             final HealthEntryEntity _item;
@@ -1228,14 +1267,24 @@ public final class HealthDao_Impl implements HealthDao {
             _tmpUserId = _cursor.getLong(_cursorIndexOfUserId);
             final String _tmpEntryDate;
             _tmpEntryDate = _cursor.getString(_cursorIndexOfEntryDate);
-            final Float _tmpWeight;
+            final Double _tmpWeight;
             if (_cursor.isNull(_cursorIndexOfWeight)) {
               _tmpWeight = null;
             } else {
-              _tmpWeight = _cursor.getFloat(_cursorIndexOfWeight);
+              _tmpWeight = _cursor.getDouble(_cursorIndexOfWeight);
             }
             final String _tmpWeightUnit;
-            _tmpWeightUnit = _cursor.getString(_cursorIndexOfWeightUnit);
+            if (_cursor.isNull(_cursorIndexOfWeightUnit)) {
+              _tmpWeightUnit = null;
+            } else {
+              _tmpWeightUnit = _cursor.getString(_cursorIndexOfWeightUnit);
+            }
+            final Integer _tmpHeartRate;
+            if (_cursor.isNull(_cursorIndexOfHeartRate)) {
+              _tmpHeartRate = null;
+            } else {
+              _tmpHeartRate = _cursor.getInt(_cursorIndexOfHeartRate);
+            }
             final Integer _tmpBloodPressureSystolic;
             if (_cursor.isNull(_cursorIndexOfBloodPressureSystolic)) {
               _tmpBloodPressureSystolic = null;
@@ -1248,20 +1297,12 @@ public final class HealthDao_Impl implements HealthDao {
             } else {
               _tmpBloodPressureDiastolic = _cursor.getInt(_cursorIndexOfBloodPressureDiastolic);
             }
-            final Integer _tmpHeartRate;
-            if (_cursor.isNull(_cursorIndexOfHeartRate)) {
-              _tmpHeartRate = null;
-            } else {
-              _tmpHeartRate = _cursor.getInt(_cursorIndexOfHeartRate);
-            }
             final Float _tmpBloodSugar;
             if (_cursor.isNull(_cursorIndexOfBloodSugar)) {
               _tmpBloodSugar = null;
             } else {
               _tmpBloodSugar = _cursor.getFloat(_cursorIndexOfBloodSugar);
             }
-            final String _tmpBloodSugarUnit;
-            _tmpBloodSugarUnit = _cursor.getString(_cursorIndexOfBloodSugarUnit);
             final Float _tmpSleepHours;
             if (_cursor.isNull(_cursorIndexOfSleepHours)) {
               _tmpSleepHours = null;
@@ -1280,6 +1321,12 @@ public final class HealthDao_Impl implements HealthDao {
             } else {
               _tmpMood = _cursor.getInt(_cursorIndexOfMood);
             }
+            final Integer _tmpMoodScore;
+            if (_cursor.isNull(_cursorIndexOfMoodScore)) {
+              _tmpMoodScore = null;
+            } else {
+              _tmpMoodScore = _cursor.getInt(_cursorIndexOfMoodScore);
+            }
             final Integer _tmpEnergy;
             if (_cursor.isNull(_cursorIndexOfEnergy)) {
               _tmpEnergy = null;
@@ -1291,6 +1338,12 @@ public final class HealthDao_Impl implements HealthDao {
               _tmpSteps = null;
             } else {
               _tmpSteps = _cursor.getInt(_cursorIndexOfSteps);
+            }
+            final Integer _tmpExerciseMinutes;
+            if (_cursor.isNull(_cursorIndexOfExerciseMinutes)) {
+              _tmpExerciseMinutes = null;
+            } else {
+              _tmpExerciseMinutes = _cursor.getInt(_cursorIndexOfExerciseMinutes);
             }
             final Float _tmpWaterOz;
             if (_cursor.isNull(_cursorIndexOfWaterOz)) {
@@ -1304,21 +1357,13 @@ public final class HealthDao_Impl implements HealthDao {
             } else {
               _tmpCalories = _cursor.getInt(_cursorIndexOfCalories);
             }
-            final Integer _tmpExerciseMinutes;
-            if (_cursor.isNull(_cursorIndexOfExerciseMinutes)) {
-              _tmpExerciseMinutes = null;
-            } else {
-              _tmpExerciseMinutes = _cursor.getInt(_cursorIndexOfExerciseMinutes);
-            }
             final String _tmpNotes;
             if (_cursor.isNull(_cursorIndexOfNotes)) {
               _tmpNotes = null;
             } else {
               _tmpNotes = _cursor.getString(_cursorIndexOfNotes);
             }
-            final long _tmpCreatedAt;
-            _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
-            _item = new HealthEntryEntity(_tmpId,_tmpUserId,_tmpEntryDate,_tmpWeight,_tmpWeightUnit,_tmpBloodPressureSystolic,_tmpBloodPressureDiastolic,_tmpHeartRate,_tmpBloodSugar,_tmpBloodSugarUnit,_tmpSleepHours,_tmpSleepQuality,_tmpMood,_tmpEnergy,_tmpSteps,_tmpWaterOz,_tmpCalories,_tmpExerciseMinutes,_tmpNotes,_tmpCreatedAt);
+            _item = new HealthEntryEntity(_tmpId,_tmpUserId,_tmpEntryDate,_tmpWeight,_tmpWeightUnit,_tmpHeartRate,_tmpBloodPressureSystolic,_tmpBloodPressureDiastolic,_tmpBloodSugar,_tmpSleepHours,_tmpSleepQuality,_tmpMood,_tmpMoodScore,_tmpEnergy,_tmpSteps,_tmpExerciseMinutes,_tmpWaterOz,_tmpCalories,_tmpNotes);
             _result.add(_item);
           }
           return _result;
@@ -1351,21 +1396,20 @@ public final class HealthDao_Impl implements HealthDao {
           final int _cursorIndexOfEntryDate = CursorUtil.getColumnIndexOrThrow(_cursor, "entryDate");
           final int _cursorIndexOfWeight = CursorUtil.getColumnIndexOrThrow(_cursor, "weight");
           final int _cursorIndexOfWeightUnit = CursorUtil.getColumnIndexOrThrow(_cursor, "weightUnit");
+          final int _cursorIndexOfHeartRate = CursorUtil.getColumnIndexOrThrow(_cursor, "heartRate");
           final int _cursorIndexOfBloodPressureSystolic = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodPressureSystolic");
           final int _cursorIndexOfBloodPressureDiastolic = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodPressureDiastolic");
-          final int _cursorIndexOfHeartRate = CursorUtil.getColumnIndexOrThrow(_cursor, "heartRate");
           final int _cursorIndexOfBloodSugar = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodSugar");
-          final int _cursorIndexOfBloodSugarUnit = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodSugarUnit");
           final int _cursorIndexOfSleepHours = CursorUtil.getColumnIndexOrThrow(_cursor, "sleepHours");
           final int _cursorIndexOfSleepQuality = CursorUtil.getColumnIndexOrThrow(_cursor, "sleepQuality");
           final int _cursorIndexOfMood = CursorUtil.getColumnIndexOrThrow(_cursor, "mood");
+          final int _cursorIndexOfMoodScore = CursorUtil.getColumnIndexOrThrow(_cursor, "moodScore");
           final int _cursorIndexOfEnergy = CursorUtil.getColumnIndexOrThrow(_cursor, "energy");
           final int _cursorIndexOfSteps = CursorUtil.getColumnIndexOrThrow(_cursor, "steps");
+          final int _cursorIndexOfExerciseMinutes = CursorUtil.getColumnIndexOrThrow(_cursor, "exerciseMinutes");
           final int _cursorIndexOfWaterOz = CursorUtil.getColumnIndexOrThrow(_cursor, "waterOz");
           final int _cursorIndexOfCalories = CursorUtil.getColumnIndexOrThrow(_cursor, "calories");
-          final int _cursorIndexOfExerciseMinutes = CursorUtil.getColumnIndexOrThrow(_cursor, "exerciseMinutes");
           final int _cursorIndexOfNotes = CursorUtil.getColumnIndexOrThrow(_cursor, "notes");
-          final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
           final List<HealthEntryEntity> _result = new ArrayList<HealthEntryEntity>(_cursor.getCount());
           while (_cursor.moveToNext()) {
             final HealthEntryEntity _item;
@@ -1375,14 +1419,24 @@ public final class HealthDao_Impl implements HealthDao {
             _tmpUserId = _cursor.getLong(_cursorIndexOfUserId);
             final String _tmpEntryDate;
             _tmpEntryDate = _cursor.getString(_cursorIndexOfEntryDate);
-            final Float _tmpWeight;
+            final Double _tmpWeight;
             if (_cursor.isNull(_cursorIndexOfWeight)) {
               _tmpWeight = null;
             } else {
-              _tmpWeight = _cursor.getFloat(_cursorIndexOfWeight);
+              _tmpWeight = _cursor.getDouble(_cursorIndexOfWeight);
             }
             final String _tmpWeightUnit;
-            _tmpWeightUnit = _cursor.getString(_cursorIndexOfWeightUnit);
+            if (_cursor.isNull(_cursorIndexOfWeightUnit)) {
+              _tmpWeightUnit = null;
+            } else {
+              _tmpWeightUnit = _cursor.getString(_cursorIndexOfWeightUnit);
+            }
+            final Integer _tmpHeartRate;
+            if (_cursor.isNull(_cursorIndexOfHeartRate)) {
+              _tmpHeartRate = null;
+            } else {
+              _tmpHeartRate = _cursor.getInt(_cursorIndexOfHeartRate);
+            }
             final Integer _tmpBloodPressureSystolic;
             if (_cursor.isNull(_cursorIndexOfBloodPressureSystolic)) {
               _tmpBloodPressureSystolic = null;
@@ -1395,20 +1449,12 @@ public final class HealthDao_Impl implements HealthDao {
             } else {
               _tmpBloodPressureDiastolic = _cursor.getInt(_cursorIndexOfBloodPressureDiastolic);
             }
-            final Integer _tmpHeartRate;
-            if (_cursor.isNull(_cursorIndexOfHeartRate)) {
-              _tmpHeartRate = null;
-            } else {
-              _tmpHeartRate = _cursor.getInt(_cursorIndexOfHeartRate);
-            }
             final Float _tmpBloodSugar;
             if (_cursor.isNull(_cursorIndexOfBloodSugar)) {
               _tmpBloodSugar = null;
             } else {
               _tmpBloodSugar = _cursor.getFloat(_cursorIndexOfBloodSugar);
             }
-            final String _tmpBloodSugarUnit;
-            _tmpBloodSugarUnit = _cursor.getString(_cursorIndexOfBloodSugarUnit);
             final Float _tmpSleepHours;
             if (_cursor.isNull(_cursorIndexOfSleepHours)) {
               _tmpSleepHours = null;
@@ -1427,6 +1473,12 @@ public final class HealthDao_Impl implements HealthDao {
             } else {
               _tmpMood = _cursor.getInt(_cursorIndexOfMood);
             }
+            final Integer _tmpMoodScore;
+            if (_cursor.isNull(_cursorIndexOfMoodScore)) {
+              _tmpMoodScore = null;
+            } else {
+              _tmpMoodScore = _cursor.getInt(_cursorIndexOfMoodScore);
+            }
             final Integer _tmpEnergy;
             if (_cursor.isNull(_cursorIndexOfEnergy)) {
               _tmpEnergy = null;
@@ -1438,6 +1490,12 @@ public final class HealthDao_Impl implements HealthDao {
               _tmpSteps = null;
             } else {
               _tmpSteps = _cursor.getInt(_cursorIndexOfSteps);
+            }
+            final Integer _tmpExerciseMinutes;
+            if (_cursor.isNull(_cursorIndexOfExerciseMinutes)) {
+              _tmpExerciseMinutes = null;
+            } else {
+              _tmpExerciseMinutes = _cursor.getInt(_cursorIndexOfExerciseMinutes);
             }
             final Float _tmpWaterOz;
             if (_cursor.isNull(_cursorIndexOfWaterOz)) {
@@ -1451,21 +1509,13 @@ public final class HealthDao_Impl implements HealthDao {
             } else {
               _tmpCalories = _cursor.getInt(_cursorIndexOfCalories);
             }
-            final Integer _tmpExerciseMinutes;
-            if (_cursor.isNull(_cursorIndexOfExerciseMinutes)) {
-              _tmpExerciseMinutes = null;
-            } else {
-              _tmpExerciseMinutes = _cursor.getInt(_cursorIndexOfExerciseMinutes);
-            }
             final String _tmpNotes;
             if (_cursor.isNull(_cursorIndexOfNotes)) {
               _tmpNotes = null;
             } else {
               _tmpNotes = _cursor.getString(_cursorIndexOfNotes);
             }
-            final long _tmpCreatedAt;
-            _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
-            _item = new HealthEntryEntity(_tmpId,_tmpUserId,_tmpEntryDate,_tmpWeight,_tmpWeightUnit,_tmpBloodPressureSystolic,_tmpBloodPressureDiastolic,_tmpHeartRate,_tmpBloodSugar,_tmpBloodSugarUnit,_tmpSleepHours,_tmpSleepQuality,_tmpMood,_tmpEnergy,_tmpSteps,_tmpWaterOz,_tmpCalories,_tmpExerciseMinutes,_tmpNotes,_tmpCreatedAt);
+            _item = new HealthEntryEntity(_tmpId,_tmpUserId,_tmpEntryDate,_tmpWeight,_tmpWeightUnit,_tmpHeartRate,_tmpBloodPressureSystolic,_tmpBloodPressureDiastolic,_tmpBloodSugar,_tmpSleepHours,_tmpSleepQuality,_tmpMood,_tmpMoodScore,_tmpEnergy,_tmpSteps,_tmpExerciseMinutes,_tmpWaterOz,_tmpCalories,_tmpNotes);
             _result.add(_item);
           }
           return _result;
@@ -1500,21 +1550,20 @@ public final class HealthDao_Impl implements HealthDao {
           final int _cursorIndexOfEntryDate = CursorUtil.getColumnIndexOrThrow(_cursor, "entryDate");
           final int _cursorIndexOfWeight = CursorUtil.getColumnIndexOrThrow(_cursor, "weight");
           final int _cursorIndexOfWeightUnit = CursorUtil.getColumnIndexOrThrow(_cursor, "weightUnit");
+          final int _cursorIndexOfHeartRate = CursorUtil.getColumnIndexOrThrow(_cursor, "heartRate");
           final int _cursorIndexOfBloodPressureSystolic = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodPressureSystolic");
           final int _cursorIndexOfBloodPressureDiastolic = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodPressureDiastolic");
-          final int _cursorIndexOfHeartRate = CursorUtil.getColumnIndexOrThrow(_cursor, "heartRate");
           final int _cursorIndexOfBloodSugar = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodSugar");
-          final int _cursorIndexOfBloodSugarUnit = CursorUtil.getColumnIndexOrThrow(_cursor, "bloodSugarUnit");
           final int _cursorIndexOfSleepHours = CursorUtil.getColumnIndexOrThrow(_cursor, "sleepHours");
           final int _cursorIndexOfSleepQuality = CursorUtil.getColumnIndexOrThrow(_cursor, "sleepQuality");
           final int _cursorIndexOfMood = CursorUtil.getColumnIndexOrThrow(_cursor, "mood");
+          final int _cursorIndexOfMoodScore = CursorUtil.getColumnIndexOrThrow(_cursor, "moodScore");
           final int _cursorIndexOfEnergy = CursorUtil.getColumnIndexOrThrow(_cursor, "energy");
           final int _cursorIndexOfSteps = CursorUtil.getColumnIndexOrThrow(_cursor, "steps");
+          final int _cursorIndexOfExerciseMinutes = CursorUtil.getColumnIndexOrThrow(_cursor, "exerciseMinutes");
           final int _cursorIndexOfWaterOz = CursorUtil.getColumnIndexOrThrow(_cursor, "waterOz");
           final int _cursorIndexOfCalories = CursorUtil.getColumnIndexOrThrow(_cursor, "calories");
-          final int _cursorIndexOfExerciseMinutes = CursorUtil.getColumnIndexOrThrow(_cursor, "exerciseMinutes");
           final int _cursorIndexOfNotes = CursorUtil.getColumnIndexOrThrow(_cursor, "notes");
-          final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
           final HealthEntryEntity _result;
           if (_cursor.moveToFirst()) {
             final long _tmpId;
@@ -1523,14 +1572,24 @@ public final class HealthDao_Impl implements HealthDao {
             _tmpUserId = _cursor.getLong(_cursorIndexOfUserId);
             final String _tmpEntryDate;
             _tmpEntryDate = _cursor.getString(_cursorIndexOfEntryDate);
-            final Float _tmpWeight;
+            final Double _tmpWeight;
             if (_cursor.isNull(_cursorIndexOfWeight)) {
               _tmpWeight = null;
             } else {
-              _tmpWeight = _cursor.getFloat(_cursorIndexOfWeight);
+              _tmpWeight = _cursor.getDouble(_cursorIndexOfWeight);
             }
             final String _tmpWeightUnit;
-            _tmpWeightUnit = _cursor.getString(_cursorIndexOfWeightUnit);
+            if (_cursor.isNull(_cursorIndexOfWeightUnit)) {
+              _tmpWeightUnit = null;
+            } else {
+              _tmpWeightUnit = _cursor.getString(_cursorIndexOfWeightUnit);
+            }
+            final Integer _tmpHeartRate;
+            if (_cursor.isNull(_cursorIndexOfHeartRate)) {
+              _tmpHeartRate = null;
+            } else {
+              _tmpHeartRate = _cursor.getInt(_cursorIndexOfHeartRate);
+            }
             final Integer _tmpBloodPressureSystolic;
             if (_cursor.isNull(_cursorIndexOfBloodPressureSystolic)) {
               _tmpBloodPressureSystolic = null;
@@ -1543,20 +1602,12 @@ public final class HealthDao_Impl implements HealthDao {
             } else {
               _tmpBloodPressureDiastolic = _cursor.getInt(_cursorIndexOfBloodPressureDiastolic);
             }
-            final Integer _tmpHeartRate;
-            if (_cursor.isNull(_cursorIndexOfHeartRate)) {
-              _tmpHeartRate = null;
-            } else {
-              _tmpHeartRate = _cursor.getInt(_cursorIndexOfHeartRate);
-            }
             final Float _tmpBloodSugar;
             if (_cursor.isNull(_cursorIndexOfBloodSugar)) {
               _tmpBloodSugar = null;
             } else {
               _tmpBloodSugar = _cursor.getFloat(_cursorIndexOfBloodSugar);
             }
-            final String _tmpBloodSugarUnit;
-            _tmpBloodSugarUnit = _cursor.getString(_cursorIndexOfBloodSugarUnit);
             final Float _tmpSleepHours;
             if (_cursor.isNull(_cursorIndexOfSleepHours)) {
               _tmpSleepHours = null;
@@ -1575,6 +1626,12 @@ public final class HealthDao_Impl implements HealthDao {
             } else {
               _tmpMood = _cursor.getInt(_cursorIndexOfMood);
             }
+            final Integer _tmpMoodScore;
+            if (_cursor.isNull(_cursorIndexOfMoodScore)) {
+              _tmpMoodScore = null;
+            } else {
+              _tmpMoodScore = _cursor.getInt(_cursorIndexOfMoodScore);
+            }
             final Integer _tmpEnergy;
             if (_cursor.isNull(_cursorIndexOfEnergy)) {
               _tmpEnergy = null;
@@ -1586,6 +1643,12 @@ public final class HealthDao_Impl implements HealthDao {
               _tmpSteps = null;
             } else {
               _tmpSteps = _cursor.getInt(_cursorIndexOfSteps);
+            }
+            final Integer _tmpExerciseMinutes;
+            if (_cursor.isNull(_cursorIndexOfExerciseMinutes)) {
+              _tmpExerciseMinutes = null;
+            } else {
+              _tmpExerciseMinutes = _cursor.getInt(_cursorIndexOfExerciseMinutes);
             }
             final Float _tmpWaterOz;
             if (_cursor.isNull(_cursorIndexOfWaterOz)) {
@@ -1599,21 +1662,13 @@ public final class HealthDao_Impl implements HealthDao {
             } else {
               _tmpCalories = _cursor.getInt(_cursorIndexOfCalories);
             }
-            final Integer _tmpExerciseMinutes;
-            if (_cursor.isNull(_cursorIndexOfExerciseMinutes)) {
-              _tmpExerciseMinutes = null;
-            } else {
-              _tmpExerciseMinutes = _cursor.getInt(_cursorIndexOfExerciseMinutes);
-            }
             final String _tmpNotes;
             if (_cursor.isNull(_cursorIndexOfNotes)) {
               _tmpNotes = null;
             } else {
               _tmpNotes = _cursor.getString(_cursorIndexOfNotes);
             }
-            final long _tmpCreatedAt;
-            _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
-            _result = new HealthEntryEntity(_tmpId,_tmpUserId,_tmpEntryDate,_tmpWeight,_tmpWeightUnit,_tmpBloodPressureSystolic,_tmpBloodPressureDiastolic,_tmpHeartRate,_tmpBloodSugar,_tmpBloodSugarUnit,_tmpSleepHours,_tmpSleepQuality,_tmpMood,_tmpEnergy,_tmpSteps,_tmpWaterOz,_tmpCalories,_tmpExerciseMinutes,_tmpNotes,_tmpCreatedAt);
+            _result = new HealthEntryEntity(_tmpId,_tmpUserId,_tmpEntryDate,_tmpWeight,_tmpWeightUnit,_tmpHeartRate,_tmpBloodPressureSystolic,_tmpBloodPressureDiastolic,_tmpBloodSugar,_tmpSleepHours,_tmpSleepQuality,_tmpMood,_tmpMoodScore,_tmpEnergy,_tmpSteps,_tmpExerciseMinutes,_tmpWaterOz,_tmpCalories,_tmpNotes);
           } else {
             _result = null;
           }

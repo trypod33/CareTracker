@@ -26,7 +26,8 @@ class CareTrackerRepository(
     suspend fun updateLogCount(habitId: Long, date: String, count: Int) = habitDao.updateLogCount(habitId, date, count)
     suspend fun getAllLogsForHabit(habitId: Long) = habitDao.getAllLogsForHabit(habitId)
     suspend fun getLogsForUserOnDate(userId: Long, date: String) = habitDao.getLogsForUserOnDate(userId, date)
-    suspend fun getLogsForUserInRange(userId: Long, startDate: String, endDate: String) = habitDao.getLogsForUserInRange(userId, startDate, endDate)
+    suspend fun getLogsForUserInRange(userId: Long, startDate: String, endDate: String) =
+        habitDao.getLogsForUserInRange(userId, startDate, endDate)
     suspend fun insertHabit(habit: HabitEntity) = habitDao.insertHabit(habit)
     suspend fun insertHabitLog(log: HabitLogEntity) = habitDao.insertLog(log)
     suspend fun updateHabit(habit: HabitEntity) = habitDao.updateHabit(habit)
@@ -41,6 +42,27 @@ class CareTrackerRepository(
     suspend fun updateHealthEntry(entry: HealthEntryEntity) = healthDao.updateEntry(entry)
     fun getVitalLogs(userId: Long) = healthDao.getVitalLogs(userId)
     suspend fun insertVitalLog(log: VitalLogEntity) = healthDao.insertVitalLog(log)
+
+    suspend fun getWaterOzForDate(userId: Long, date: String): Float {
+        return healthDao.getEntryForDate(userId, date)?.waterOz ?: 0f
+    }
+
+    suspend fun addWaterOz(userId: Long, date: String, oz: Float) {
+        val existing = healthDao.getEntryForDate(userId, date)
+        if (existing == null) {
+            healthDao.insertEntry(
+                HealthEntryEntity(
+                    userId = userId,
+                    entryDate = date,
+                    waterOz = oz
+                )
+            )
+        } else {
+            healthDao.updateEntry(
+                existing.copy(waterOz = (existing.waterOz ?: 0f) + oz)
+            )
+        }
+    }
 
     fun getAllMedications() = medicationDao.getAllMedications()
     fun getMedicationsForUser(userId: Long) = medicationDao.getMedicationsForUser(userId)

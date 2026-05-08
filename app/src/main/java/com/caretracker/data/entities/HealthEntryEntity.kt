@@ -8,21 +8,26 @@ data class HealthEntryEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val userId: Long,
     val entryDate: String,
-    val weight: Float? = null,
-    val weightUnit: String = "lbs",
+
+    val weight: Double? = null,
+    val weightUnit: String? = "lbs",
+
+    val heartRate: Int? = null,
     val bloodPressureSystolic: Int? = null,
     val bloodPressureDiastolic: Int? = null,
-    val heartRate: Int? = null,
     val bloodSugar: Float? = null,
-    val bloodSugarUnit: String = "mg/dL",
+
     val sleepHours: Float? = null,
     val sleepQuality: Int? = null,
+
     val mood: Int? = null,
+    val moodScore: Int? = null,
     val energy: Int? = null,
+
     val steps: Int? = null,
+    val exerciseMinutes: Int? = null,
     val waterOz: Float? = null,
     val calories: Int? = null,
-    val exerciseMinutes: Int? = null,
-    val notes: String? = null,
-    val createdAt: Long = System.currentTimeMillis()
+
+    val notes: String? = null
 )
