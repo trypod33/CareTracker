@@ -24,7 +24,7 @@ import com.caretracker.data.entities.*
         BloodPressureReadingEntity::class,
         BloodSugarReadingEntity::class
     ],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 abstract class CareTrackerDatabase : RoomDatabase() {

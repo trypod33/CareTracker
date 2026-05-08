@@ -42,6 +42,10 @@
             android:name="com.caretracker.ui.MainActivity"
             android:exported="false" />
 
+        <receiver
+            android:name="com.caretracker.notifications.TaskReminderReceiver"
+            android:exported="false" />
+
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="com.caretracker.androidx-startup"

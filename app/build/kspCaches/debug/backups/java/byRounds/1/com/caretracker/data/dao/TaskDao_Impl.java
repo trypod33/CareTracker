@@ -45,7 +45,7 @@ public final class TaskDao_Impl implements TaskDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "INSERT OR REPLACE INTO `tasks` (`id`,`userId`,`title`,`description`,`priority`,`status`,`category`,`dueDate`,`dueTime`,`estimatedMinutes`,`tags`,`sortOrder`,`completedAt`,`createdAt`) VALUES (nullif(?, 0),?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        return "INSERT OR REPLACE INTO `tasks` (`id`,`userId`,`title`,`description`,`priority`,`status`,`category`,`dueDate`,`dueTime`,`estimatedMinutes`,`tags`,`sortOrder`,`completedAt`,`reminderEnabled`,`reminderAtMillis`,`createdAt`) VALUES (nullif(?, 0),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
       }
 
       @Override
@@ -88,7 +88,14 @@ public final class TaskDao_Impl implements TaskDao {
         } else {
           statement.bindLong(13, entity.getCompletedAt());
         }
-        statement.bindLong(14, entity.getCreatedAt());
+        final int _tmp = entity.getReminderEnabled() ? 1 : 0;
+        statement.bindLong(14, _tmp);
+        if (entity.getReminderAtMillis() == null) {
+          statement.bindNull(15);
+        } else {
+          statement.bindLong(15, entity.getReminderAtMillis());
+        }
+        statement.bindLong(16, entity.getCreatedAt());
       }
     };
     this.__deletionAdapterOfTaskEntity = new EntityDeletionOrUpdateAdapter<TaskEntity>(__db) {
@@ -108,7 +115,7 @@ public final class TaskDao_Impl implements TaskDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "UPDATE OR ABORT `tasks` SET `id` = ?,`userId` = ?,`title` = ?,`description` = ?,`priority` = ?,`status` = ?,`category` = ?,`dueDate` = ?,`dueTime` = ?,`estimatedMinutes` = ?,`tags` = ?,`sortOrder` = ?,`completedAt` = ?,`createdAt` = ? WHERE `id` = ?";
+        return "UPDATE OR ABORT `tasks` SET `id` = ?,`userId` = ?,`title` = ?,`description` = ?,`priority` = ?,`status` = ?,`category` = ?,`dueDate` = ?,`dueTime` = ?,`estimatedMinutes` = ?,`tags` = ?,`sortOrder` = ?,`completedAt` = ?,`reminderEnabled` = ?,`reminderAtMillis` = ?,`createdAt` = ? WHERE `id` = ?";
       }
 
       @Override
@@ -151,8 +158,15 @@ public final class TaskDao_Impl implements TaskDao {
         } else {
           statement.bindLong(13, entity.getCompletedAt());
         }
-        statement.bindLong(14, entity.getCreatedAt());
-        statement.bindLong(15, entity.getId());
+        final int _tmp = entity.getReminderEnabled() ? 1 : 0;
+        statement.bindLong(14, _tmp);
+        if (entity.getReminderAtMillis() == null) {
+          statement.bindNull(15);
+        } else {
+          statement.bindLong(15, entity.getReminderAtMillis());
+        }
+        statement.bindLong(16, entity.getCreatedAt());
+        statement.bindLong(17, entity.getId());
       }
     };
   }
@@ -236,6 +250,8 @@ public final class TaskDao_Impl implements TaskDao {
           final int _cursorIndexOfTags = CursorUtil.getColumnIndexOrThrow(_cursor, "tags");
           final int _cursorIndexOfSortOrder = CursorUtil.getColumnIndexOrThrow(_cursor, "sortOrder");
           final int _cursorIndexOfCompletedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "completedAt");
+          final int _cursorIndexOfReminderEnabled = CursorUtil.getColumnIndexOrThrow(_cursor, "reminderEnabled");
+          final int _cursorIndexOfReminderAtMillis = CursorUtil.getColumnIndexOrThrow(_cursor, "reminderAtMillis");
           final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
           final List<TaskEntity> _result = new ArrayList<TaskEntity>(_cursor.getCount());
           while (_cursor.moveToNext()) {
@@ -290,9 +306,19 @@ public final class TaskDao_Impl implements TaskDao {
             } else {
               _tmpCompletedAt = _cursor.getLong(_cursorIndexOfCompletedAt);
             }
+            final boolean _tmpReminderEnabled;
+            final int _tmp;
+            _tmp = _cursor.getInt(_cursorIndexOfReminderEnabled);
+            _tmpReminderEnabled = _tmp != 0;
+            final Long _tmpReminderAtMillis;
+            if (_cursor.isNull(_cursorIndexOfReminderAtMillis)) {
+              _tmpReminderAtMillis = null;
+            } else {
+              _tmpReminderAtMillis = _cursor.getLong(_cursorIndexOfReminderAtMillis);
+            }
             final long _tmpCreatedAt;
             _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
-            _item = new TaskEntity(_tmpId,_tmpUserId,_tmpTitle,_tmpDescription,_tmpPriority,_tmpStatus,_tmpCategory,_tmpDueDate,_tmpDueTime,_tmpEstimatedMinutes,_tmpTags,_tmpSortOrder,_tmpCompletedAt,_tmpCreatedAt);
+            _item = new TaskEntity(_tmpId,_tmpUserId,_tmpTitle,_tmpDescription,_tmpPriority,_tmpStatus,_tmpCategory,_tmpDueDate,_tmpDueTime,_tmpEstimatedMinutes,_tmpTags,_tmpSortOrder,_tmpCompletedAt,_tmpReminderEnabled,_tmpReminderAtMillis,_tmpCreatedAt);
             _result.add(_item);
           }
           return _result;
@@ -333,6 +359,8 @@ public final class TaskDao_Impl implements TaskDao {
           final int _cursorIndexOfTags = CursorUtil.getColumnIndexOrThrow(_cursor, "tags");
           final int _cursorIndexOfSortOrder = CursorUtil.getColumnIndexOrThrow(_cursor, "sortOrder");
           final int _cursorIndexOfCompletedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "completedAt");
+          final int _cursorIndexOfReminderEnabled = CursorUtil.getColumnIndexOrThrow(_cursor, "reminderEnabled");
+          final int _cursorIndexOfReminderAtMillis = CursorUtil.getColumnIndexOrThrow(_cursor, "reminderAtMillis");
           final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
           final List<TaskEntity> _result = new ArrayList<TaskEntity>(_cursor.getCount());
           while (_cursor.moveToNext()) {
@@ -387,9 +415,19 @@ public final class TaskDao_Impl implements TaskDao {
             } else {
               _tmpCompletedAt = _cursor.getLong(_cursorIndexOfCompletedAt);
             }
+            final boolean _tmpReminderEnabled;
+            final int _tmp;
+            _tmp = _cursor.getInt(_cursorIndexOfReminderEnabled);
+            _tmpReminderEnabled = _tmp != 0;
+            final Long _tmpReminderAtMillis;
+            if (_cursor.isNull(_cursorIndexOfReminderAtMillis)) {
+              _tmpReminderAtMillis = null;
+            } else {
+              _tmpReminderAtMillis = _cursor.getLong(_cursorIndexOfReminderAtMillis);
+            }
             final long _tmpCreatedAt;
             _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
-            _item = new TaskEntity(_tmpId,_tmpUserId,_tmpTitle,_tmpDescription,_tmpPriority,_tmpStatus,_tmpCategory,_tmpDueDate,_tmpDueTime,_tmpEstimatedMinutes,_tmpTags,_tmpSortOrder,_tmpCompletedAt,_tmpCreatedAt);
+            _item = new TaskEntity(_tmpId,_tmpUserId,_tmpTitle,_tmpDescription,_tmpPriority,_tmpStatus,_tmpCategory,_tmpDueDate,_tmpDueTime,_tmpEstimatedMinutes,_tmpTags,_tmpSortOrder,_tmpCompletedAt,_tmpReminderEnabled,_tmpReminderAtMillis,_tmpCreatedAt);
             _result.add(_item);
           }
           return _result;
@@ -430,6 +468,8 @@ public final class TaskDao_Impl implements TaskDao {
           final int _cursorIndexOfTags = CursorUtil.getColumnIndexOrThrow(_cursor, "tags");
           final int _cursorIndexOfSortOrder = CursorUtil.getColumnIndexOrThrow(_cursor, "sortOrder");
           final int _cursorIndexOfCompletedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "completedAt");
+          final int _cursorIndexOfReminderEnabled = CursorUtil.getColumnIndexOrThrow(_cursor, "reminderEnabled");
+          final int _cursorIndexOfReminderAtMillis = CursorUtil.getColumnIndexOrThrow(_cursor, "reminderAtMillis");
           final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
           final List<TaskEntity> _result = new ArrayList<TaskEntity>(_cursor.getCount());
           while (_cursor.moveToNext()) {
@@ -484,9 +524,19 @@ public final class TaskDao_Impl implements TaskDao {
             } else {
               _tmpCompletedAt = _cursor.getLong(_cursorIndexOfCompletedAt);
             }
+            final boolean _tmpReminderEnabled;
+            final int _tmp;
+            _tmp = _cursor.getInt(_cursorIndexOfReminderEnabled);
+            _tmpReminderEnabled = _tmp != 0;
+            final Long _tmpReminderAtMillis;
+            if (_cursor.isNull(_cursorIndexOfReminderAtMillis)) {
+              _tmpReminderAtMillis = null;
+            } else {
+              _tmpReminderAtMillis = _cursor.getLong(_cursorIndexOfReminderAtMillis);
+            }
             final long _tmpCreatedAt;
             _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
-            _item = new TaskEntity(_tmpId,_tmpUserId,_tmpTitle,_tmpDescription,_tmpPriority,_tmpStatus,_tmpCategory,_tmpDueDate,_tmpDueTime,_tmpEstimatedMinutes,_tmpTags,_tmpSortOrder,_tmpCompletedAt,_tmpCreatedAt);
+            _item = new TaskEntity(_tmpId,_tmpUserId,_tmpTitle,_tmpDescription,_tmpPriority,_tmpStatus,_tmpCategory,_tmpDueDate,_tmpDueTime,_tmpEstimatedMinutes,_tmpTags,_tmpSortOrder,_tmpCompletedAt,_tmpReminderEnabled,_tmpReminderAtMillis,_tmpCreatedAt);
             _result.add(_item);
           }
           return _result;

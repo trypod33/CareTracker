@@ -3812,6 +3812,7 @@ id tvTakenStatus
 id tvTaskDue
 id tvTaskInstructions
 id tvTaskPriority
+id tvTaskReminderBadge
 id tvTaskTitle
 id tvTasksEmpty
 id tvToggle

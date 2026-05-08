@@ -11,6 +11,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.caretracker.R
 import com.caretracker.data.entities.TaskEntity
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class TaskAdapter(
     private val onToggle: (TaskEntity) -> Unit,
@@ -22,6 +25,7 @@ class TaskAdapter(
         val tvTitle: TextView = v.findViewById(R.id.tvTaskTitle)
         val tvDue: TextView = v.findViewById(R.id.tvTaskDue)
         val tvPriority: TextView = v.findViewById(R.id.tvTaskPriority)
+        val tvReminderBadge: TextView = v.findViewById(R.id.tvTaskReminderBadge)
         val btnDelete: ImageButton = v.findViewById(R.id.btnDeleteTask)
     }
 
@@ -34,6 +38,13 @@ class TaskAdapter(
         holder.tvTitle.text = task.title
         holder.tvDue.text = task.dueDate?.let { "Due: $it" } ?: "No due date"
         holder.tvDue.visibility = View.VISIBLE
+
+        if (task.reminderEnabled && task.reminderAtMillis != null) {
+            holder.tvReminderBadge.visibility = View.VISIBLE
+            holder.tvReminderBadge.text = "⏰ " + SimpleDateFormat("MMM d h:mm a", Locale.getDefault()).format(Date(task.reminderAtMillis))
+        } else {
+            holder.tvReminderBadge.visibility = View.GONE
+        }
 
         holder.tvPriority.text = task.priority.uppercase()
         holder.tvPriority.setTextColor(

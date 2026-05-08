@@ -1,12 +1,16 @@
 package com.caretracker.ui.tasks
 
+import android.content.Context
 import androidx.lifecycle.*
 import com.caretracker.data.entities.TaskEntity
 import com.caretracker.data.repository.CareTrackerRepository
+import com.caretracker.notifications.TaskReminderScheduler
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class TasksViewModel(private val repository: CareTrackerRepository) : ViewModel() {
+class TasksViewModel(
+    private val repository: CareTrackerRepository
+) : ViewModel() {
 
     private val _tasks = MutableStateFlow<List<TaskEntity>>(emptyList())
     val tasks: StateFlow<List<TaskEntity>> = _tasks.asStateFlow()
@@ -35,46 +39,81 @@ class TasksViewModel(private val repository: CareTrackerRepository) : ViewModel(
         }
     }
 
-    fun addTask(title: String, dueDate: String?, priority: String?) {
+    fun addTask(
+        context: Context,
+        title: String,
+        dueDate: String?,
+        priority: String?,
+        reminderEnabled: Boolean,
+        reminderAtMillis: Long?
+    ) {
         viewModelScope.launch {
-            repository.insertTask(
-                TaskEntity(
-                    userId = currentUserId,
-                    title = title,
-                    dueDate = dueDate,
-                    priority = priority ?: "medium",
-                    status = "todo"
-                )
+            val task = TaskEntity(
+                userId = currentUserId,
+                title = title,
+                dueDate = dueDate,
+                priority = priority ?: "medium",
+                status = "todo",
+                reminderEnabled = reminderEnabled,
+                reminderAtMillis = if (reminderEnabled) reminderAtMillis else null
             )
+            val id = repository.insertTask(task)
+            val saved = task.copy(id = id)
+            if (saved.reminderEnabled && saved.reminderAtMillis != null) {
+                TaskReminderScheduler.schedule(context, saved)
+            }
         }
     }
 
-    fun updateTask(task: TaskEntity, title: String, dueDate: String?, priority: String?) {
+    fun updateTask(
+        context: Context,
+        task: TaskEntity,
+        title: String,
+        dueDate: String?,
+        priority: String?,
+        reminderEnabled: Boolean,
+        reminderAtMillis: Long?
+    ) {
         viewModelScope.launch {
-            repository.updateTask(
-                task.copy(
-                    title = title,
-                    dueDate = dueDate,
-                    priority = priority ?: task.priority
-                )
+            TaskReminderScheduler.cancel(context, task)
+
+            val updated = task.copy(
+                title = title,
+                dueDate = dueDate,
+                priority = priority ?: task.priority,
+                reminderEnabled = reminderEnabled,
+                reminderAtMillis = if (reminderEnabled) reminderAtMillis else null
             )
+
+            repository.updateTask(updated)
+
+            if (updated.reminderEnabled && updated.reminderAtMillis != null && updated.status != "done") {
+                TaskReminderScheduler.schedule(context, updated)
+            }
         }
     }
 
-    fun toggleComplete(task: TaskEntity) {
+    fun toggleComplete(context: Context, task: TaskEntity) {
         viewModelScope.launch {
             val newStatus = if (task.status == "done") "todo" else "done"
-            repository.updateTask(
-                task.copy(
-                    status = newStatus,
-                    completedAt = if (newStatus == "done") System.currentTimeMillis() else null
-                )
+            val updated = task.copy(
+                status = newStatus,
+                completedAt = if (newStatus == "done") System.currentTimeMillis() else null
             )
+
+            repository.updateTask(updated)
+
+            if (newStatus == "done") {
+                TaskReminderScheduler.cancel(context, updated)
+            } else if (updated.reminderEnabled && updated.reminderAtMillis != null) {
+                TaskReminderScheduler.schedule(context, updated)
+            }
         }
     }
 
-    fun deleteTask(task: TaskEntity) {
+    fun deleteTask(context: Context, task: TaskEntity) {
         viewModelScope.launch {
+            TaskReminderScheduler.cancel(context, task)
             repository.deleteTask(task)
         }
     }
