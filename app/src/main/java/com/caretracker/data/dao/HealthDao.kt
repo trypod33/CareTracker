@@ -48,4 +48,10 @@ interface HealthDao {
 
     @Query("SELECT * FROM health_entries WHERE userId = :userId AND (bloodPressureSystolic IS NOT NULL OR bloodSugar IS NOT NULL) ORDER BY entryDate DESC LIMIT 1")
     suspend fun getLatestVitalEntry(userId: Long): HealthEntryEntity?
+
+    @Query("DELETE FROM vital_logs WHERE userId = :userId")
+    suspend fun deleteVitalLogsByUserId(userId: Long)
+
+    @Query("DELETE FROM health_entries WHERE userId = :userId")
+    suspend fun deleteEntriesByUserId(userId: Long)
 }

@@ -1,15 +1,11 @@
 [
     {
-        "merged": "com.caretracker.app-mergeDebugResources-54:/layout/item_task.xml",
-        "source": "com.caretracker.app-main-57:/layout/item_task.xml"
+        "merged": "/data/data/com.termux/files/home/.gradle/daemon/8.9/com.caretracker.app-mergeDebugResources-54:/layout/item_bp_reading.xml",
+        "source": "/data/data/com.termux/files/home/.gradle/daemon/8.9/com.caretracker.app-main-57:/layout/item_bp_reading.xml"
     },
     {
         "merged": "/data/data/com.termux/files/home/.gradle/daemon/8.9/com.caretracker.app-mergeDebugResources-54:/layout/item_medication.xml",
         "source": "/data/data/com.termux/files/home/.gradle/daemon/8.9/com.caretracker.app-main-57:/layout/item_medication.xml"
-    },
-    {
-        "merged": "/data/data/com.termux/files/home/.gradle/daemon/8.9/com.caretracker.app-mergeDebugResources-54:/layout/item_bp_reading.xml",
-        "source": "/data/data/com.termux/files/home/.gradle/daemon/8.9/com.caretracker.app-main-57:/layout/item_bp_reading.xml"
     },
     {
         "merged": "/data/data/com.termux/files/home/.gradle/daemon/8.9/com.caretracker.app-mergeDebugResources-54:/layout/item_sugar_reading.xml",
@@ -36,16 +32,20 @@
         "source": "/data/data/com.termux/files/home/.gradle/daemon/8.9/com.caretracker.app-main-57:/layout/activity_main.xml"
     },
     {
-        "merged": "/data/data/com.termux/files/home/.gradle/daemon/8.9/com.caretracker.app-mergeDebugResources-54:/layout/fragment_dashboard.xml",
-        "source": "/data/data/com.termux/files/home/.gradle/daemon/8.9/com.caretracker.app-main-57:/layout/fragment_dashboard.xml"
-    },
-    {
         "merged": "/data/data/com.termux/files/home/.gradle/daemon/8.9/com.caretracker.app-mergeDebugResources-54:/layout/item_task.xml",
         "source": "/data/data/com.termux/files/home/.gradle/daemon/8.9/com.caretracker.app-main-57:/layout/item_task.xml"
     },
     {
+        "merged": "/data/data/com.termux/files/home/.gradle/daemon/8.9/com.caretracker.app-mergeDebugResources-54:/layout/fragment_dashboard.xml",
+        "source": "/data/data/com.termux/files/home/.gradle/daemon/8.9/com.caretracker.app-main-57:/layout/fragment_dashboard.xml"
+    },
+    {
         "merged": "/data/data/com.termux/files/home/.gradle/daemon/8.9/com.caretracker.app-mergeDebugResources-54:/layout/fragment_habits.xml",
         "source": "/data/data/com.termux/files/home/.gradle/daemon/8.9/com.caretracker.app-main-57:/layout/fragment_habits.xml"
+    },
+    {
+        "merged": "com.caretracker.app-mergeDebugResources-54:/layout/activity_main.xml",
+        "source": "com.caretracker.app-main-57:/layout/activity_main.xml"
     },
     {
         "merged": "/data/data/com.termux/files/home/.gradle/daemon/8.9/com.caretracker.app-mergeDebugResources-54:/layout/item_task_header.xml",

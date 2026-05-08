@@ -9,6 +9,7 @@ import androidx.room.EntityDeletionOrUpdateAdapter;
 import androidx.room.EntityInsertionAdapter;
 import androidx.room.RoomDatabase;
 import androidx.room.RoomSQLiteQuery;
+import androidx.room.SharedSQLiteStatement;
 import androidx.room.util.CursorUtil;
 import androidx.room.util.DBUtil;
 import androidx.sqlite.db.SupportSQLiteStatement;
@@ -40,6 +41,8 @@ public final class MoodDao_Impl implements MoodDao {
   private final EntityDeletionOrUpdateAdapter<MoodJournalEntity> __deletionAdapterOfMoodJournalEntity;
 
   private final EntityDeletionOrUpdateAdapter<MoodJournalEntity> __updateAdapterOfMoodJournalEntity;
+
+  private final SharedSQLiteStatement __preparedStmtOfDeleteEntriesByUserId;
 
   public MoodDao_Impl(@NonNull final RoomDatabase __db) {
     this.__db = __db;
@@ -119,6 +122,14 @@ public final class MoodDao_Impl implements MoodDao {
         statement.bindLong(8, entity.getId());
       }
     };
+    this.__preparedStmtOfDeleteEntriesByUserId = new SharedSQLiteStatement(__db) {
+      @Override
+      @NonNull
+      public String createQuery() {
+        final String _query = "DELETE FROM mood_journal WHERE userId = ?";
+        return _query;
+      }
+    };
   }
 
   @Override
@@ -173,6 +184,32 @@ public final class MoodDao_Impl implements MoodDao {
           return Unit.INSTANCE;
         } finally {
           __db.endTransaction();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object deleteEntriesByUserId(final long userId,
+      final Continuation<? super Unit> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
+      @Override
+      @NonNull
+      public Unit call() throws Exception {
+        final SupportSQLiteStatement _stmt = __preparedStmtOfDeleteEntriesByUserId.acquire();
+        int _argIndex = 1;
+        _stmt.bindLong(_argIndex, userId);
+        try {
+          __db.beginTransaction();
+          try {
+            _stmt.executeUpdateDelete();
+            __db.setTransactionSuccessful();
+            return Unit.INSTANCE;
+          } finally {
+            __db.endTransaction();
+          }
+        } finally {
+          __preparedStmtOfDeleteEntriesByUserId.release(_stmt);
         }
       }
     }, $completion);

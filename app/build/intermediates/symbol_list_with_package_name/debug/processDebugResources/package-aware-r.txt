@@ -3223,6 +3223,7 @@ id action_bar_subtitle
 id action_bar_title
 id action_container
 id action_context_bar
+id action_delete_person
 id action_divider
 id action_image
 id action_menu_divider
@@ -3278,6 +3279,8 @@ id btnEdit
 id btnHabitEdit
 id btnLogHealth
 id btnLogin
+id btnLogout
+id btnMore
 id btnRefill
 id btnRegister
 id btnSave
@@ -4058,6 +4061,7 @@ layout select_dialog_multichoice_material
 layout select_dialog_singlechoice_material
 layout support_simple_spinner_dropdown_item
 menu bottom_nav_menu
+menu main_overflow_menu
 mipmap ic_launcher
 mipmap ic_launcher_round
 navigation nav_graph

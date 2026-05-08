@@ -9,6 +9,7 @@ import androidx.room.EntityDeletionOrUpdateAdapter;
 import androidx.room.EntityInsertionAdapter;
 import androidx.room.RoomDatabase;
 import androidx.room.RoomSQLiteQuery;
+import androidx.room.SharedSQLiteStatement;
 import androidx.room.util.CursorUtil;
 import androidx.room.util.DBUtil;
 import androidx.sqlite.db.SupportSQLiteStatement;
@@ -47,6 +48,10 @@ public final class HealthDao_Impl implements HealthDao {
   private final EntityDeletionOrUpdateAdapter<VitalLogEntity> __deletionAdapterOfVitalLogEntity;
 
   private final EntityDeletionOrUpdateAdapter<HealthEntryEntity> __updateAdapterOfHealthEntryEntity;
+
+  private final SharedSQLiteStatement __preparedStmtOfDeleteVitalLogsByUserId;
+
+  private final SharedSQLiteStatement __preparedStmtOfDeleteEntriesByUserId;
 
   public HealthDao_Impl(@NonNull final RoomDatabase __db) {
     this.__db = __db;
@@ -300,6 +305,22 @@ public final class HealthDao_Impl implements HealthDao {
         statement.bindLong(20, entity.getId());
       }
     };
+    this.__preparedStmtOfDeleteVitalLogsByUserId = new SharedSQLiteStatement(__db) {
+      @Override
+      @NonNull
+      public String createQuery() {
+        final String _query = "DELETE FROM vital_logs WHERE userId = ?";
+        return _query;
+      }
+    };
+    this.__preparedStmtOfDeleteEntriesByUserId = new SharedSQLiteStatement(__db) {
+      @Override
+      @NonNull
+      public String createQuery() {
+        final String _query = "DELETE FROM health_entries WHERE userId = ?";
+        return _query;
+      }
+    };
   }
 
   @Override
@@ -392,6 +413,58 @@ public final class HealthDao_Impl implements HealthDao {
           return Unit.INSTANCE;
         } finally {
           __db.endTransaction();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object deleteVitalLogsByUserId(final long userId,
+      final Continuation<? super Unit> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
+      @Override
+      @NonNull
+      public Unit call() throws Exception {
+        final SupportSQLiteStatement _stmt = __preparedStmtOfDeleteVitalLogsByUserId.acquire();
+        int _argIndex = 1;
+        _stmt.bindLong(_argIndex, userId);
+        try {
+          __db.beginTransaction();
+          try {
+            _stmt.executeUpdateDelete();
+            __db.setTransactionSuccessful();
+            return Unit.INSTANCE;
+          } finally {
+            __db.endTransaction();
+          }
+        } finally {
+          __preparedStmtOfDeleteVitalLogsByUserId.release(_stmt);
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object deleteEntriesByUserId(final long userId,
+      final Continuation<? super Unit> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
+      @Override
+      @NonNull
+      public Unit call() throws Exception {
+        final SupportSQLiteStatement _stmt = __preparedStmtOfDeleteEntriesByUserId.acquire();
+        int _argIndex = 1;
+        _stmt.bindLong(_argIndex, userId);
+        try {
+          __db.beginTransaction();
+          try {
+            _stmt.executeUpdateDelete();
+            __db.setTransactionSuccessful();
+            return Unit.INSTANCE;
+          } finally {
+            __db.endTransaction();
+          }
+        } finally {
+          __preparedStmtOfDeleteEntriesByUserId.release(_stmt);
         }
       }
     }, $completion);

@@ -39,6 +39,7 @@ drawable ic_launcher_foreground
 drawable progress_pills
 drawable progress_ring
 drawable spinner_background
+id action_delete_person
 id bottom_nav
 id btnAddHabit
 id btnAddHabitHeader
@@ -55,6 +56,8 @@ id btnEdit
 id btnHabitEdit
 id btnLogHealth
 id btnLogin
+id btnLogout
+id btnMore
 id btnRefill
 id btnRegister
 id btnSave
@@ -236,6 +239,7 @@ layout item_sugar_reading
 layout item_task
 layout item_task_header
 menu bottom_nav_menu
+menu main_overflow_menu
 mipmap ic_launcher
 mipmap ic_launcher_round
 navigation nav_graph

@@ -22,7 +22,7 @@
 
     <application
         android:name="com.caretracker.CareTrackerApp"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:appComponentFactory="androidx.core.app.CoreComponentFactory"
         android:debuggable="true"
         android:extractNativeLibs="false"
@@ -40,10 +40,6 @@
         </activity>
         <activity
             android:name="com.caretracker.ui.MainActivity"
-            android:exported="false" />
-
-        <receiver
-            android:name="com.caretracker.notifications.TaskReminderReceiver"
             android:exported="false" />
 
         <provider

@@ -1,8 +1,8 @@
 package com.caretracker.data.dao
 
 import androidx.room.*
-import com.caretracker.data.entities.MedicationEntity
 import com.caretracker.data.entities.MedLogEntity
+import com.caretracker.data.entities.MedicationEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -36,4 +36,10 @@ interface MedicationDao {
 
     @Delete
     suspend fun deleteMedication(med: MedicationEntity)
+
+    @Query("DELETE FROM med_logs WHERE medicationId IN (SELECT id FROM medications WHERE userId = :userId)")
+    suspend fun deleteLogsByUserId(userId: Long)
+
+    @Query("DELETE FROM medications WHERE userId = :userId")
+    suspend fun deleteMedicationsByUserId(userId: Long)
 }

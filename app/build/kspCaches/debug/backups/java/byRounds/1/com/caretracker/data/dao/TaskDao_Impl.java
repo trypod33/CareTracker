@@ -7,6 +7,7 @@ import androidx.room.EntityDeletionOrUpdateAdapter;
 import androidx.room.EntityInsertionAdapter;
 import androidx.room.RoomDatabase;
 import androidx.room.RoomSQLiteQuery;
+import androidx.room.SharedSQLiteStatement;
 import androidx.room.util.CursorUtil;
 import androidx.room.util.DBUtil;
 import androidx.sqlite.db.SupportSQLiteStatement;
@@ -38,6 +39,8 @@ public final class TaskDao_Impl implements TaskDao {
   private final EntityDeletionOrUpdateAdapter<TaskEntity> __deletionAdapterOfTaskEntity;
 
   private final EntityDeletionOrUpdateAdapter<TaskEntity> __updateAdapterOfTaskEntity;
+
+  private final SharedSQLiteStatement __preparedStmtOfDeleteTasksByUserId;
 
   public TaskDao_Impl(@NonNull final RoomDatabase __db) {
     this.__db = __db;
@@ -169,6 +172,14 @@ public final class TaskDao_Impl implements TaskDao {
         statement.bindLong(17, entity.getId());
       }
     };
+    this.__preparedStmtOfDeleteTasksByUserId = new SharedSQLiteStatement(__db) {
+      @Override
+      @NonNull
+      public String createQuery() {
+        final String _query = "DELETE FROM tasks WHERE userId = ?";
+        return _query;
+      }
+    };
   }
 
   @Override
@@ -220,6 +231,32 @@ public final class TaskDao_Impl implements TaskDao {
           return Unit.INSTANCE;
         } finally {
           __db.endTransaction();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object deleteTasksByUserId(final long userId,
+      final Continuation<? super Unit> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
+      @Override
+      @NonNull
+      public Unit call() throws Exception {
+        final SupportSQLiteStatement _stmt = __preparedStmtOfDeleteTasksByUserId.acquire();
+        int _argIndex = 1;
+        _stmt.bindLong(_argIndex, userId);
+        try {
+          __db.beginTransaction();
+          try {
+            _stmt.executeUpdateDelete();
+            __db.setTransactionSuccessful();
+            return Unit.INSTANCE;
+          } finally {
+            __db.endTransaction();
+          }
+        } finally {
+          __preparedStmtOfDeleteTasksByUserId.release(_stmt);
         }
       }
     }, $completion);

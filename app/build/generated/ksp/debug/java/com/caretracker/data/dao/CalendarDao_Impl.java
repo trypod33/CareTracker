@@ -7,6 +7,7 @@ import androidx.room.EntityDeletionOrUpdateAdapter;
 import androidx.room.EntityInsertionAdapter;
 import androidx.room.RoomDatabase;
 import androidx.room.RoomSQLiteQuery;
+import androidx.room.SharedSQLiteStatement;
 import androidx.room.util.CursorUtil;
 import androidx.room.util.DBUtil;
 import androidx.sqlite.db.SupportSQLiteStatement;
@@ -37,6 +38,8 @@ public final class CalendarDao_Impl implements CalendarDao {
   private final EntityDeletionOrUpdateAdapter<CalendarEventEntity> __deletionAdapterOfCalendarEventEntity;
 
   private final EntityDeletionOrUpdateAdapter<CalendarEventEntity> __updateAdapterOfCalendarEventEntity;
+
+  private final SharedSQLiteStatement __preparedStmtOfDeleteEventsByUserId;
 
   public CalendarDao_Impl(@NonNull final RoomDatabase __db) {
     this.__db = __db;
@@ -134,6 +137,14 @@ public final class CalendarDao_Impl implements CalendarDao {
         statement.bindLong(15, entity.getId());
       }
     };
+    this.__preparedStmtOfDeleteEventsByUserId = new SharedSQLiteStatement(__db) {
+      @Override
+      @NonNull
+      public String createQuery() {
+        final String _query = "DELETE FROM calendar_events WHERE userId = ?";
+        return _query;
+      }
+    };
   }
 
   @Override
@@ -188,6 +199,32 @@ public final class CalendarDao_Impl implements CalendarDao {
           return Unit.INSTANCE;
         } finally {
           __db.endTransaction();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object deleteEventsByUserId(final long userId,
+      final Continuation<? super Unit> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
+      @Override
+      @NonNull
+      public Unit call() throws Exception {
+        final SupportSQLiteStatement _stmt = __preparedStmtOfDeleteEventsByUserId.acquire();
+        int _argIndex = 1;
+        _stmt.bindLong(_argIndex, userId);
+        try {
+          __db.beginTransaction();
+          try {
+            _stmt.executeUpdateDelete();
+            __db.setTransactionSuccessful();
+            return Unit.INSTANCE;
+          } finally {
+            __db.endTransaction();
+          }
+        } finally {
+          __preparedStmtOfDeleteEventsByUserId.release(_stmt);
         }
       }
     }, $completion);

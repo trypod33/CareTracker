@@ -49,6 +49,10 @@ public final class HabitDao_Impl implements HabitDao {
 
   private final SharedSQLiteStatement __preparedStmtOfUpdateLogCount;
 
+  private final SharedSQLiteStatement __preparedStmtOfDeleteLogsByUserId;
+
+  private final SharedSQLiteStatement __preparedStmtOfDeleteHabitsByUserId;
+
   public HabitDao_Impl(@NonNull final RoomDatabase __db) {
     this.__db = __db;
     this.__insertionAdapterOfHabitEntity = new EntityInsertionAdapter<HabitEntity>(__db) {
@@ -163,6 +167,22 @@ public final class HabitDao_Impl implements HabitDao {
       @NonNull
       public String createQuery() {
         final String _query = "UPDATE habit_logs SET count = ? WHERE habitId = ? AND loggedDate = ?";
+        return _query;
+      }
+    };
+    this.__preparedStmtOfDeleteLogsByUserId = new SharedSQLiteStatement(__db) {
+      @Override
+      @NonNull
+      public String createQuery() {
+        final String _query = "DELETE FROM habit_logs WHERE habitId IN (SELECT id FROM habits WHERE userId = ?)";
+        return _query;
+      }
+    };
+    this.__preparedStmtOfDeleteHabitsByUserId = new SharedSQLiteStatement(__db) {
+      @Override
+      @NonNull
+      public String createQuery() {
+        final String _query = "DELETE FROM habits WHERE userId = ?";
         return _query;
       }
     };
@@ -283,6 +303,58 @@ public final class HabitDao_Impl implements HabitDao {
           }
         } finally {
           __preparedStmtOfUpdateLogCount.release(_stmt);
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object deleteLogsByUserId(final long userId,
+      final Continuation<? super Unit> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
+      @Override
+      @NonNull
+      public Unit call() throws Exception {
+        final SupportSQLiteStatement _stmt = __preparedStmtOfDeleteLogsByUserId.acquire();
+        int _argIndex = 1;
+        _stmt.bindLong(_argIndex, userId);
+        try {
+          __db.beginTransaction();
+          try {
+            _stmt.executeUpdateDelete();
+            __db.setTransactionSuccessful();
+            return Unit.INSTANCE;
+          } finally {
+            __db.endTransaction();
+          }
+        } finally {
+          __preparedStmtOfDeleteLogsByUserId.release(_stmt);
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object deleteHabitsByUserId(final long userId,
+      final Continuation<? super Unit> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
+      @Override
+      @NonNull
+      public Unit call() throws Exception {
+        final SupportSQLiteStatement _stmt = __preparedStmtOfDeleteHabitsByUserId.acquire();
+        int _argIndex = 1;
+        _stmt.bindLong(_argIndex, userId);
+        try {
+          __db.beginTransaction();
+          try {
+            _stmt.executeUpdateDelete();
+            __db.setTransactionSuccessful();
+            return Unit.INSTANCE;
+          } finally {
+            __db.endTransaction();
+          }
+        } finally {
+          __preparedStmtOfDeleteHabitsByUserId.release(_stmt);
         }
       }
     }, $completion);

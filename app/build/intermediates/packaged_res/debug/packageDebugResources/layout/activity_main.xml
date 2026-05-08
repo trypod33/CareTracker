@@ -20,7 +20,7 @@
             android:text="CareTracker"
             android:textColor="#ffffff"
             android:textSize="18sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,20 +32,47 @@
                 android:id="@+id/tv_viewing_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
                 android:text="Viewing:"
                 android:textColor="#aaaaaa"
-                android:textSize="13sp"
-                android:layout_marginEnd="6dp"/>
+                android:textSize="13sp" />
 
             <Spinner
                 android:id="@+id/spinner_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#4f9cf9"
-                android:popupBackground="#1e1e1e"/>
+                android:popupBackground="#1e1e1e" />
 
+            <TextView
+                android:id="@+id/btnLogout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="6dp"
+                android:text="Sign out"
+                android:textColor="#ffb4b4"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/btnMore"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="6dp"
+                android:gravity="center"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="⋮"
+                android:textColor="#dddddd"
+                android:textSize="20sp"
+                android:contentDescription="More options" />
         </LinearLayout>
-
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.fragment.app.FragmentContainerView
@@ -55,7 +82,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         app:defaultNavHost="true"
-        app:navGraph="@navigation/nav_graph"/>
+        app:navGraph="@navigation/nav_graph" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
@@ -64,6 +91,5 @@
         android:background="#1e1e1e"
         app:itemIconTint="#4f9cf9"
         app:itemTextColor="#4f9cf9"
-        app:menu="@menu/bottom_nav_menu"/>
-
+        app:menu="@menu/bottom_nav_menu" />
 </LinearLayout>

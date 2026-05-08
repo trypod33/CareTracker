@@ -20,4 +20,7 @@ interface MoodDao {
 
     @Delete
     suspend fun deleteEntry(entry: MoodJournalEntity)
+
+    @Query("DELETE FROM mood_journal WHERE userId = :userId")
+    suspend fun deleteEntriesByUserId(userId: Long)
 }

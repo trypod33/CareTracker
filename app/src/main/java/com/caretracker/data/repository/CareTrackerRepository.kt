@@ -18,6 +18,20 @@ class CareTrackerRepository(
     suspend fun getUserByUsername(username: String) = userDao.getUserByUsername(username)
     suspend fun insertUser(user: UserEntity) = userDao.insert(user)
     suspend fun updateUser(user: UserEntity) = userDao.update(user)
+    suspend fun deleteUser(user: UserEntity) = userDao.delete(user)
+
+    suspend fun deleteUserAndData(user: UserEntity) {
+        habitDao.deleteLogsByUserId(user.id)
+        habitDao.deleteHabitsByUserId(user.id)
+        medicationDao.deleteLogsByUserId(user.id)
+        medicationDao.deleteMedicationsByUserId(user.id)
+        calendarDao.deleteEventsByUserId(user.id)
+        taskDao.deleteTasksByUserId(user.id)
+        moodDao.deleteEntriesByUserId(user.id)
+        healthDao.deleteVitalLogsByUserId(user.id)
+        healthDao.deleteEntriesByUserId(user.id)
+        userDao.delete(user)
+    }
 
     fun getHabitsForUser(userId: Long) = habitDao.getHabitsForUser(userId)
     fun getRecentHabitLogs(habitId: Long) = habitDao.getRecentLogs(habitId)
@@ -58,9 +72,7 @@ class CareTrackerRepository(
                 )
             )
         } else {
-            healthDao.updateEntry(
-                existing.copy(waterOz = (existing.waterOz ?: 0f) + oz)
-            )
+            healthDao.updateEntry(existing.copy(waterOz = (existing.waterOz ?: 0f) + oz))
         }
     }
 
@@ -75,9 +87,7 @@ class CareTrackerRepository(
                 )
             )
         } else {
-            healthDao.updateEntry(
-                existing.copy(waterOz = oz)
-            )
+            healthDao.updateEntry(existing.copy(waterOz = oz))
         }
     }
 

@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:2:1-31:12
-INJECTED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:2:1-31:12
-INJECTED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:2:1-31:12
-INJECTED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:2:1-31:12
+ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:2:1-26:12
+INJECTED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:2:1-26:12
+INJECTED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:2:1-26:12
+INJECTED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:2:1-26:12
 MERGED from [androidx.databinding:viewbinding:8.7.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/19038ff875efb3fd2f7831d229d20030/transformed/jetified-viewbinding-8.7.0/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.navigation:navigation-common:2.7.7] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/f305866975d37b1360e156996463329d/transformed/navigation-common-2.7.7/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.navigation:navigation-common-ktx:2.7.7] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/7346b6cb8c8d2013cba107db214f3dc8/transformed/navigation-common-ktx-2.7.7/AndroidManifest.xml:2:1-7:12
@@ -79,18 +79,18 @@ MERGED from [androidx.print:print:1.0.0] /data/data/com.termux/files/home/.gradl
 	xmlns:android
 		ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:2:11-69
 uses-permission#android.permission.RECEIVE_BOOT_COMPLETED
-ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:4:5-81
+ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:3:5-81
 MERGED from [androidx.work:work-runtime:2.9.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/91f8e9ef107c8de3ae1f49405535304b/transformed/work-runtime-2.9.0/AndroidManifest.xml:25:5-81
 MERGED from [androidx.work:work-runtime:2.9.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/91f8e9ef107c8de3ae1f49405535304b/transformed/work-runtime-2.9.0/AndroidManifest.xml:25:5-81
 	android:name
-		ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:4:22-78
+		ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:3:22-78
 uses-permission#android.permission.POST_NOTIFICATIONS
-ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:5:5-77
+ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:4:5-77
 	android:name
-		ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:5:22-74
+		ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:4:22-74
 application
-ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:7:5-30:19
-INJECTED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:7:5-30:19
+ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:6:5-25:19
+INJECTED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:6:5-25:19
 MERGED from [com.google.android.material:material:1.11.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/2f13fd4d75ff5b352c11ac9d1fec2ce5/transformed/material-1.11.0/AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.11.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/2f13fd4d75ff5b352c11ac9d1fec2ce5/transformed/material-1.11.0/AndroidManifest.xml:22:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/942c5f2c67c53a7539021d58ef1981cd/transformed/constraintlayout-2.1.4/AndroidManifest.xml:9:5-20
@@ -118,43 +118,37 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] /data/data/com.termux/files
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.12.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/8e00ad8759cbc3b3e80bbebd9556d75a/transformed/core-1.12.0/AndroidManifest.xml:28:18-86
 	android:label
-		ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:11:9-36
+		ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:8:9-36
 	android:icon
-		ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:10:9-43
+		ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:9:9-43
 	android:allowBackup
-		ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:9:9-35
+		ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:11:9-36
 	android:theme
-		ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:12:9-49
+		ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:10:9-49
 	android:name
-		ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:8:9-39
+		ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:7:9-39
 activity#com.caretracker.ui.auth.LoginActivity
-ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:14:9-21:20
+ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:13:9-20:20
 	android:exported
-		ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:16:13-36
+		ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:15:13-36
 	android:name
-		ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:15:13-50
+		ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:14:13-50
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:17:13-20:29
+ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:16:13-19:29
 action#android.intent.action.MAIN
-ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:18:17-69
+ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:17:17-69
 	android:name
-		ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:18:25-66
+		ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:17:25-66
 category#android.intent.category.LAUNCHER
-ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:19:17-77
+ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:18:17-77
 	android:name
-		ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:19:27-74
+		ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:18:27-74
 activity#com.caretracker.ui.MainActivity
-ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:23:9-25:40
+ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:22:9-24:40
 	android:exported
-		ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:25:13-37
+		ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:24:13-37
 	android:name
-		ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:24:13-44
-receiver#com.caretracker.notifications.TaskReminderReceiver
-ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:27:9-29:40
-	android:exported
-		ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:29:13-37
-	android:name
-		ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:28:13-63
+		ADDED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml:23:13-44
 uses-sdk
 INJECTED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /data/data/com.termux/files/home/CareTracker/app/src/main/AndroidManifest.xml

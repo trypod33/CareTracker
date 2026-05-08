@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:name=".CareTrackerApp"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
         android:label="CareTracker"
-        android:theme="@style/Theme.CareTracker">
+        android:icon="@mipmap/ic_launcher"
+        android:theme="@style/Theme.CareTracker"
+        android:allowBackup="false">
 
         <activity
             android:name=".ui.auth.LoginActivity"
@@ -22,10 +21,6 @@
 
         <activity
             android:name=".ui.MainActivity"
-            android:exported="false" />
-
-        <receiver
-            android:name=".notifications.TaskReminderReceiver"
             android:exported="false" />
     </application>
 </manifest>
