@@ -64,6 +64,23 @@ class CareTrackerRepository(
         }
     }
 
+    suspend fun setWaterOzForDate(userId: Long, date: String, oz: Float) {
+        val existing = healthDao.getEntryForDate(userId, date)
+        if (existing == null) {
+            healthDao.insertEntry(
+                HealthEntryEntity(
+                    userId = userId,
+                    entryDate = date,
+                    waterOz = oz
+                )
+            )
+        } else {
+            healthDao.updateEntry(
+                existing.copy(waterOz = oz)
+            )
+        }
+    }
+
     fun getAllMedications() = medicationDao.getAllMedications()
     fun getMedicationsForUser(userId: Long) = medicationDao.getMedicationsForUser(userId)
     suspend fun getMedicationById(id: Long) = medicationDao.getMedicationById(id)

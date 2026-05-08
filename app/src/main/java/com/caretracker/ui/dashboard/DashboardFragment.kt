@@ -1,9 +1,14 @@
 package com.caretracker.ui.dashboard
 
+import android.app.AlertDialog
 import android.os.Bundle
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -53,7 +58,12 @@ class DashboardFragment : Fragment() {
         binding.cardMeds.setOnClickListener { navigateAsTopLevel(R.id.medicationsFragment) }
         binding.cardTasks.setOnClickListener { navigateAsTopLevel(R.id.tasksFragment) }
         binding.cardMood.setOnClickListener { navigateAsTopLevel(R.id.healthFragment) }
-        binding.cardWater.setOnClickListener { navigateAsTopLevel(R.id.healthFragment) }
+
+        // Water card: tap or long-press both open the edit dialog
+        binding.cardWater.setOnClickListener { showEditWaterDialog() }
+        binding.cardWater.setOnLongClickListener { showEditWaterDialog(); true }
+        binding.tvWaterOz.setOnLongClickListener { showEditWaterDialog(); true }
+
         binding.btnViewAllHabits.setOnClickListener { navigateAsTopLevel(R.id.habitsFragment) }
         binding.btnViewAllMeds.setOnClickListener { navigateAsTopLevel(R.id.medicationsFragment) }
         binding.btnViewAllTasks.setOnClickListener { navigateAsTopLevel(R.id.tasksFragment) }
@@ -89,6 +99,59 @@ class DashboardFragment : Fragment() {
                 Toast.makeText(requireContext(), "Added ${formatOz(oz)} oz", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun showEditWaterDialog() {
+        val app = requireActivity().application as CareTrackerApp
+        val currentText = binding.tvWaterOz.text?.toString()?.trim().orEmpty()
+
+        val input = EditText(requireContext()).apply {
+            inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+            setText(currentText)
+            setSelection(text?.length ?: 0)
+            hint = "oz"
+        }
+
+        val container = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
+            val pad = (20 * resources.displayMetrics.density).toInt()
+            setPadding(pad * 2, pad, pad * 2, 0)
+            addView(input)
+            val hint = TextView(requireContext()).apply {
+                text = "Tap Reset to clear today's total."
+                textSize = 11f
+                setPadding(0, 12, 0, 0)
+                setTextColor(0xFF888888.toInt())
+            }
+            addView(hint)
+        }
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Today's Water")
+            .setView(container)
+            .setNegativeButton("Cancel", null)
+            .setNeutralButton("Reset to 0") { _, _ ->
+                viewLifecycleOwner.lifecycleScope.launch {
+                    val userId = app.currentUserId
+                    app.repository.setWaterOzForDate(userId, today, 0f)
+                    binding.tvWaterOz.text = "0"
+                    Toast.makeText(requireContext(), "Water reset to 0", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setPositiveButton("Save") { _, _ ->
+                val oz = input.text?.toString()?.trim()?.toFloatOrNull()
+                if (oz == null || oz < 0f) {
+                    Toast.makeText(requireContext(), "Enter a valid amount", Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
+                viewLifecycleOwner.lifecycleScope.launch {
+                    val userId = app.currentUserId
+                    app.repository.setWaterOzForDate(userId, today, oz)
+                    binding.tvWaterOz.text = formatOz(oz)
+                    Toast.makeText(requireContext(), "Water updated to ${formatOz(oz)} oz", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .show()
     }
 
     private fun navigateAsTopLevel(destinationId: Int) {
@@ -131,7 +194,8 @@ class DashboardFragment : Fragment() {
         val waterOz = app.repository.getWaterOzForDate(userId, today)
 
         binding.tvStatHabits.text = "$habitDone/${habits.size}"
-        binding.tvStatHabitsSub.text = if (habits.isNotEmpty()) "${(habitDone * 100) / habits.size}% complete" else "0% complete"
+        binding.tvStatHabitsSub.text =
+            if (habits.isNotEmpty()) "${(habitDone * 100) / habits.size}% complete" else "0% complete"
         binding.tvStatMeds.text = "$medsDone/${meds.size}"
         binding.tvStatTasks.text = openTasks.toString()
         binding.tvMoodScore.text = moodEntry?.moodScore?.toString() ?: "—"
@@ -140,7 +204,8 @@ class DashboardFragment : Fragment() {
     }
 
     private fun formatOz(value: Float): String {
-        return if (value % 1f == 0f) value.toInt().toString() else String.format(Locale.getDefault(), "%.1f", value)
+        return if (value % 1f == 0f) value.toInt().toString()
+        else String.format(Locale.getDefault(), "%.1f", value)
     }
 
     override fun onDestroyView() {
