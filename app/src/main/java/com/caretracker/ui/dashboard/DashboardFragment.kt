@@ -61,8 +61,14 @@ class DashboardFragment : Fragment() {
         binding.btnAddHabit.setOnClickListener {
             navigateAsTopLevelWithArgs(R.id.habitsFragment, bundleOf("openAddDialog" to true))
         }
+        binding.btnAddHabitHeader.setOnClickListener {
+            navigateAsTopLevelWithArgs(R.id.habitsFragment, bundleOf("openAddDialog" to true))
+        }
 
         binding.btnAddTask.setOnClickListener {
+            navigateAsTopLevelWithArgs(R.id.tasksFragment, bundleOf("openAddDialog" to true))
+        }
+        binding.btnAddTaskHeader.setOnClickListener {
             navigateAsTopLevelWithArgs(R.id.tasksFragment, bundleOf("openAddDialog" to true))
         }
 

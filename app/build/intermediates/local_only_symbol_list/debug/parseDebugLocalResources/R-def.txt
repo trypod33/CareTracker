@@ -41,8 +41,10 @@ drawable progress_ring
 drawable spinner_background
 id bottom_nav
 id btnAddHabit
+id btnAddHabitHeader
 id btnAddMedication
 id btnAddTask
+id btnAddTaskHeader
 id btnAddWater
 id btnCancel
 id btnDelete

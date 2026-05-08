@@ -27,7 +27,13 @@ public final class FragmentDashboardBinding implements ViewBinding {
   public final Button btnAddHabit;
 
   @NonNull
+  public final TextView btnAddHabitHeader;
+
+  @NonNull
   public final Button btnAddTask;
+
+  @NonNull
+  public final TextView btnAddTaskHeader;
 
   @NonNull
   public final Button btnAddWater;
@@ -96,19 +102,22 @@ public final class FragmentDashboardBinding implements ViewBinding {
   public final TextView tvWaterOz;
 
   private FragmentDashboardBinding(@NonNull NestedScrollView rootView, @NonNull Button btnAddHabit,
-      @NonNull Button btnAddTask, @NonNull Button btnAddWater, @NonNull TextView btnViewAllHabits,
-      @NonNull TextView btnViewAllMeds, @NonNull TextView btnViewAllTasks,
-      @NonNull LinearLayout cardHabits, @NonNull LinearLayout cardMeds,
-      @NonNull LinearLayout cardMood, @NonNull LinearLayout cardTasks,
-      @NonNull LinearLayout cardWater, @NonNull LinearLayout emptyHabits,
-      @NonNull LinearLayout emptyTasks, @NonNull EditText etBottleSize,
-      @NonNull RecyclerView rvHabits, @NonNull RecyclerView rvMeds, @NonNull RecyclerView rvTasks,
-      @NonNull TextView tvMoodDate, @NonNull TextView tvMoodScore, @NonNull TextView tvStatHabits,
-      @NonNull TextView tvStatHabitsSub, @NonNull TextView tvStatMeds,
-      @NonNull TextView tvStatTasks, @NonNull TextView tvWaterOz) {
+      @NonNull TextView btnAddHabitHeader, @NonNull Button btnAddTask,
+      @NonNull TextView btnAddTaskHeader, @NonNull Button btnAddWater,
+      @NonNull TextView btnViewAllHabits, @NonNull TextView btnViewAllMeds,
+      @NonNull TextView btnViewAllTasks, @NonNull LinearLayout cardHabits,
+      @NonNull LinearLayout cardMeds, @NonNull LinearLayout cardMood,
+      @NonNull LinearLayout cardTasks, @NonNull LinearLayout cardWater,
+      @NonNull LinearLayout emptyHabits, @NonNull LinearLayout emptyTasks,
+      @NonNull EditText etBottleSize, @NonNull RecyclerView rvHabits, @NonNull RecyclerView rvMeds,
+      @NonNull RecyclerView rvTasks, @NonNull TextView tvMoodDate, @NonNull TextView tvMoodScore,
+      @NonNull TextView tvStatHabits, @NonNull TextView tvStatHabitsSub,
+      @NonNull TextView tvStatMeds, @NonNull TextView tvStatTasks, @NonNull TextView tvWaterOz) {
     this.rootView = rootView;
     this.btnAddHabit = btnAddHabit;
+    this.btnAddHabitHeader = btnAddHabitHeader;
     this.btnAddTask = btnAddTask;
+    this.btnAddTaskHeader = btnAddTaskHeader;
     this.btnAddWater = btnAddWater;
     this.btnViewAllHabits = btnViewAllHabits;
     this.btnViewAllMeds = btnViewAllMeds;
@@ -166,9 +175,21 @@ public final class FragmentDashboardBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.btnAddHabitHeader;
+      TextView btnAddHabitHeader = ViewBindings.findChildViewById(rootView, id);
+      if (btnAddHabitHeader == null) {
+        break missingId;
+      }
+
       id = R.id.btnAddTask;
       Button btnAddTask = ViewBindings.findChildViewById(rootView, id);
       if (btnAddTask == null) {
+        break missingId;
+      }
+
+      id = R.id.btnAddTaskHeader;
+      TextView btnAddTaskHeader = ViewBindings.findChildViewById(rootView, id);
+      if (btnAddTaskHeader == null) {
         break missingId;
       }
 
@@ -304,11 +325,11 @@ public final class FragmentDashboardBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentDashboardBinding((NestedScrollView) rootView, btnAddHabit, btnAddTask,
-          btnAddWater, btnViewAllHabits, btnViewAllMeds, btnViewAllTasks, cardHabits, cardMeds,
-          cardMood, cardTasks, cardWater, emptyHabits, emptyTasks, etBottleSize, rvHabits, rvMeds,
-          rvTasks, tvMoodDate, tvMoodScore, tvStatHabits, tvStatHabitsSub, tvStatMeds, tvStatTasks,
-          tvWaterOz);
+      return new FragmentDashboardBinding((NestedScrollView) rootView, btnAddHabit,
+          btnAddHabitHeader, btnAddTask, btnAddTaskHeader, btnAddWater, btnViewAllHabits,
+          btnViewAllMeds, btnViewAllTasks, cardHabits, cardMeds, cardMood, cardTasks, cardWater,
+          emptyHabits, emptyTasks, etBottleSize, rvHabits, rvMeds, rvTasks, tvMoodDate, tvMoodScore,
+          tvStatHabits, tvStatHabitsSub, tvStatMeds, tvStatTasks, tvWaterOz);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

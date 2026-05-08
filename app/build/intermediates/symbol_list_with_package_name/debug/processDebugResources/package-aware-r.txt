@@ -3264,8 +3264,10 @@ id bounceBoth
 id bounceEnd
 id bounceStart
 id btnAddHabit
+id btnAddHabitHeader
 id btnAddMedication
 id btnAddTask
+id btnAddTaskHeader
 id btnAddWater
 id btnCancel
 id btnDelete
