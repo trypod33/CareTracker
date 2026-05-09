@@ -6,8 +6,12 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserDao {
+
     @Query("SELECT * FROM users WHERE isActive = 1")
     fun getAllUsers(): Flow<List<UserEntity>>
+
+    @Query("SELECT * FROM users WHERE isActive = 1")
+    suspend fun getAllUsersOnce(): List<UserEntity>
 
     @Query("SELECT * FROM users WHERE id = :id")
     suspend fun getUserById(id: Long): UserEntity?

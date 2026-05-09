@@ -14,6 +14,7 @@ class CareTrackerRepository(
     private val moodDao: MoodDao
 ) {
     fun getAllUsers(): Flow<List<UserEntity>> = userDao.getAllUsers()
+suspend fun getAllUsersOnce(): List<UserEntity> = userDao.getAllUsersOnce()
     suspend fun getUserById(id: Long) = userDao.getUserById(id)
     suspend fun getUserByUsername(username: String) = userDao.getUserByUsername(username)
     suspend fun insertUser(user: UserEntity) = userDao.insert(user)
@@ -93,6 +94,7 @@ class CareTrackerRepository(
 
     fun getAllMedications() = medicationDao.getAllMedications()
     fun getMedicationsForUser(userId: Long) = medicationDao.getMedicationsForUser(userId)
+    suspend fun getMedicationsForUserOnce(userId: Long) = medicationDao.getMedicationsForUserOnce(userId)
     suspend fun getMedicationById(id: Long) = medicationDao.getMedicationById(id)
     fun getMedLogsForDate(medId: Long, date: String) = medicationDao.getLogsForDate(medId, date)
     fun getRecentMedLogs(medId: Long) = medicationDao.getRecentLogs(medId)
@@ -111,6 +113,7 @@ class CareTrackerRepository(
     fun getTasksForUser(userId: Long) = taskDao.getTasksForUser(userId)
     fun getActiveTasks(userId: Long) = taskDao.getActiveTasks(userId)
     fun getAllTasksForUser(userId: Long) = taskDao.getAllTasksForUser(userId)
+    suspend fun getAllTasksForUserOnce(userId: Long) = taskDao.getAllTasksForUserOnce(userId)
     suspend fun insertTask(task: TaskEntity) = taskDao.insertTask(task)
     suspend fun updateTask(task: TaskEntity) = taskDao.updateTask(task)
     suspend fun deleteTask(task: TaskEntity) = taskDao.deleteTask(task)

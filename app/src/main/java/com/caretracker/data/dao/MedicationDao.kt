@@ -7,39 +7,43 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MedicationDao {
-    @Query("SELECT * FROM medications WHERE isActive = 1 ORDER BY userId ASC, sortOrder ASC, createdAt ASC")
+
+    @Query("SELECT * FROM medications ORDER BY sortOrder ASC, createdAt DESC")
     fun getAllMedications(): Flow<List<MedicationEntity>>
 
-    @Query("SELECT * FROM medications WHERE userId = :userId AND isActive = 1 ORDER BY sortOrder ASC, createdAt ASC")
+    @Query("SELECT * FROM medications WHERE userId = :userId ORDER BY sortOrder ASC, createdAt DESC")
     fun getMedicationsForUser(userId: Long): Flow<List<MedicationEntity>>
 
-    @Query("SELECT * FROM medications WHERE id = :id")
+    @Query("SELECT * FROM medications WHERE userId = :userId ORDER BY sortOrder ASC, createdAt DESC")
+    suspend fun getMedicationsForUserOnce(userId: Long): List<MedicationEntity>
+
+    @Query("SELECT * FROM medications WHERE id = :id LIMIT 1")
     suspend fun getMedicationById(id: Long): MedicationEntity?
 
-    @Query("SELECT * FROM med_logs WHERE medicationId = :medId AND takenDate = :date")
-    fun getLogsForDate(medId: Long, date: String): Flow<List<MedLogEntity>>
-
-    @Query("SELECT * FROM med_logs WHERE medicationId = :medId ORDER BY takenAt DESC LIMIT 30")
-    fun getRecentLogs(medId: Long): Flow<List<MedLogEntity>>
-
-    @Query("SELECT * FROM med_logs WHERE medicationId = :medId AND takenDate = :date")
-    suspend fun getMedLogsForDateOnce(medId: Long, date: String): List<MedLogEntity>
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMedication(med: MedicationEntity): Long
+    suspend fun insertMedication(medication: MedicationEntity): Long
+
+    @Update
+    suspend fun updateMedication(medication: MedicationEntity)
+
+    @Delete
+    suspend fun deleteMedication(medication: MedicationEntity)
+
+    @Query("DELETE FROM medications WHERE userId = :userId")
+    suspend fun deleteMedicationsByUserId(userId: Long)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertLog(log: MedLogEntity): Long
 
-    @Update
-    suspend fun updateMedication(med: MedicationEntity)
+    @Query("SELECT * FROM med_logs WHERE medicationId = :medId AND takenDate = :date ORDER BY id DESC")
+    fun getLogsForDate(medId: Long, date: String): Flow<List<MedLogEntity>>
 
-    @Delete
-    suspend fun deleteMedication(med: MedicationEntity)
+    @Query("SELECT * FROM med_logs WHERE medicationId = :medId AND takenDate = :date ORDER BY id DESC")
+    suspend fun getMedLogsForDateOnce(medId: Long, date: String): List<MedLogEntity>
+
+    @Query("SELECT * FROM med_logs WHERE medicationId = :medId ORDER BY id DESC LIMIT 30")
+    fun getRecentLogs(medId: Long): Flow<List<MedLogEntity>>
 
     @Query("DELETE FROM med_logs WHERE medicationId IN (SELECT id FROM medications WHERE userId = :userId)")
     suspend fun deleteLogsByUserId(userId: Long)
-
-    @Query("DELETE FROM medications WHERE userId = :userId")
-    suspend fun deleteMedicationsByUserId(userId: Long)
 }
