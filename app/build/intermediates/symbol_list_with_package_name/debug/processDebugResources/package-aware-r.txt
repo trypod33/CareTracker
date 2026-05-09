@@ -3223,7 +3223,6 @@ id action_bar_subtitle
 id action_bar_title
 id action_container
 id action_context_bar
-id action_delete_person
 id action_divider
 id action_image
 id action_menu_divider
@@ -3231,6 +3230,7 @@ id action_menu_presenter
 id action_mode_bar
 id action_mode_bar_stub
 id action_mode_close_button
+id action_settings
 id action_text
 id actions
 id activity_chooser_view_content
@@ -3279,7 +3279,6 @@ id btnEdit
 id btnHabitEdit
 id btnLogHealth
 id btnLogin
-id btnLogout
 id btnMore
 id btnRefill
 id btnRegister
@@ -3629,7 +3628,16 @@ id rightToLeft
 id right_icon
 id right_side
 id rounded
+id row_about
+id row_app_lock
+id row_backup_restore
+id row_delete_person
 id row_index_key
+id row_manage_people
+id row_medical_disclaimer
+id row_privacy_policy
+id row_reminder_settings
+id row_sign_out
 id rtl
 id rvHabits
 id rvHealthHistory
@@ -3663,6 +3671,7 @@ id seekSleepQuality
 id select_dialog_listview
 id selected
 id selection_type
+id settingsFragment
 id sharedValueSet
 id sharedValueUnset
 id shortcut
@@ -3756,11 +3765,13 @@ id transition_position
 id transition_scene_layoutid_cache
 id transition_transform
 id triangle
+id tvBackupStatusValue
 id tvBloodPressure
 id tvBloodSugar
 id tvBpTrend
 id tvBpTrendTitle
 id tvCalories
+id tvCurrentPersonValue
 id tvDayOfWeekDate
 id tvDosage
 id tvDragHandleMed
@@ -3796,8 +3807,13 @@ id tvMoodScore
 id tvPastEntriesHeader
 id tvPillCount
 id tvPrescriber
+id tvPrivacyStatusValue
 id tvProgressPct
+id tvReminderStatusValue
+id tvRoadmapStatus
 id tvSectionHeader
+id tvSettingsSubtitle
+id tvSettingsTitle
 id tvSleep
 id tvSleepQuality
 id tvSleepTrend
@@ -3988,6 +4004,7 @@ layout fragment_dashboard
 layout fragment_habits
 layout fragment_health
 layout fragment_medications
+layout fragment_settings
 layout fragment_tasks
 layout ime_base_split_test_activity
 layout ime_secondary_split_test_activity

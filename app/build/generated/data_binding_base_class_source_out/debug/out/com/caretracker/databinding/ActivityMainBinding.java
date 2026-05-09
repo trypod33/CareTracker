@@ -27,9 +27,6 @@ public final class ActivityMainBinding implements ViewBinding {
   public final BottomNavigationView bottomNav;
 
   @NonNull
-  public final TextView btnLogout;
-
-  @NonNull
   public final TextView btnMore;
 
   @NonNull
@@ -48,13 +45,11 @@ public final class ActivityMainBinding implements ViewBinding {
   public final TextView tvViewingLabel;
 
   private ActivityMainBinding(@NonNull LinearLayout rootView,
-      @NonNull BottomNavigationView bottomNav, @NonNull TextView btnLogout,
-      @NonNull TextView btnMore, @NonNull FragmentContainerView navHostFragment,
-      @NonNull Spinner spinnerUser, @NonNull Toolbar toolbar, @NonNull TextView tvAppTitle,
-      @NonNull TextView tvViewingLabel) {
+      @NonNull BottomNavigationView bottomNav, @NonNull TextView btnMore,
+      @NonNull FragmentContainerView navHostFragment, @NonNull Spinner spinnerUser,
+      @NonNull Toolbar toolbar, @NonNull TextView tvAppTitle, @NonNull TextView tvViewingLabel) {
     this.rootView = rootView;
     this.bottomNav = bottomNav;
-    this.btnLogout = btnLogout;
     this.btnMore = btnMore;
     this.navHostFragment = navHostFragment;
     this.spinnerUser = spinnerUser;
@@ -96,12 +91,6 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.btnLogout;
-      TextView btnLogout = ViewBindings.findChildViewById(rootView, id);
-      if (btnLogout == null) {
-        break missingId;
-      }
-
       id = R.id.btnMore;
       TextView btnMore = ViewBindings.findChildViewById(rootView, id);
       if (btnMore == null) {
@@ -138,8 +127,8 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ActivityMainBinding((LinearLayout) rootView, bottomNav, btnLogout, btnMore,
-          navHostFragment, spinnerUser, toolbar, tvAppTitle, tvViewingLabel);
+      return new ActivityMainBinding((LinearLayout) rootView, bottomNav, btnMore, navHostFragment,
+          spinnerUser, toolbar, tvAppTitle, tvViewingLabel);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

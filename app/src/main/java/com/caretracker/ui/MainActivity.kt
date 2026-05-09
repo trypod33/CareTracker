@@ -21,7 +21,12 @@ import com.caretracker.ui.auth.LoginActivity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class MainActivity : AppCompatActivity() {
+interface SettingsActionListener {
+    fun onDeleteCurrentPersonRequested()
+    fun onSignOutRequested()
+}
+
+class MainActivity : AppCompatActivity(), SettingsActionListener {
     private lateinit var binding: ActivityMainBinding
     private val app get() = application as CareTrackerApp
     private var userList: List<UserEntity> = emptyList()
@@ -40,7 +45,6 @@ class MainActivity : AppCompatActivity() {
         val savedUserId = intent.getLongExtra("user_id", -1L)
         if (savedUserId != -1L) app.currentUserId = savedUserId
 
-        binding.btnLogout.setOnClickListener { signOut() }
         binding.btnMore.setOnClickListener { showOverflowMenu(it) }
 
         lifecycleScope.launch {
@@ -56,8 +60,10 @@ class MainActivity : AppCompatActivity() {
             menuInflater.inflate(R.menu.main_overflow_menu, menu)
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
-                    R.id.action_delete_person -> {
-                        confirmDeleteCurrentPerson()
+                    R.id.action_settings -> {
+                        val navHostFragment =
+                            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+                        navHostFragment.navController.navigate(R.id.settingsFragment)
                         true
                     }
                     else -> false
@@ -87,8 +93,8 @@ class MainActivity : AppCompatActivity() {
                 if (!spinnerReady) return
 
                 if (position == userList.size) {
-                    val currentIndex = userList.indexOfFirst { it.id == app.currentUserId }
-                    if (currentIndex >= 0) binding.spinnerUser.setSelection(currentIndex)
+                    val selectedUserIndex = userList.indexOfFirst { it.id == app.currentUserId }
+                    if (selectedUserIndex >= 0) binding.spinnerUser.setSelection(selectedUserIndex)
                     showAddPersonDialog()
                 } else {
                     val selected = userList[position]
@@ -185,6 +191,14 @@ class MainActivity : AppCompatActivity() {
             }
             .setNegativeButton("Cancel", null)
             .show()
+    }
+
+    override fun onDeleteCurrentPersonRequested() {
+        confirmDeleteCurrentPerson()
+    }
+
+    override fun onSignOutRequested() {
+        signOut()
     }
 
     private fun signOut() {

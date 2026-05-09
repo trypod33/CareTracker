@@ -4,19 +4,33 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/dashboardFragment">
 
-    <fragment android:id="@+id/dashboardFragment"
+    <fragment
+        android:id="@+id/dashboardFragment"
         android:name="com.caretracker.ui.dashboard.DashboardFragment"
-        android:label="Dashboard"/>
-    <fragment android:id="@+id/habitsFragment"
+        android:label="Dashboard" />
+
+    <fragment
+        android:id="@+id/habitsFragment"
         android:name="com.caretracker.ui.habits.HabitsFragment"
-        android:label="Habits"/>
-    <fragment android:id="@+id/healthFragment"
+        android:label="Habits" />
+
+    <fragment
+        android:id="@+id/healthFragment"
         android:name="com.caretracker.ui.health.HealthFragment"
-        android:label="Health"/>
-    <fragment android:id="@+id/medicationsFragment"
+        android:label="Health" />
+
+    <fragment
+        android:id="@+id/medicationsFragment"
         android:name="com.caretracker.ui.meds.MedicationsFragment"
-        android:label="Medications"/>
-    <fragment android:id="@+id/tasksFragment"
+        android:label="Medications" />
+
+    <fragment
+        android:id="@+id/tasksFragment"
         android:name="com.caretracker.ui.tasks.TasksFragment"
-        android:label="Tasks"/>
+        android:label="Tasks" />
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.caretracker.ui.settings.SettingsFragment"
+        android:label="Settings" />
 </navigation>

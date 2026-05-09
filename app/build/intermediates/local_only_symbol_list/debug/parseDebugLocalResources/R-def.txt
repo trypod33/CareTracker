@@ -39,7 +39,7 @@ drawable ic_launcher_foreground
 drawable progress_pills
 drawable progress_ring
 drawable spinner_background
-id action_delete_person
+id action_settings
 id bottom_nav
 id btnAddHabit
 id btnAddHabitHeader
@@ -56,7 +56,6 @@ id btnEdit
 id btnHabitEdit
 id btnLogHealth
 id btnLogin
-id btnLogout
 id btnMore
 id btnRefill
 id btnRegister
@@ -135,6 +134,15 @@ id rbOrange
 id rbPink
 id rbPurple
 id rbRed
+id row_about
+id row_app_lock
+id row_backup_restore
+id row_delete_person
+id row_manage_people
+id row_medical_disclaimer
+id row_privacy_policy
+id row_reminder_settings
+id row_sign_out
 id rvHabits
 id rvHealthHistory
 id rvJournalEntries
@@ -144,6 +152,7 @@ id rvTasks
 id seekEnergy
 id seekMood
 id seekSleepQuality
+id settingsFragment
 id spinnerPerson
 id spinnerWeightUnit
 id spinner_user
@@ -151,11 +160,13 @@ id tasksFragment
 id tilPassword
 id tilUsername
 id toolbar
+id tvBackupStatusValue
 id tvBloodPressure
 id tvBloodSugar
 id tvBpTrend
 id tvBpTrendTitle
 id tvCalories
+id tvCurrentPersonValue
 id tvDayOfWeekDate
 id tvDosage
 id tvDragHandleMed
@@ -191,8 +202,13 @@ id tvMoodScore
 id tvPastEntriesHeader
 id tvPillCount
 id tvPrescriber
+id tvPrivacyStatusValue
 id tvProgressPct
+id tvReminderStatusValue
+id tvRoadmapStatus
 id tvSectionHeader
+id tvSettingsSubtitle
+id tvSettingsTitle
 id tvSleep
 id tvSleepQuality
 id tvSleepTrend
@@ -229,6 +245,7 @@ layout fragment_dashboard
 layout fragment_habits
 layout fragment_health
 layout fragment_medications
+layout fragment_settings
 layout fragment_tasks
 layout item_bp_reading
 layout item_habit
