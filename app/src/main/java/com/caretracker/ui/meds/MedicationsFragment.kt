@@ -1,6 +1,7 @@
 package com.caretracker.ui.meds
 
 import android.app.AlertDialog
+import android.app.TimePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,7 @@ import com.caretracker.databinding.DialogAddMedicationBinding
 import com.caretracker.databinding.FragmentMedicationsBinding
 import com.google.android.material.chip.Chip
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 class MedicationsFragment : Fragment() {
 
@@ -129,6 +131,20 @@ class MedicationsFragment : Fragment() {
         val targetUserId = existing?.userId ?: currentUserId.takeIf { it > 0 } ?: vm.getCurrentUserId()
         val selectedIndex = users.indexOfFirst { it.id == targetUserId }.coerceAtLeast(0)
         db.spinnerPerson.setSelection(selectedIndex)
+
+        db.tilScheduledTimes.setEndIconOnClickListener {
+            val currentTimes = db.etScheduledTimes.text.toString().trim()
+            val cal = Calendar.getInstance()
+            TimePickerDialog(requireContext(), { _, hour, minute ->
+                val timeStr = String.format("%02d:%02d", hour, minute)
+                val newText = if (currentTimes.isBlank()) {
+                    timeStr
+                } else {
+                    "$currentTimes, $timeStr"
+                }
+                db.etScheduledTimes.setText(newText)
+            }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), false).show()
+        }
 
         existing?.let { med ->
             db.etMedName.setText(med.name)

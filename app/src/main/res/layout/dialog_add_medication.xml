@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="wrap_content">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
         <TextView android:text="BASIC INFO" android:textSize="11sp" android:textColor="#4f9cf9" android:textStyle="bold" android:layout_marginBottom="10dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
         <TextView android:text="For Person *" android:textSize="12sp" android:textColor="#aaaaaa" android:layout_marginBottom="4dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
@@ -29,7 +32,15 @@
             <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:hint="Times/Day" android:layout_marginEnd="8dp">
                 <com.google.android.material.textfield.TextInputEditText android:id="@+id/etTimesPerDay" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" android:text="1"/>
             </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="2" android:hint="Scheduled Times (08:00,20:00)">
+            <com.google.android.material.textfield.TextInputLayout 
+                android:id="@+id/tilScheduledTimes"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" 
+                android:layout_width="0dp" 
+                android:layout_height="wrap_content" 
+                android:layout_weight="2" 
+                android:hint="Scheduled Times (08:00,20:00)"
+                app:endIconMode="custom"
+                app:endIconDrawable="@drawable/ic_time">
                 <com.google.android.material.textfield.TextInputEditText android:id="@+id/etScheduledTimes" android:layout_width="match_parent" android:layout_height="wrap_content"/>
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>

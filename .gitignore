@@ -1,4 +1,31 @@
-
-# Build outputs
+# Android
 .gradle/
 app/build/
+build/
+local.properties
+*.apk
+*.ap_
+*.dex
+bin/
+gen/
+
+# Signing
+*.jks
+*.keystore
+release.properties
+secrets.properties
+
+# Firebase
+google-services.json
+
+# IDE
+.idea/
+*.iml
+.DS_Store
+
+# Logs
+log/
+*.log
+
+# Temp
+/data/data/com.termux/files/home/.gemini/tmp/caretracker/

@@ -8,6 +8,8 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.caretracker.data.dao.*
 import com.caretracker.data.entities.*
+import net.zetetic.database.sqlcipher.SupportOpenHelperFactory
+import net.sqlcipher.database.SQLiteDatabase
 
 @Database(
     entities = [
@@ -86,11 +88,20 @@ abstract class CareTrackerDatabase : RoomDatabase() {
 
         fun getDatabase(context: Context): CareTrackerDatabase {
             return INSTANCE ?: synchronized(this) {
+                // Initialize SQLCipher library
+                SQLiteDatabase.loadLibs(context)
+
+                // In a production app, this passphrase should be retrieved from the Android Keystore.
+                // For demonstration, we use a placeholder. NEVER hardcode a real production key.
+                val passphrase = SQLiteDatabase.getBytes("caretracker-secure-key".toCharArray())
+                val factory = SupportOpenHelperFactory(passphrase)
+
                 Room.databaseBuilder(
                     context.applicationContext,
                     CareTrackerDatabase::class.java,
                     "caretracker_db"
                 )
+                    .openHelperFactory(factory)
                     .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                     .fallbackToDestructiveMigration()
                     .build()
