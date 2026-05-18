@@ -227,6 +227,65 @@ public final class UserDao_Impl implements UserDao {
   }
 
   @Override
+  public Object getAllUsersOnce(final Continuation<? super List<UserEntity>> $completion) {
+    final String _sql = "SELECT * FROM users WHERE isActive = 1";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<List<UserEntity>>() {
+      @Override
+      @NonNull
+      public List<UserEntity> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfUsername = CursorUtil.getColumnIndexOrThrow(_cursor, "username");
+          final int _cursorIndexOfEmail = CursorUtil.getColumnIndexOrThrow(_cursor, "email");
+          final int _cursorIndexOfPasswordHash = CursorUtil.getColumnIndexOrThrow(_cursor, "passwordHash");
+          final int _cursorIndexOfDisplayName = CursorUtil.getColumnIndexOrThrow(_cursor, "displayName");
+          final int _cursorIndexOfAvatarColor = CursorUtil.getColumnIndexOrThrow(_cursor, "avatarColor");
+          final int _cursorIndexOfRole = CursorUtil.getColumnIndexOrThrow(_cursor, "role");
+          final int _cursorIndexOfIsActive = CursorUtil.getColumnIndexOrThrow(_cursor, "isActive");
+          final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
+          final List<UserEntity> _result = new ArrayList<UserEntity>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final UserEntity _item;
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final String _tmpUsername;
+            _tmpUsername = _cursor.getString(_cursorIndexOfUsername);
+            final String _tmpEmail;
+            _tmpEmail = _cursor.getString(_cursorIndexOfEmail);
+            final String _tmpPasswordHash;
+            _tmpPasswordHash = _cursor.getString(_cursorIndexOfPasswordHash);
+            final String _tmpDisplayName;
+            if (_cursor.isNull(_cursorIndexOfDisplayName)) {
+              _tmpDisplayName = null;
+            } else {
+              _tmpDisplayName = _cursor.getString(_cursorIndexOfDisplayName);
+            }
+            final String _tmpAvatarColor;
+            _tmpAvatarColor = _cursor.getString(_cursorIndexOfAvatarColor);
+            final String _tmpRole;
+            _tmpRole = _cursor.getString(_cursorIndexOfRole);
+            final boolean _tmpIsActive;
+            final int _tmp;
+            _tmp = _cursor.getInt(_cursorIndexOfIsActive);
+            _tmpIsActive = _tmp != 0;
+            final long _tmpCreatedAt;
+            _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
+            _item = new UserEntity(_tmpId,_tmpUsername,_tmpEmail,_tmpPasswordHash,_tmpDisplayName,_tmpAvatarColor,_tmpRole,_tmpIsActive,_tmpCreatedAt);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
   public Object getUserById(final long id, final Continuation<? super UserEntity> $completion) {
     final String _sql = "SELECT * FROM users WHERE id = ?";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);

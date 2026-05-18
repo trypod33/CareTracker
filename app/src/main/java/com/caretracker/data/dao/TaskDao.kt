@@ -15,6 +15,9 @@ interface TaskDao {
     @Query("SELECT * FROM tasks WHERE userId = :userId ORDER BY createdAt DESC")
     fun getAllTasksForUser(userId: Long): Flow<List<TaskEntity>>
 
+    @Query("SELECT * FROM tasks WHERE userId = :userId ORDER BY createdAt DESC")
+    suspend fun getAllTasksForUserOnce(userId: Long): List<TaskEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTask(task: TaskEntity): Long
 

@@ -2,8 +2,6 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.devtools.ksp'
-    id 'com.google.gms.google-services'
-    id 'com.google.firebase.crashlytics'
 }
 android {
     namespace 'com.caretracker'
@@ -25,29 +23,6 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
-    signingConfigs {
-        debug {
-            v1SigningEnabled true
-            v2SigningEnabled true
-        }
-        release {
-            val propsFile = rootProject.file("release.properties")
-            if (propsFile.exists()) {
-                val props = java.util.Properties()
-                props.load(propsFile.inputStream())
-                storeFile = file(props.getProperty("STORE_FILE"))
-                storePassword = props.getProperty("STORE_PASSWORD")
-                keyAlias = props.getProperty("KEY_ALIAS")
-                keyPassword = props.getProperty("KEY_PASSWORD")
-            } else {
-                // Fallback or placeholder
-                storeFile = file("release.keystore")
-                storePassword = "placeholder"
-                keyAlias = "placeholder"
-                keyPassword = "placeholder"
-            }
-        }
-    }
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
@@ -56,7 +31,6 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
         }
     }
 }
@@ -73,13 +47,6 @@ dependencies {
     implementation 'androidx.room:room-ktx:2.6.1'
     ksp 'androidx.room:room-compiler:2.6.1'
     implementation 'androidx.work:work-runtime-ktx:2.9.0'
-
-    // SQLCipher for database encryption
     implementation "net.zetetic:android-database-sqlcipher:4.5.4"
     implementation "androidx.sqlite:sqlite-ktx:2.4.0"
-
-    // Firebase
-    implementation platform('com.google.firebase:firebase-bom:32.8.0')
-    implementation 'com.google.firebase:firebase-analytics-ktx'
-    implementation 'com.google.firebase:firebase-crashlytics-ktx'
 }

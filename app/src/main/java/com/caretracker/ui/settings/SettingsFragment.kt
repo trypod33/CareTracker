@@ -1,4 +1,5 @@
 package com.caretracker.ui.settings
+import com.caretracker.data.entities.TaskEntity
 
 import android.app.TimePickerDialog
 import android.content.Context
@@ -193,7 +194,7 @@ class SettingsFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             val allTasks = app.repository.getAllTasksForUserOnce(app.currentUserId)
-            allTasks.forEach { task ->
+            allTasks.forEach { task: TaskEntity ->
                 TaskReminderScheduler.cancel(context, task)
                 TaskReminderScheduler.schedule(context, task)
             }

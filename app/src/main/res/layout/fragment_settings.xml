@@ -29,6 +29,7 @@
             android:textColor="#AAAAAA"
             android:textSize="14sp" />
 
+        <!-- Account and Household -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -64,7 +65,6 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="12dp">
-
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -72,7 +72,6 @@
                     android:text="Manage people"
                     android:textColor="#FFFFFF"
                     android:textSize="15sp" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -91,16 +90,14 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="12dp">
-
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Sign out"
+                    android:text="Switch person"
                     android:textColor="#FFB4B4"
                     android:textSize="15sp"
                     android:textStyle="bold" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -119,7 +116,6 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="12dp">
-
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -127,7 +123,6 @@
                     android:text="Delete current person"
                     android:textColor="#FF8A8A"
                     android:textSize="15sp" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -137,6 +132,7 @@
             </LinearLayout>
         </LinearLayout>
 
+        <!-- Reminders -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -161,8 +157,72 @@
                 android:textColor="#B8B8B8"
                 android:textSize="13sp" />
 
+            <!-- Master switch -->
             <LinearLayout
-                android:id="@+id/row_reminder_settings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="4dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Enable reminders"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp" />
+                <Switch
+                    android:id="@+id/switchRemindersMaster"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <!-- Task reminders switch -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="4dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Task reminders"
+                    android:textColor="#CCCCCC"
+                    android:textSize="14sp" />
+                <Switch
+                    android:id="@+id/switchTaskReminders"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <!-- Medication reminders switch -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="4dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Medication reminders"
+                    android:textColor="#CCCCCC"
+                    android:textSize="14sp" />
+                <Switch
+                    android:id="@+id/switchMedicationReminders"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <!-- Default reminder time row -->
+            <LinearLayout
+                android:id="@+id/row_default_reminder_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
@@ -172,24 +232,24 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="12dp">
-
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Reminder settings"
+                    android:text="Default reminder time"
                     android:textColor="#FFFFFF"
                     android:textSize="15sp" />
-
                 <TextView
+                    android:id="@+id/tvDefaultReminderTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="›"
-                    android:textColor="#AAAAAA"
-                    android:textSize="20sp" />
+                    android:text="8:00 AM"
+                    android:textColor="#4f9cf9"
+                    android:textSize="14sp" />
             </LinearLayout>
         </LinearLayout>
 
+        <!-- Privacy and Safety -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -225,7 +285,6 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="12dp">
-
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -233,7 +292,6 @@
                     android:text="Privacy policy"
                     android:textColor="#FFFFFF"
                     android:textSize="15sp" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -252,7 +310,6 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="12dp">
-
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -260,7 +317,6 @@
                     android:text="Medical disclaimer"
                     android:textColor="#FFFFFF"
                     android:textSize="15sp" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -279,7 +335,6 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="12dp">
-
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -287,7 +342,6 @@
                     android:text="App lock"
                     android:textColor="#FFFFFF"
                     android:textSize="15sp" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -315,7 +369,6 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="12dp">
-
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -323,7 +376,6 @@
                     android:text="Backup and restore"
                     android:textColor="#FFFFFF"
                     android:textSize="15sp" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -333,6 +385,7 @@
             </LinearLayout>
         </LinearLayout>
 
+        <!-- Development Plan -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -358,6 +411,7 @@
                 android:textSize="14sp" />
         </LinearLayout>
 
+        <!-- About -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -386,7 +440,6 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="12dp">
-
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -394,7 +447,6 @@
                     android:text="About CareTracker"
                     android:textColor="#FFFFFF"
                     android:textSize="15sp" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -407,7 +459,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="Version 0.8.1-dev"
+                android:text="Version 0.9.0-dev"
                 android:textColor="#888888"
                 android:textSize="13sp" />
         </LinearLayout>

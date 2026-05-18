@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.caretracker.app-mergeDebugResources-53:/values-v26/values-v26.xml",
+            "outputFile": "com.caretracker.app-mergeDebugResources-55:/values-v26/values-v26.xml",
             "map": [
                 {
-                    "source": "/data/data/com.termux/files/home/.gradle/caches/8.9/transforms/3f0467b21ba2af13a76dd245bce7c8b5/transformed/appcompat-1.6.1/res/values-v26/values-v26.xml",
+                    "source": "/data/data/com.termux/files/home/.gradle/caches/8.9/transforms/b4acd74069a879592fe73889d17e4f55/transformed/appcompat-1.6.1/res/values-v26/values-v26.xml",
                     "from": {
                         "startLines": "2,3,4,8,12,16",
                         "startColumns": "4,4,4,4,4,4",

@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.caretracker.app-mergeDebugResources-53:/values-en-rIN/values-en-rIN.xml",
+            "outputFile": "com.caretracker.app-mergeDebugResources-55:/values-en-rIN/values-en-rIN.xml",
             "map": [
                 {
-                    "source": "/data/data/com.termux/files/home/.gradle/caches/8.9/transforms/3f0467b21ba2af13a76dd245bce7c8b5/transformed/appcompat-1.6.1/res/values-en-rIN/values-en-rIN.xml",
+                    "source": "/data/data/com.termux/files/home/.gradle/caches/8.9/transforms/b4acd74069a879592fe73889d17e4f55/transformed/appcompat-1.6.1/res/values-en-rIN/values-en-rIN.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -21,7 +21,7 @@
                     }
                 },
                 {
-                    "source": "/data/data/com.termux/files/home/.gradle/caches/8.9/transforms/207eba46b9dc9bafb7ff3aa7bd14341e/transformed/navigation-ui-2.7.7/res/values-en-rIN/values-en-rIN.xml",
+                    "source": "/data/data/com.termux/files/home/.gradle/caches/8.9/transforms/5b4d67f8adcc5a48b0db78730b974f51/transformed/navigation-ui-2.7.7/res/values-en-rIN/values-en-rIN.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",
@@ -38,7 +38,7 @@
                     }
                 },
                 {
-                    "source": "/data/data/com.termux/files/home/.gradle/caches/8.9/transforms/8e00ad8759cbc3b3e80bbebd9556d75a/transformed/core-1.12.0/res/values-en-rIN/values-en-rIN.xml",
+                    "source": "/data/data/com.termux/files/home/.gradle/caches/8.9/transforms/2890527d7a8c2f4a28da488adc898d86/transformed/core-1.12.0/res/values-en-rIN/values-en-rIN.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",

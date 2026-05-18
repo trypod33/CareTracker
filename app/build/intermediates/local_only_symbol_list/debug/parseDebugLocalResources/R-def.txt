@@ -36,6 +36,7 @@ drawable bg_week_day_active
 drawable ic_delete
 drawable ic_edit
 drawable ic_launcher_foreground
+drawable ic_time
 drawable progress_pills
 drawable progress_ring
 drawable spinner_background
@@ -137,11 +138,11 @@ id rbRed
 id row_about
 id row_app_lock
 id row_backup_restore
+id row_default_reminder_time
 id row_delete_person
 id row_manage_people
 id row_medical_disclaimer
 id row_privacy_policy
-id row_reminder_settings
 id row_sign_out
 id rvHabits
 id rvHealthHistory
@@ -156,8 +157,12 @@ id settingsFragment
 id spinnerPerson
 id spinnerWeightUnit
 id spinner_user
+id switchMedicationReminders
+id switchRemindersMaster
+id switchTaskReminders
 id tasksFragment
 id tilPassword
+id tilScheduledTimes
 id tilUsername
 id toolbar
 id tvBackupStatusValue
@@ -168,6 +173,7 @@ id tvBpTrendTitle
 id tvCalories
 id tvCurrentPersonValue
 id tvDayOfWeekDate
+id tvDefaultReminderTime
 id tvDosage
 id tvDragHandleMed
 id tvDragHandleTask

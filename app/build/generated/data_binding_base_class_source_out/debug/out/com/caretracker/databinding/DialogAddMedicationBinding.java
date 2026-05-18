@@ -14,6 +14,7 @@ import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.caretracker.R;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
@@ -97,6 +98,9 @@ public final class DialogAddMedicationBinding implements ViewBinding {
   @NonNull
   public final Spinner spinnerPerson;
 
+  @NonNull
+  public final TextInputLayout tilScheduledTimes;
+
   private DialogAddMedicationBinding(@NonNull ScrollView rootView, @NonNull CheckBox cbWithFood,
       @NonNull TextInputEditText etCurrentCount, @NonNull TextInputEditText etDosage,
       @NonNull TextInputEditText etDosageUnit, @NonNull TextInputEditText etForm,
@@ -108,7 +112,8 @@ public final class DialogAddMedicationBinding implements ViewBinding {
       @NonNull TextInputEditText etTimesPerDay, @NonNull RadioButton rbAmber,
       @NonNull RadioButton rbBlue, @NonNull RadioButton rbCyan, @NonNull RadioButton rbGreen,
       @NonNull RadioButton rbOrange, @NonNull RadioButton rbPink, @NonNull RadioButton rbPurple,
-      @NonNull RadioButton rbRed, @NonNull Spinner spinnerPerson) {
+      @NonNull RadioButton rbRed, @NonNull Spinner spinnerPerson,
+      @NonNull TextInputLayout tilScheduledTimes) {
     this.rootView = rootView;
     this.cbWithFood = cbWithFood;
     this.etCurrentCount = etCurrentCount;
@@ -135,6 +140,7 @@ public final class DialogAddMedicationBinding implements ViewBinding {
     this.rbPurple = rbPurple;
     this.rbRed = rbRed;
     this.spinnerPerson = spinnerPerson;
+    this.tilScheduledTimes = tilScheduledTimes;
   }
 
   @Override
@@ -314,11 +320,17 @@ public final class DialogAddMedicationBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tilScheduledTimes;
+      TextInputLayout tilScheduledTimes = ViewBindings.findChildViewById(rootView, id);
+      if (tilScheduledTimes == null) {
+        break missingId;
+      }
+
       return new DialogAddMedicationBinding((ScrollView) rootView, cbWithFood, etCurrentCount,
           etDosage, etDosageUnit, etForm, etFrequency, etGenericName, etInstructions, etMedName,
           etPharmacy, etPillsPerRefill, etPrescriber, etRefillReminder, etRxNumber,
           etScheduledTimes, etTimesPerDay, rbAmber, rbBlue, rbCyan, rbGreen, rbOrange, rbPink,
-          rbPurple, rbRed, spinnerPerson);
+          rbPurple, rbRed, spinnerPerson, tilScheduledTimes);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));
