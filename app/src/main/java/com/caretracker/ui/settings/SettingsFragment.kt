@@ -11,6 +11,7 @@ import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.lifecycle.lifecycleScope
 import com.caretracker.CareTrackerApp
 import com.caretracker.R
@@ -96,7 +97,7 @@ class SettingsFragment : Fragment() {
         click(view, R.id.row_privacy_policy, "Privacy policy placeholder")
         click(view, R.id.row_medical_disclaimer, "Medical disclaimer placeholder")
         click(view, R.id.row_app_lock, "App lock coming soon")
-        click(view, R.id.row_backup_restore, "Backup and restore coming soon")
+        view.findViewById<View>(R.id.row_backup_restore).setOnClickListener { findNavController().navigate(R.id.backupFragment) }
         click(view, R.id.row_about, "CareTracker v0.9.0-dev")
 
         rowSignOut.setOnClickListener {

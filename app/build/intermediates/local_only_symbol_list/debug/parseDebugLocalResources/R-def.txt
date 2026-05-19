@@ -41,6 +41,7 @@ drawable progress_pills
 drawable progress_ring
 drawable spinner_background
 id action_settings
+id backupFragment
 id bottom_nav
 id btnAddHabit
 id btnAddHabitHeader

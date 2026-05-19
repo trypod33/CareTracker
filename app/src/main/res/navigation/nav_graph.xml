@@ -33,4 +33,9 @@
         android:id="@+id/settingsFragment"
         android:name="com.caretracker.ui.settings.SettingsFragment"
         android:label="Settings" />
+
+    <fragment
+        android:id="@+id/backupFragment"
+        android:name="com.caretracker.ui.backup.BackupFragment"
+        android:label="Backup and Restore" />
 </navigation>
