@@ -46,4 +46,7 @@ interface MedicationDao {
 
     @Query("DELETE FROM med_logs WHERE medicationId IN (SELECT id FROM medications WHERE userId = :userId)")
     suspend fun deleteLogsByUserId(userId: Long)
+
+    @Query("SELECT ml.* FROM med_logs ml INNER JOIN medications m ON ml.medicationId = m.id WHERE m.userId = :userId")
+    suspend fun getAllMedLogsForUserOnce(userId: Long): List<MedLogEntity>
 }

@@ -54,4 +54,10 @@ interface HealthDao {
 
     @Query("DELETE FROM health_entries WHERE userId = :userId")
     suspend fun deleteEntriesByUserId(userId: Long)
+
+    @Query("SELECT * FROM health_entries WHERE userId = :userId")
+    suspend fun getAllHealthEntriesForUserOnce(userId: Long): List<HealthEntryEntity>
+
+    @Query("SELECT * FROM vital_logs WHERE userId = :userId")
+    suspend fun getAllVitalLogsForUserOnce(userId: Long): List<VitalLogEntity>
 }

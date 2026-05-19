@@ -123,4 +123,25 @@ suspend fun getAllUsersOnce(): List<UserEntity> = userDao.getAllUsersOnce()
     suspend fun insertMoodEntry(entry: MoodJournalEntity) = moodDao.insertEntry(entry)
     suspend fun updateMoodEntry(entry: MoodJournalEntity) = moodDao.updateEntry(entry)
     suspend fun deleteMoodEntry(entry: MoodJournalEntity) = moodDao.deleteEntry(entry)
+
+    // ── Backup bulk queries ───────────────────────────────────────────────────
+    suspend fun getAllHabitsForUserOnce(userId: Long)       = habitDao.getAllHabitsForUserOnce(userId)
+    suspend fun getAllHabitLogsForUserOnce(userId: Long)    = habitDao.getAllHabitLogsForUserOnce(userId)
+    suspend fun getAllMedLogsForUserOnce(userId: Long)      = medicationDao.getAllMedLogsForUserOnce(userId)
+    suspend fun getAllHealthEntriesForUserOnce(userId: Long)= healthDao.getAllHealthEntriesForUserOnce(userId)
+    suspend fun getAllVitalLogsForUserOnce(userId: Long)    = healthDao.getAllVitalLogsForUserOnce(userId)
+    suspend fun getAllMoodEntriesForUserOnce(userId: Long)  = moodDao.getAllMoodEntriesForUserOnce(userId)
+    suspend fun getAllEventsForUserOnce(userId: Long)       = calendarDao.getAllEventsForUserOnce(userId)
+
+    suspend fun deleteUserData(userId: Long) {
+        habitDao.deleteLogsByUserId(userId)
+        habitDao.deleteHabitsByUserId(userId)
+        medicationDao.deleteLogsByUserId(userId)
+        medicationDao.deleteMedicationsByUserId(userId)
+        calendarDao.deleteEventsByUserId(userId)
+        taskDao.deleteTasksByUserId(userId)
+        moodDao.deleteEntriesByUserId(userId)
+        healthDao.deleteVitalLogsByUserId(userId)
+        healthDao.deleteEntriesByUserId(userId)
+    }
 }

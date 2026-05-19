@@ -3277,12 +3277,14 @@ id btnDeleteEntry
 id btnDeleteTask
 id btnDrag
 id btnEdit
+id btnExportBackup
 id btnHabitEdit
 id btnLogHealth
 id btnLogin
 id btnMore
 id btnRefill
 id btnRegister
+id btnRestoreBackup
 id btnSave
 id btnSaveJournal
 id btnTake
@@ -3770,6 +3772,7 @@ id transition_position
 id transition_scene_layoutid_cache
 id transition_transform
 id triangle
+id tvBackupStatus
 id tvBackupStatusValue
 id tvBloodPressure
 id tvBloodSugar
@@ -3802,6 +3805,7 @@ id tvJournalContent
 id tvJournalDate
 id tvJournalMood
 id tvJournalTags
+id tvLastBackup
 id tvManage
 id tvMedName
 id tvMedicationInstructions
@@ -4006,6 +4010,7 @@ layout design_text_input_end_icon
 layout design_text_input_start_icon
 layout dialog_add_medication
 layout dialog_log_health
+layout fragment_backup
 layout fragment_dashboard
 layout fragment_habits
 layout fragment_health

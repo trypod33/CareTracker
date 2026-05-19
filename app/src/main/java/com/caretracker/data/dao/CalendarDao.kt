@@ -23,4 +23,7 @@ interface CalendarDao {
 
     @Query("DELETE FROM calendar_events WHERE userId = :userId")
     suspend fun deleteEventsByUserId(userId: Long)
+
+    @Query("SELECT * FROM calendar_events WHERE userId = :userId")
+    suspend fun getAllEventsForUserOnce(userId: Long): List<CalendarEventEntity>
 }

@@ -1283,6 +1283,71 @@ public final class MedicationDao_Impl implements MedicationDao {
     });
   }
 
+  @Override
+  public Object getAllMedLogsForUserOnce(final long userId,
+      final Continuation<? super List<MedLogEntity>> $completion) {
+    final String _sql = "SELECT ml.* FROM med_logs ml INNER JOIN medications m ON ml.medicationId = m.id WHERE m.userId = ?";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, userId);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<List<MedLogEntity>>() {
+      @Override
+      @NonNull
+      public List<MedLogEntity> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfMedicationId = CursorUtil.getColumnIndexOrThrow(_cursor, "medicationId");
+          final int _cursorIndexOfTakenAt = CursorUtil.getColumnIndexOrThrow(_cursor, "takenAt");
+          final int _cursorIndexOfTakenDate = CursorUtil.getColumnIndexOrThrow(_cursor, "takenDate");
+          final int _cursorIndexOfScheduledTime = CursorUtil.getColumnIndexOrThrow(_cursor, "scheduledTime");
+          final int _cursorIndexOfStatus = CursorUtil.getColumnIndexOrThrow(_cursor, "status");
+          final int _cursorIndexOfNote = CursorUtil.getColumnIndexOrThrow(_cursor, "note");
+          final int _cursorIndexOfDoseTaken = CursorUtil.getColumnIndexOrThrow(_cursor, "doseTaken");
+          final List<MedLogEntity> _result = new ArrayList<MedLogEntity>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final MedLogEntity _item;
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final long _tmpMedicationId;
+            _tmpMedicationId = _cursor.getLong(_cursorIndexOfMedicationId);
+            final long _tmpTakenAt;
+            _tmpTakenAt = _cursor.getLong(_cursorIndexOfTakenAt);
+            final String _tmpTakenDate;
+            _tmpTakenDate = _cursor.getString(_cursorIndexOfTakenDate);
+            final String _tmpScheduledTime;
+            if (_cursor.isNull(_cursorIndexOfScheduledTime)) {
+              _tmpScheduledTime = null;
+            } else {
+              _tmpScheduledTime = _cursor.getString(_cursorIndexOfScheduledTime);
+            }
+            final String _tmpStatus;
+            _tmpStatus = _cursor.getString(_cursorIndexOfStatus);
+            final String _tmpNote;
+            if (_cursor.isNull(_cursorIndexOfNote)) {
+              _tmpNote = null;
+            } else {
+              _tmpNote = _cursor.getString(_cursorIndexOfNote);
+            }
+            final String _tmpDoseTaken;
+            if (_cursor.isNull(_cursorIndexOfDoseTaken)) {
+              _tmpDoseTaken = null;
+            } else {
+              _tmpDoseTaken = _cursor.getString(_cursorIndexOfDoseTaken);
+            }
+            _item = new MedLogEntity(_tmpId,_tmpMedicationId,_tmpTakenAt,_tmpTakenDate,_tmpScheduledTime,_tmpStatus,_tmpNote,_tmpDoseTaken);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
+  }
+
   @NonNull
   public static List<Class<?>> getRequiredConverters() {
     return Collections.emptyList();

@@ -1,6 +1,7 @@
 package com.caretracker.data.dao;
 
 import android.database.Cursor;
+import android.os.CancellationSignal;
 import androidx.annotation.NonNull;
 import androidx.room.CoroutinesRoom;
 import androidx.room.EntityDeletionOrUpdateAdapter;
@@ -411,6 +412,93 @@ public final class CalendarDao_Impl implements CalendarDao {
         _statement.release();
       }
     });
+  }
+
+  @Override
+  public Object getAllEventsForUserOnce(final long userId,
+      final Continuation<? super List<CalendarEventEntity>> $completion) {
+    final String _sql = "SELECT * FROM calendar_events WHERE userId = ?";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, userId);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<List<CalendarEventEntity>>() {
+      @Override
+      @NonNull
+      public List<CalendarEventEntity> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfUserId = CursorUtil.getColumnIndexOrThrow(_cursor, "userId");
+          final int _cursorIndexOfTitle = CursorUtil.getColumnIndexOrThrow(_cursor, "title");
+          final int _cursorIndexOfDescription = CursorUtil.getColumnIndexOrThrow(_cursor, "description");
+          final int _cursorIndexOfCategory = CursorUtil.getColumnIndexOrThrow(_cursor, "category");
+          final int _cursorIndexOfColor = CursorUtil.getColumnIndexOrThrow(_cursor, "color");
+          final int _cursorIndexOfStartDatetime = CursorUtil.getColumnIndexOrThrow(_cursor, "startDatetime");
+          final int _cursorIndexOfEndDatetime = CursorUtil.getColumnIndexOrThrow(_cursor, "endDatetime");
+          final int _cursorIndexOfAllDay = CursorUtil.getColumnIndexOrThrow(_cursor, "allDay");
+          final int _cursorIndexOfLocation = CursorUtil.getColumnIndexOrThrow(_cursor, "location");
+          final int _cursorIndexOfReminderMinutes = CursorUtil.getColumnIndexOrThrow(_cursor, "reminderMinutes");
+          final int _cursorIndexOfRecurrence = CursorUtil.getColumnIndexOrThrow(_cursor, "recurrence");
+          final int _cursorIndexOfIsCompleted = CursorUtil.getColumnIndexOrThrow(_cursor, "isCompleted");
+          final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
+          final List<CalendarEventEntity> _result = new ArrayList<CalendarEventEntity>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final CalendarEventEntity _item;
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final long _tmpUserId;
+            _tmpUserId = _cursor.getLong(_cursorIndexOfUserId);
+            final String _tmpTitle;
+            _tmpTitle = _cursor.getString(_cursorIndexOfTitle);
+            final String _tmpDescription;
+            if (_cursor.isNull(_cursorIndexOfDescription)) {
+              _tmpDescription = null;
+            } else {
+              _tmpDescription = _cursor.getString(_cursorIndexOfDescription);
+            }
+            final String _tmpCategory;
+            _tmpCategory = _cursor.getString(_cursorIndexOfCategory);
+            final String _tmpColor;
+            _tmpColor = _cursor.getString(_cursorIndexOfColor);
+            final long _tmpStartDatetime;
+            _tmpStartDatetime = _cursor.getLong(_cursorIndexOfStartDatetime);
+            final Long _tmpEndDatetime;
+            if (_cursor.isNull(_cursorIndexOfEndDatetime)) {
+              _tmpEndDatetime = null;
+            } else {
+              _tmpEndDatetime = _cursor.getLong(_cursorIndexOfEndDatetime);
+            }
+            final boolean _tmpAllDay;
+            final int _tmp;
+            _tmp = _cursor.getInt(_cursorIndexOfAllDay);
+            _tmpAllDay = _tmp != 0;
+            final String _tmpLocation;
+            if (_cursor.isNull(_cursorIndexOfLocation)) {
+              _tmpLocation = null;
+            } else {
+              _tmpLocation = _cursor.getString(_cursorIndexOfLocation);
+            }
+            final int _tmpReminderMinutes;
+            _tmpReminderMinutes = _cursor.getInt(_cursorIndexOfReminderMinutes);
+            final String _tmpRecurrence;
+            _tmpRecurrence = _cursor.getString(_cursorIndexOfRecurrence);
+            final boolean _tmpIsCompleted;
+            final int _tmp_1;
+            _tmp_1 = _cursor.getInt(_cursorIndexOfIsCompleted);
+            _tmpIsCompleted = _tmp_1 != 0;
+            final long _tmpCreatedAt;
+            _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
+            _item = new CalendarEventEntity(_tmpId,_tmpUserId,_tmpTitle,_tmpDescription,_tmpCategory,_tmpColor,_tmpStartDatetime,_tmpEndDatetime,_tmpAllDay,_tmpLocation,_tmpReminderMinutes,_tmpRecurrence,_tmpIsCompleted,_tmpCreatedAt);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
   }
 
   @NonNull

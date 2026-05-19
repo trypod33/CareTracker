@@ -23,4 +23,7 @@ interface MoodDao {
 
     @Query("DELETE FROM mood_journal WHERE userId = :userId")
     suspend fun deleteEntriesByUserId(userId: Long)
+
+    @Query("SELECT * FROM mood_journal WHERE userId = :userId")
+    suspend fun getAllMoodEntriesForUserOnce(userId: Long): List<MoodJournalEntity>
 }

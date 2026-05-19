@@ -87,7 +87,7 @@ class SettingsFragment : Fragment() {
     private fun bindStaticText() {
         tvCurrentPersonValue.text = "Current person: managed from top selector"
         tvPrivacyStatusValue.text = "Privacy policy and disclaimer needed before store release."
-        tvBackupStatusValue.text = "Backup and restore not built yet."
+        tvBackupStatusValue.text = "Tap below to export or restore your data."
         tvRoadmapStatus.text = "Milestone: v0.9.0 reminder settings"
     }
 

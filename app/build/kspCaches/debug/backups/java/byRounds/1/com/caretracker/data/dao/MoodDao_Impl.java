@@ -343,6 +343,68 @@ public final class MoodDao_Impl implements MoodDao {
     }, $completion);
   }
 
+  @Override
+  public Object getAllMoodEntriesForUserOnce(final long userId,
+      final Continuation<? super List<MoodJournalEntity>> $completion) {
+    final String _sql = "SELECT * FROM mood_journal WHERE userId = ?";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, userId);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<List<MoodJournalEntity>>() {
+      @Override
+      @NonNull
+      public List<MoodJournalEntity> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfUserId = CursorUtil.getColumnIndexOrThrow(_cursor, "userId");
+          final int _cursorIndexOfEntryDate = CursorUtil.getColumnIndexOrThrow(_cursor, "entryDate");
+          final int _cursorIndexOfMoodScore = CursorUtil.getColumnIndexOrThrow(_cursor, "moodScore");
+          final int _cursorIndexOfContent = CursorUtil.getColumnIndexOrThrow(_cursor, "content");
+          final int _cursorIndexOfTags = CursorUtil.getColumnIndexOrThrow(_cursor, "tags");
+          final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
+          final List<MoodJournalEntity> _result = new ArrayList<MoodJournalEntity>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final MoodJournalEntity _item;
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final long _tmpUserId;
+            _tmpUserId = _cursor.getLong(_cursorIndexOfUserId);
+            final String _tmpEntryDate;
+            _tmpEntryDate = _cursor.getString(_cursorIndexOfEntryDate);
+            final Integer _tmpMoodScore;
+            if (_cursor.isNull(_cursorIndexOfMoodScore)) {
+              _tmpMoodScore = null;
+            } else {
+              _tmpMoodScore = _cursor.getInt(_cursorIndexOfMoodScore);
+            }
+            final String _tmpContent;
+            if (_cursor.isNull(_cursorIndexOfContent)) {
+              _tmpContent = null;
+            } else {
+              _tmpContent = _cursor.getString(_cursorIndexOfContent);
+            }
+            final String _tmpTags;
+            if (_cursor.isNull(_cursorIndexOfTags)) {
+              _tmpTags = null;
+            } else {
+              _tmpTags = _cursor.getString(_cursorIndexOfTags);
+            }
+            final long _tmpCreatedAt;
+            _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
+            _item = new MoodJournalEntity(_tmpId,_tmpUserId,_tmpEntryDate,_tmpMoodScore,_tmpContent,_tmpTags,_tmpCreatedAt);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
+  }
+
   @NonNull
   public static List<Class<?>> getRequiredConverters() {
     return Collections.emptyList();

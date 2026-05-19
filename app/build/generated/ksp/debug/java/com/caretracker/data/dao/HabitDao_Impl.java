@@ -733,6 +733,128 @@ public final class HabitDao_Impl implements HabitDao {
     }, $completion);
   }
 
+  @Override
+  public Object getAllHabitsForUserOnce(final long userId,
+      final Continuation<? super List<HabitEntity>> $completion) {
+    final String _sql = "SELECT * FROM habits WHERE userId = ?";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, userId);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<List<HabitEntity>>() {
+      @Override
+      @NonNull
+      public List<HabitEntity> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfUserId = CursorUtil.getColumnIndexOrThrow(_cursor, "userId");
+          final int _cursorIndexOfName = CursorUtil.getColumnIndexOrThrow(_cursor, "name");
+          final int _cursorIndexOfDescription = CursorUtil.getColumnIndexOrThrow(_cursor, "description");
+          final int _cursorIndexOfCategory = CursorUtil.getColumnIndexOrThrow(_cursor, "category");
+          final int _cursorIndexOfColor = CursorUtil.getColumnIndexOrThrow(_cursor, "color");
+          final int _cursorIndexOfIcon = CursorUtil.getColumnIndexOrThrow(_cursor, "icon");
+          final int _cursorIndexOfFrequency = CursorUtil.getColumnIndexOrThrow(_cursor, "frequency");
+          final int _cursorIndexOfTargetCount = CursorUtil.getColumnIndexOrThrow(_cursor, "targetCount");
+          final int _cursorIndexOfSortOrder = CursorUtil.getColumnIndexOrThrow(_cursor, "sortOrder");
+          final int _cursorIndexOfIsActive = CursorUtil.getColumnIndexOrThrow(_cursor, "isActive");
+          final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
+          final List<HabitEntity> _result = new ArrayList<HabitEntity>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final HabitEntity _item;
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final long _tmpUserId;
+            _tmpUserId = _cursor.getLong(_cursorIndexOfUserId);
+            final String _tmpName;
+            _tmpName = _cursor.getString(_cursorIndexOfName);
+            final String _tmpDescription;
+            if (_cursor.isNull(_cursorIndexOfDescription)) {
+              _tmpDescription = null;
+            } else {
+              _tmpDescription = _cursor.getString(_cursorIndexOfDescription);
+            }
+            final String _tmpCategory;
+            _tmpCategory = _cursor.getString(_cursorIndexOfCategory);
+            final String _tmpColor;
+            _tmpColor = _cursor.getString(_cursorIndexOfColor);
+            final String _tmpIcon;
+            _tmpIcon = _cursor.getString(_cursorIndexOfIcon);
+            final String _tmpFrequency;
+            _tmpFrequency = _cursor.getString(_cursorIndexOfFrequency);
+            final int _tmpTargetCount;
+            _tmpTargetCount = _cursor.getInt(_cursorIndexOfTargetCount);
+            final int _tmpSortOrder;
+            _tmpSortOrder = _cursor.getInt(_cursorIndexOfSortOrder);
+            final boolean _tmpIsActive;
+            final int _tmp;
+            _tmp = _cursor.getInt(_cursorIndexOfIsActive);
+            _tmpIsActive = _tmp != 0;
+            final long _tmpCreatedAt;
+            _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
+            _item = new HabitEntity(_tmpId,_tmpUserId,_tmpName,_tmpDescription,_tmpCategory,_tmpColor,_tmpIcon,_tmpFrequency,_tmpTargetCount,_tmpSortOrder,_tmpIsActive,_tmpCreatedAt);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object getAllHabitLogsForUserOnce(final long userId,
+      final Continuation<? super List<HabitLogEntity>> $completion) {
+    final String _sql = "SELECT hl.* FROM habit_logs hl INNER JOIN habits h ON hl.habitId = h.id WHERE h.userId = ?";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, userId);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<List<HabitLogEntity>>() {
+      @Override
+      @NonNull
+      public List<HabitLogEntity> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfHabitId = CursorUtil.getColumnIndexOrThrow(_cursor, "habitId");
+          final int _cursorIndexOfLoggedDate = CursorUtil.getColumnIndexOrThrow(_cursor, "loggedDate");
+          final int _cursorIndexOfCount = CursorUtil.getColumnIndexOrThrow(_cursor, "count");
+          final int _cursorIndexOfNote = CursorUtil.getColumnIndexOrThrow(_cursor, "note");
+          final int _cursorIndexOfLoggedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "loggedAt");
+          final List<HabitLogEntity> _result = new ArrayList<HabitLogEntity>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final HabitLogEntity _item;
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final long _tmpHabitId;
+            _tmpHabitId = _cursor.getLong(_cursorIndexOfHabitId);
+            final String _tmpLoggedDate;
+            _tmpLoggedDate = _cursor.getString(_cursorIndexOfLoggedDate);
+            final int _tmpCount;
+            _tmpCount = _cursor.getInt(_cursorIndexOfCount);
+            final String _tmpNote;
+            if (_cursor.isNull(_cursorIndexOfNote)) {
+              _tmpNote = null;
+            } else {
+              _tmpNote = _cursor.getString(_cursorIndexOfNote);
+            }
+            final long _tmpLoggedAt;
+            _tmpLoggedAt = _cursor.getLong(_cursorIndexOfLoggedAt);
+            _item = new HabitLogEntity(_tmpId,_tmpHabitId,_tmpLoggedDate,_tmpCount,_tmpNote,_tmpLoggedAt);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
+  }
+
   @NonNull
   public static List<Class<?>> getRequiredConverters() {
     return Collections.emptyList();

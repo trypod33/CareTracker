@@ -51,4 +51,10 @@ interface HabitDao {
 
     @Query("DELETE FROM habits WHERE userId = :userId")
     suspend fun deleteHabitsByUserId(userId: Long)
+
+    @Query("SELECT * FROM habits WHERE userId = :userId")
+    suspend fun getAllHabitsForUserOnce(userId: Long): List<HabitEntity>
+
+    @Query("SELECT hl.* FROM habit_logs hl INNER JOIN habits h ON hl.habitId = h.id WHERE h.userId = :userId")
+    suspend fun getAllHabitLogsForUserOnce(userId: Long): List<HabitLogEntity>
 }
